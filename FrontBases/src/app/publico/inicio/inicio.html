@@ -1,0 +1,56 @@
+<header class="encabezado">
+  <h1 class="titulo-sistema">{{ nombreSistema }}</h1>
+  <button class="btn-login">Iniciar sesión</button>
+</header>
+
+<main class="contenido">
+  <section class="bienvenida">
+    <h2>¿Qué está pasando hoy?</h2>
+    <p>Consulta en tiempo real el estado de la evasión en el sistema.</p>
+  </section>
+
+  <section class="indicadores">
+    @for (item of indicadores; track item.titulo) {
+      <article class="tarjeta">
+        <span class="tarjeta-titulo">{{ item.titulo }}</span>
+        <span class="tarjeta-valor">{{ item.valor }}</span>
+        <span class="tarjeta-detalle">{{ item.detalle }}</span>
+      </article>
+    }
+  </section>
+
+  <section class="paneles">
+    <article class="panel panel-mapa">
+      <h3>Mapa</h3>
+      <div class="espacio-reservado">Aquí irá el mapa</div>
+    </article>
+
+    <article class="panel">
+      <h3>Troncales más afectadas</h3>
+      @for (t of troncales; track t.nombre) {
+        <div class="fila-troncal">
+          <span class="troncal-nombre">{{ t.nombre }}</span>
+          <div class="barra">
+            <div
+              class="barra-relleno"
+              [style.width.%]="t.porcentaje"
+              [class.alto]="t.porcentaje >= 60"
+              [class.medio]="t.porcentaje >= 30 && t.porcentaje < 60"
+              [class.bajo]="t.porcentaje < 30"
+            ></div>
+          </div>
+          <span class="troncal-valor">{{ t.porcentaje }}%</span>
+        </div>
+      }
+    </article>
+
+    <article class="panel">
+      <h3>Horas pico</h3>
+      <div class="espacio-reservado">Aquí irá la gráfica de horas pico</div>
+    </article>
+  </section>
+</main>
+
+<footer class="pie">
+  <p>Datos de ejemplo · Proyecto de Bases de Datos</p>
+</footer>
