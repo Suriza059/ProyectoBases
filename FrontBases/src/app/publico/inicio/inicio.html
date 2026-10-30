@@ -35,10 +35,6 @@
       <span class="indicador-detalle">{{ item.detalle }}</span>
     </div>
   </div>
-
-  <p class="hero-pista animate__animated animate__bounce animate__infinite">
-    Desliza para ver más ↓
-  </p>
 </section>
 
 <!-- SECCIONES: aparecen al hacer scroll -->
@@ -53,7 +49,8 @@
   >
     <h2 class="seccion-titulo">Troncales más afectadas</h2>
 
-    <div class="fila-troncal" *ngFor="let t of troncales">
+    <!-- La clase "relieve" hace el efecto al pasar el cursor -->
+    <div class="fila-troncal relieve" *ngFor="let t of troncales">
       <span class="troncal-nombre">{{ t.nombre }}</span>
       <div class="barra">
         <div
@@ -80,7 +77,8 @@
     [class.animate__faster]="mostrarMapa"
   >
     <h2 class="seccion-titulo">Mapa</h2>
-    <div class="espacio-reservado">Aquí irá el mapa de estaciones</div>
+    <!-- Cuando pongas el mapa real, déjalo dentro de este div con la clase "relieve" -->
+    <div class="espacio-reservado relieve">Aquí irá el mapa de estaciones</div>
   </section>
 
   <section
