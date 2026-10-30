@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 
 @Component({
@@ -12,10 +13,10 @@ export class Login {
   contrasena = '';
   error = '';
 
-  // Por ahora, el rol con el que se ingresó (para mostrar un mensaje)
+  // Para los roles que todavía no tienen panel
   rolIniciado = '';
 
-  constructor(private authService: AuthService) {}
+  constructor(private router: Router, private authService: AuthService) {}
 
   ingresar(): void {
     this.error = '';
@@ -36,17 +37,12 @@ export class Login {
         this.authService.guardarRol(response.role);
         this.authService.guardarId(response.id);
 
-        this.rolIniciado = response.role;
-
-        // MÁS ADELANTE (cuando existan los paneles): inyectar Router en el
-        // constructor (private router: Router) y enviar a cada rol a su panel:
-        //   if (response.role === 'ADMIN') {
-        //     this.router.navigate(['/admin']);
-        //   } else if (response.role === 'ANALISTA') {
-        //     this.router.navigate(['/analista']);
-        //   } else {
-        //     this.router.navigate(['/guarda']);
-        //   }
+        if (response.role === 'GUARDA') {
+          this.router.navigate(['/guarda']);
+        } else {
+          // Los paneles de ADMIN y ANALISTA todavía no existen
+          this.rolIniciado = response.role;
+        }
       },
       error: (err) => {
         this.error = typeof err.error === 'string'
