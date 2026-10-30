@@ -23,7 +23,10 @@ public class UsuarioController {
 	}
 
 	@PostMapping("/crear")
-	public ResponseEntity<String> crear(@RequestBody UsuarioDTO dto) {
+	public ResponseEntity<String> crear(
+			@RequestParam(name = "rol", required = false) String rol) {
+		UsuarioDTO dto = new UsuarioDTO();
+		dto.setRol(rol);
 		try {
 			usuarioService.create(dto);
 			return new ResponseEntity<>("El usuario creado", HttpStatus.CREATED);
@@ -38,7 +41,11 @@ public class UsuarioController {
 	}
 
 	@PutMapping("/actualizar/{id}")
-	public ResponseEntity<String> actualizar(@PathVariable Long id, @RequestBody UsuarioDTO dto) {
+	public ResponseEntity<String> actualizar(
+			@PathVariable Long id,
+			@RequestParam(name = "rol", required = false) String rol) {
+		UsuarioDTO dto = new UsuarioDTO();
+		dto.setRol(rol);
 		try {
 			usuarioService.updateById(id, dto);
 			return new ResponseEntity<>("El usuario actualizado", HttpStatus.OK);

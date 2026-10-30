@@ -1,7 +1,9 @@
 package co.edu.unbosque.TransMilenio.controller;
 
+import java.time.LocalDate;
 import java.util.List;
 
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -23,7 +25,14 @@ public class TarifaController {
 	}
 
 	@PostMapping("/crear")
-	public ResponseEntity<String> crear(@RequestBody TarifaDTO dto) {
+	public ResponseEntity<String> crear(
+			@RequestParam(name = "fechaInicio", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaInicio,
+			@RequestParam(name = "fechaFin", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaFin,
+			@RequestParam(name = "valor", required = false) Long valor) {
+		TarifaDTO dto = new TarifaDTO();
+		dto.setFechaInicio(fechaInicio);
+		dto.setFechaFin(fechaFin);
+		dto.setValor(valor);
 		try {
 			tarifaService.create(dto);
 			return new ResponseEntity<>("La tarifa creada", HttpStatus.CREATED);
@@ -38,7 +47,15 @@ public class TarifaController {
 	}
 
 	@PutMapping("/actualizar/{id}")
-	public ResponseEntity<String> actualizar(@PathVariable Long id, @RequestBody TarifaDTO dto) {
+	public ResponseEntity<String> actualizar(
+			@PathVariable Long id,
+			@RequestParam(name = "fechaInicio", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaInicio,
+			@RequestParam(name = "fechaFin", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaFin,
+			@RequestParam(name = "valor", required = false) Long valor) {
+		TarifaDTO dto = new TarifaDTO();
+		dto.setFechaInicio(fechaInicio);
+		dto.setFechaFin(fechaFin);
+		dto.setValor(valor);
 		try {
 			tarifaService.updateById(id, dto);
 			return new ResponseEntity<>("La tarifa actualizada", HttpStatus.OK);

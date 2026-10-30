@@ -23,7 +23,10 @@ public class ModalidadController {
 	}
 
 	@PostMapping("/crear")
-	public ResponseEntity<String> crear(@RequestBody ModalidadDTO dto) {
+	public ResponseEntity<String> crear(
+			@RequestParam(name = "nombre", required = false) String nombre) {
+		ModalidadDTO dto = new ModalidadDTO();
+		dto.setNombre(nombre);
 		try {
 			modalidadService.create(dto);
 			return new ResponseEntity<>("La modalidad creada", HttpStatus.CREATED);
@@ -38,7 +41,11 @@ public class ModalidadController {
 	}
 
 	@PutMapping("/actualizar/{id}")
-	public ResponseEntity<String> actualizar(@PathVariable Long id, @RequestBody ModalidadDTO dto) {
+	public ResponseEntity<String> actualizar(
+			@PathVariable Long id,
+			@RequestParam(name = "nombre", required = false) String nombre) {
+		ModalidadDTO dto = new ModalidadDTO();
+		dto.setNombre(nombre);
 		try {
 			modalidadService.updateById(id, dto);
 			return new ResponseEntity<>("La modalidad actualizada", HttpStatus.OK);

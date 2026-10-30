@@ -23,7 +23,22 @@ public class GuardaController {
 	}
 
 	@PostMapping("/crear")
-	public ResponseEntity<String> crear(@RequestBody GuardaDTO dto) {
+	public ResponseEntity<String> crear(
+			@RequestParam(name = "turno", required = false) String turno,
+			@RequestParam(name = "nombre", required = false) String nombre,
+			@RequestParam(name = "apellido", required = false) String apellido,
+			@RequestParam(name = "activo", required = false) String activo,
+			@RequestParam(name = "cargo", required = false) String cargo,
+			@RequestParam(name = "idEstacion", required = false) Long idEstacion,
+			@RequestParam(name = "idSupervisor", required = false) Long idSupervisor) {
+		GuardaDTO dto = new GuardaDTO();
+		dto.setTurno(turno);
+		dto.setNombre(nombre);
+		dto.setApellido(apellido);
+		dto.setActivo(activo);
+		dto.setCargo(cargo);
+		dto.setIdEstacion(idEstacion);
+		dto.setIdSupervisor(idSupervisor);
 		try {
 			guardaService.create(dto);
 			return new ResponseEntity<>("El guarda creado", HttpStatus.CREATED);
@@ -38,7 +53,23 @@ public class GuardaController {
 	}
 
 	@PutMapping("/actualizar/{id}")
-	public ResponseEntity<String> actualizar(@PathVariable Long id, @RequestBody GuardaDTO dto) {
+	public ResponseEntity<String> actualizar(
+			@PathVariable Long id,
+			@RequestParam(name = "turno", required = false) String turno,
+			@RequestParam(name = "nombre", required = false) String nombre,
+			@RequestParam(name = "apellido", required = false) String apellido,
+			@RequestParam(name = "activo", required = false) String activo,
+			@RequestParam(name = "cargo", required = false) String cargo,
+			@RequestParam(name = "idEstacion", required = false) Long idEstacion,
+			@RequestParam(name = "idSupervisor", required = false) Long idSupervisor) {
+		GuardaDTO dto = new GuardaDTO();
+		dto.setTurno(turno);
+		dto.setNombre(nombre);
+		dto.setApellido(apellido);
+		dto.setActivo(activo);
+		dto.setCargo(cargo);
+		dto.setIdEstacion(idEstacion);
+		dto.setIdSupervisor(idSupervisor);
 		try {
 			guardaService.updateById(id, dto);
 			return new ResponseEntity<>("El guarda actualizado", HttpStatus.OK);

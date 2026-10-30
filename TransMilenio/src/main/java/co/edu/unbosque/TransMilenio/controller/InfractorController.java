@@ -23,7 +23,16 @@ public class InfractorController {
 	}
 
 	@PostMapping("/crear")
-	public ResponseEntity<String> crear(@RequestBody InfractorDTO dto) {
+	public ResponseEntity<String> crear(
+			@RequestParam(name = "tipoDocumento", required = false) String tipoDocumento,
+			@RequestParam(name = "numeroDocumento", required = false) String numeroDocumento,
+			@RequestParam(name = "nombre", required = false) String nombre,
+			@RequestParam(name = "apellido", required = false) String apellido) {
+		InfractorDTO dto = new InfractorDTO();
+		dto.setTipoDocumento(tipoDocumento);
+		dto.setNumeroDocumento(numeroDocumento);
+		dto.setNombre(nombre);
+		dto.setApellido(apellido);
 		try {
 			infractorService.create(dto);
 			return new ResponseEntity<>("El infractor creado", HttpStatus.CREATED);
@@ -38,7 +47,17 @@ public class InfractorController {
 	}
 
 	@PutMapping("/actualizar/{id}")
-	public ResponseEntity<String> actualizar(@PathVariable Long id, @RequestBody InfractorDTO dto) {
+	public ResponseEntity<String> actualizar(
+			@PathVariable Long id,
+			@RequestParam(name = "tipoDocumento", required = false) String tipoDocumento,
+			@RequestParam(name = "numeroDocumento", required = false) String numeroDocumento,
+			@RequestParam(name = "nombre", required = false) String nombre,
+			@RequestParam(name = "apellido", required = false) String apellido) {
+		InfractorDTO dto = new InfractorDTO();
+		dto.setTipoDocumento(tipoDocumento);
+		dto.setNumeroDocumento(numeroDocumento);
+		dto.setNombre(nombre);
+		dto.setApellido(apellido);
 		try {
 			infractorService.updateById(id, dto);
 			return new ResponseEntity<>("El infractor actualizado", HttpStatus.OK);

@@ -23,7 +23,12 @@ public class EventoInfractorController {
 	}
 
 	@PostMapping("/crear")
-	public ResponseEntity<String> crear(@RequestBody EventoInfractorDTO dto) {
+	public ResponseEntity<String> crear(
+			@RequestParam(name = "idEvento", required = false) Long idEvento,
+			@RequestParam(name = "idInfractor", required = false) Long idInfractor) {
+		EventoInfractorDTO dto = new EventoInfractorDTO();
+		dto.setIdEvento(idEvento);
+		dto.setIdInfractor(idInfractor);
 		try {
 			eventoInfractorService.create(dto);
 			return new ResponseEntity<>("La pareja evento-infractor creada", HttpStatus.CREATED);
@@ -38,7 +43,13 @@ public class EventoInfractorController {
 	}
 
 	@PutMapping("/actualizar/{id}")
-	public ResponseEntity<String> actualizar(@PathVariable Long id, @RequestBody EventoInfractorDTO dto) {
+	public ResponseEntity<String> actualizar(
+			@PathVariable Long id,
+			@RequestParam(name = "idEvento", required = false) Long idEvento,
+			@RequestParam(name = "idInfractor", required = false) Long idInfractor) {
+		EventoInfractorDTO dto = new EventoInfractorDTO();
+		dto.setIdEvento(idEvento);
+		dto.setIdInfractor(idInfractor);
 		try {
 			eventoInfractorService.updateById(id, dto);
 			return new ResponseEntity<>("La pareja evento-infractor actualizada", HttpStatus.OK);

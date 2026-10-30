@@ -23,7 +23,10 @@ public class TroncalController {
 	}
 
 	@PostMapping("/crear")
-	public ResponseEntity<String> crear(@RequestBody TroncalDTO dto) {
+	public ResponseEntity<String> crear(
+			@RequestParam(name = "nombre", required = false) String nombre) {
+		TroncalDTO dto = new TroncalDTO();
+		dto.setNombre(nombre);
 		try {
 			troncalService.create(dto);
 			return new ResponseEntity<>("La troncal creada", HttpStatus.CREATED);
@@ -38,7 +41,11 @@ public class TroncalController {
 	}
 
 	@PutMapping("/actualizar/{id}")
-	public ResponseEntity<String> actualizar(@PathVariable Long id, @RequestBody TroncalDTO dto) {
+	public ResponseEntity<String> actualizar(
+			@PathVariable Long id,
+			@RequestParam(name = "nombre", required = false) String nombre) {
+		TroncalDTO dto = new TroncalDTO();
+		dto.setNombre(nombre);
 		try {
 			troncalService.updateById(id, dto);
 			return new ResponseEntity<>("La troncal actualizada", HttpStatus.OK);

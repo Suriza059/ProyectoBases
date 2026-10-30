@@ -1,7 +1,9 @@
 package co.edu.unbosque.TransMilenio.controller;
 
+import java.time.LocalDate;
 import java.util.List;
 
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -23,7 +25,20 @@ public class EventoController {
 	}
 
 	@PostMapping("/crear")
-	public ResponseEntity<String> crear(@RequestBody EventoDTO dto) {
+	public ResponseEntity<String> crear(
+			@RequestParam(name = "fecha", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fecha,
+			@RequestParam(name = "numeroPersonas", required = false) Integer numeroPersonas,
+			@RequestParam(name = "idEstacion", required = false) Long idEstacion,
+			@RequestParam(name = "idTarifa", required = false) Long idTarifa,
+			@RequestParam(name = "idModalidad", required = false) Long idModalidad,
+			@RequestParam(name = "idGuarda", required = false) Long idGuarda) {
+		EventoDTO dto = new EventoDTO();
+		dto.setFecha(fecha);
+		dto.setNumeroPersonas(numeroPersonas);
+		dto.setIdEstacion(idEstacion);
+		dto.setIdTarifa(idTarifa);
+		dto.setIdModalidad(idModalidad);
+		dto.setIdGuarda(idGuarda);
 		try {
 			eventoService.create(dto);
 			return new ResponseEntity<>("El evento creado", HttpStatus.CREATED);
@@ -38,7 +53,21 @@ public class EventoController {
 	}
 
 	@PutMapping("/actualizar/{id}")
-	public ResponseEntity<String> actualizar(@PathVariable Long id, @RequestBody EventoDTO dto) {
+	public ResponseEntity<String> actualizar(
+			@PathVariable Long id,
+			@RequestParam(name = "fecha", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fecha,
+			@RequestParam(name = "numeroPersonas", required = false) Integer numeroPersonas,
+			@RequestParam(name = "idEstacion", required = false) Long idEstacion,
+			@RequestParam(name = "idTarifa", required = false) Long idTarifa,
+			@RequestParam(name = "idModalidad", required = false) Long idModalidad,
+			@RequestParam(name = "idGuarda", required = false) Long idGuarda) {
+		EventoDTO dto = new EventoDTO();
+		dto.setFecha(fecha);
+		dto.setNumeroPersonas(numeroPersonas);
+		dto.setIdEstacion(idEstacion);
+		dto.setIdTarifa(idTarifa);
+		dto.setIdModalidad(idModalidad);
+		dto.setIdGuarda(idGuarda);
 		try {
 			eventoService.updateById(id, dto);
 			return new ResponseEntity<>("El evento actualizado", HttpStatus.OK);

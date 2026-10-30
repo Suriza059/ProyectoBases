@@ -23,7 +23,12 @@ public class AnalistaController {
 	}
 
 	@PostMapping("/crear")
-	public ResponseEntity<String> crear(@RequestBody AnalistaDTO dto) {
+	public ResponseEntity<String> crear(
+			@RequestParam(name = "idUsuario", required = false) Long idUsuario,
+			@RequestParam(name = "areaAnalisis", required = false) String areaAnalisis) {
+		AnalistaDTO dto = new AnalistaDTO();
+		dto.setIdUsuario(idUsuario);
+		dto.setAreaAnalisis(areaAnalisis);
 		try {
 			analistaService.create(dto);
 			return new ResponseEntity<>("El analista creado", HttpStatus.CREATED);
@@ -38,7 +43,11 @@ public class AnalistaController {
 	}
 
 	@PutMapping("/actualizar/{id}")
-	public ResponseEntity<String> actualizar(@PathVariable Long id, @RequestBody AnalistaDTO dto) {
+	public ResponseEntity<String> actualizar(
+			@PathVariable Long id,
+			@RequestParam(name = "areaAnalisis", required = false) String areaAnalisis) {
+		AnalistaDTO dto = new AnalistaDTO();
+		dto.setAreaAnalisis(areaAnalisis);
 		try {
 			analistaService.updateById(id, dto);
 			return new ResponseEntity<>("El analista actualizado", HttpStatus.OK);

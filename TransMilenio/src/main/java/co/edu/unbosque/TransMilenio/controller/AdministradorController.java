@@ -1,7 +1,9 @@
 package co.edu.unbosque.TransMilenio.controller;
 
+import java.time.LocalDate;
 import java.util.List;
 
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -23,7 +25,14 @@ public class AdministradorController {
 	}
 
 	@PostMapping("/crear")
-	public ResponseEntity<String> crear(@RequestBody AdministradorDTO dto) {
+	public ResponseEntity<String> crear(
+			@RequestParam(name = "idUsuario", required = false) Long idUsuario,
+			@RequestParam(name = "areaGestion", required = false) String areaGestion,
+			@RequestParam(name = "fechaGestion", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaGestion) {
+		AdministradorDTO dto = new AdministradorDTO();
+		dto.setIdUsuario(idUsuario);
+		dto.setAreaGestion(areaGestion);
+		dto.setFechaGestion(fechaGestion);
 		try {
 			administradorService.create(dto);
 			return new ResponseEntity<>("El administrador creado", HttpStatus.CREATED);
@@ -38,7 +47,13 @@ public class AdministradorController {
 	}
 
 	@PutMapping("/actualizar/{id}")
-	public ResponseEntity<String> actualizar(@PathVariable Long id, @RequestBody AdministradorDTO dto) {
+	public ResponseEntity<String> actualizar(
+			@PathVariable Long id,
+			@RequestParam(name = "areaGestion", required = false) String areaGestion,
+			@RequestParam(name = "fechaGestion", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaGestion) {
+		AdministradorDTO dto = new AdministradorDTO();
+		dto.setAreaGestion(areaGestion);
+		dto.setFechaGestion(fechaGestion);
 		try {
 			administradorService.updateById(id, dto);
 			return new ResponseEntity<>("El administrador actualizado", HttpStatus.OK);

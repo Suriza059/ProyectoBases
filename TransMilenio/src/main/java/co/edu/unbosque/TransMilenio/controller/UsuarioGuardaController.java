@@ -1,7 +1,9 @@
 package co.edu.unbosque.TransMilenio.controller;
 
+import java.time.LocalDate;
 import java.util.List;
 
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -23,7 +25,14 @@ public class UsuarioGuardaController {
 	}
 
 	@PostMapping("/crear")
-	public ResponseEntity<String> crear(@RequestBody UsuarioGuardaDTO dto) {
+	public ResponseEntity<String> crear(
+			@RequestParam(name = "idUsuario", required = false) Long idUsuario,
+			@RequestParam(name = "fechaActivacion", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaActivacion,
+			@RequestParam(name = "idGuarda", required = false) Long idGuarda) {
+		UsuarioGuardaDTO dto = new UsuarioGuardaDTO();
+		dto.setIdUsuario(idUsuario);
+		dto.setFechaActivacion(fechaActivacion);
+		dto.setIdGuarda(idGuarda);
 		try {
 			usuarioGuardaService.create(dto);
 			return new ResponseEntity<>("El guarda activado creado", HttpStatus.CREATED);
@@ -38,7 +47,13 @@ public class UsuarioGuardaController {
 	}
 
 	@PutMapping("/actualizar/{id}")
-	public ResponseEntity<String> actualizar(@PathVariable Long id, @RequestBody UsuarioGuardaDTO dto) {
+	public ResponseEntity<String> actualizar(
+			@PathVariable Long id,
+			@RequestParam(name = "fechaActivacion", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaActivacion,
+			@RequestParam(name = "idGuarda", required = false) Long idGuarda) {
+		UsuarioGuardaDTO dto = new UsuarioGuardaDTO();
+		dto.setFechaActivacion(fechaActivacion);
+		dto.setIdGuarda(idGuarda);
 		try {
 			usuarioGuardaService.updateById(id, dto);
 			return new ResponseEntity<>("El guarda activado actualizado", HttpStatus.OK);

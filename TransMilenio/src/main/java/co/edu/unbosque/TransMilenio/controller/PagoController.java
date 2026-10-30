@@ -1,7 +1,9 @@
 package co.edu.unbosque.TransMilenio.controller;
 
+import java.time.LocalDate;
 import java.util.List;
 
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -23,7 +25,16 @@ public class PagoController {
 	}
 
 	@PostMapping("/crear")
-	public ResponseEntity<String> crear(@RequestBody PagoDTO dto) {
+	public ResponseEntity<String> crear(
+			@RequestParam(name = "valor", required = false) Long valor,
+			@RequestParam(name = "numeroRecibo", required = false) String numeroRecibo,
+			@RequestParam(name = "fecha", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fecha,
+			@RequestParam(name = "idComparendo", required = false) Long idComparendo) {
+		PagoDTO dto = new PagoDTO();
+		dto.setValor(valor);
+		dto.setNumeroRecibo(numeroRecibo);
+		dto.setFecha(fecha);
+		dto.setIdComparendo(idComparendo);
 		try {
 			pagoService.create(dto);
 			return new ResponseEntity<>("El pago creado", HttpStatus.CREATED);
@@ -38,7 +49,17 @@ public class PagoController {
 	}
 
 	@PutMapping("/actualizar/{id}")
-	public ResponseEntity<String> actualizar(@PathVariable Long id, @RequestBody PagoDTO dto) {
+	public ResponseEntity<String> actualizar(
+			@PathVariable Long id,
+			@RequestParam(name = "valor", required = false) Long valor,
+			@RequestParam(name = "numeroRecibo", required = false) String numeroRecibo,
+			@RequestParam(name = "fecha", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fecha,
+			@RequestParam(name = "idComparendo", required = false) Long idComparendo) {
+		PagoDTO dto = new PagoDTO();
+		dto.setValor(valor);
+		dto.setNumeroRecibo(numeroRecibo);
+		dto.setFecha(fecha);
+		dto.setIdComparendo(idComparendo);
 		try {
 			pagoService.updateById(id, dto);
 			return new ResponseEntity<>("El pago actualizado", HttpStatus.OK);

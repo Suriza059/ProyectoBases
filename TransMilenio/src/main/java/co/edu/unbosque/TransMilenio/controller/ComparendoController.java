@@ -1,7 +1,9 @@
 package co.edu.unbosque.TransMilenio.controller;
 
+import java.time.LocalDate;
 import java.util.List;
 
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -23,7 +25,16 @@ public class ComparendoController {
 	}
 
 	@PostMapping("/crear")
-	public ResponseEntity<String> crear(@RequestBody ComparendoDTO dto) {
+	public ResponseEntity<String> crear(
+			@RequestParam(name = "fecha", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fecha,
+			@RequestParam(name = "valor", required = false) Long valor,
+			@RequestParam(name = "estado", required = false) String estado,
+			@RequestParam(name = "idEventoInfractor", required = false) Long idEventoInfractor) {
+		ComparendoDTO dto = new ComparendoDTO();
+		dto.setFecha(fecha);
+		dto.setValor(valor);
+		dto.setEstado(estado);
+		dto.setIdEventoInfractor(idEventoInfractor);
 		try {
 			comparendoService.create(dto);
 			return new ResponseEntity<>("El comparendo creado", HttpStatus.CREATED);
@@ -38,7 +49,17 @@ public class ComparendoController {
 	}
 
 	@PutMapping("/actualizar/{id}")
-	public ResponseEntity<String> actualizar(@PathVariable Long id, @RequestBody ComparendoDTO dto) {
+	public ResponseEntity<String> actualizar(
+			@PathVariable Long id,
+			@RequestParam(name = "fecha", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fecha,
+			@RequestParam(name = "valor", required = false) Long valor,
+			@RequestParam(name = "estado", required = false) String estado,
+			@RequestParam(name = "idEventoInfractor", required = false) Long idEventoInfractor) {
+		ComparendoDTO dto = new ComparendoDTO();
+		dto.setFecha(fecha);
+		dto.setValor(valor);
+		dto.setEstado(estado);
+		dto.setIdEventoInfractor(idEventoInfractor);
 		try {
 			comparendoService.updateById(id, dto);
 			return new ResponseEntity<>("El comparendo actualizado", HttpStatus.OK);

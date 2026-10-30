@@ -23,7 +23,14 @@ public class EstacionController {
 	}
 
 	@PostMapping("/crear")
-	public ResponseEntity<String> crear(@RequestBody EstacionDTO dto) {
+	public ResponseEntity<String> crear(
+			@RequestParam(name = "nombre", required = false) String nombre,
+			@RequestParam(name = "activa", required = false) String activa,
+			@RequestParam(name = "idTroncal", required = false) Long idTroncal) {
+		EstacionDTO dto = new EstacionDTO();
+		dto.setNombre(nombre);
+		dto.setActiva(activa);
+		dto.setIdTroncal(idTroncal);
 		try {
 			estacionService.create(dto);
 			return new ResponseEntity<>("La estacion creada", HttpStatus.CREATED);
@@ -38,7 +45,15 @@ public class EstacionController {
 	}
 
 	@PutMapping("/actualizar/{id}")
-	public ResponseEntity<String> actualizar(@PathVariable Long id, @RequestBody EstacionDTO dto) {
+	public ResponseEntity<String> actualizar(
+			@PathVariable Long id,
+			@RequestParam(name = "nombre", required = false) String nombre,
+			@RequestParam(name = "activa", required = false) String activa,
+			@RequestParam(name = "idTroncal", required = false) Long idTroncal) {
+		EstacionDTO dto = new EstacionDTO();
+		dto.setNombre(nombre);
+		dto.setActiva(activa);
+		dto.setIdTroncal(idTroncal);
 		try {
 			estacionService.updateById(id, dto);
 			return new ResponseEntity<>("La estacion actualizada", HttpStatus.OK);

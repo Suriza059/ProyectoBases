@@ -1,7 +1,9 @@
 package co.edu.unbosque.TransMilenio.controller;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -23,7 +25,20 @@ public class RegistroCambiosController {
 	}
 
 	@PostMapping("/crear")
-	public ResponseEntity<String> crear(@RequestBody RegistroCambiosDTO dto) {
+	public ResponseEntity<String> crear(
+			@RequestParam(name = "fecha", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime fecha,
+			@RequestParam(name = "campoModificado", required = false) String campoModificado,
+			@RequestParam(name = "valorAnterior", required = false) String valorAnterior,
+			@RequestParam(name = "valorNuevo", required = false) String valorNuevo,
+			@RequestParam(name = "idUsuario", required = false) Long idUsuario,
+			@RequestParam(name = "idComparendo", required = false) Long idComparendo) {
+		RegistroCambiosDTO dto = new RegistroCambiosDTO();
+		dto.setFecha(fecha);
+		dto.setCampoModificado(campoModificado);
+		dto.setValorAnterior(valorAnterior);
+		dto.setValorNuevo(valorNuevo);
+		dto.setIdUsuario(idUsuario);
+		dto.setIdComparendo(idComparendo);
 		try {
 			registroCambiosService.create(dto);
 			return new ResponseEntity<>("El registro de cambios creado", HttpStatus.CREATED);
@@ -38,7 +53,21 @@ public class RegistroCambiosController {
 	}
 
 	@PutMapping("/actualizar/{id}")
-	public ResponseEntity<String> actualizar(@PathVariable Long id, @RequestBody RegistroCambiosDTO dto) {
+	public ResponseEntity<String> actualizar(
+			@PathVariable Long id,
+			@RequestParam(name = "fecha", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime fecha,
+			@RequestParam(name = "campoModificado", required = false) String campoModificado,
+			@RequestParam(name = "valorAnterior", required = false) String valorAnterior,
+			@RequestParam(name = "valorNuevo", required = false) String valorNuevo,
+			@RequestParam(name = "idUsuario", required = false) Long idUsuario,
+			@RequestParam(name = "idComparendo", required = false) Long idComparendo) {
+		RegistroCambiosDTO dto = new RegistroCambiosDTO();
+		dto.setFecha(fecha);
+		dto.setCampoModificado(campoModificado);
+		dto.setValorAnterior(valorAnterior);
+		dto.setValorNuevo(valorNuevo);
+		dto.setIdUsuario(idUsuario);
+		dto.setIdComparendo(idComparendo);
 		try {
 			registroCambiosService.updateById(id, dto);
 			return new ResponseEntity<>("El registro de cambios actualizado", HttpStatus.OK);

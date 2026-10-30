@@ -1,7 +1,9 @@
 package co.edu.unbosque.TransMilenio.controller;
 
+import java.time.LocalDate;
 import java.util.List;
 
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -23,7 +25,18 @@ public class AgresionController {
 	}
 
 	@PostMapping("/crear")
-	public ResponseEntity<String> crear(@RequestBody AgresionDTO dto) {
+	public ResponseEntity<String> crear(
+			@RequestParam(name = "fecha", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fecha,
+			@RequestParam(name = "gravedad", required = false) String gravedad,
+			@RequestParam(name = "descripcion", required = false) String descripcion,
+			@RequestParam(name = "idEvento", required = false) Long idEvento,
+			@RequestParam(name = "idGuarda", required = false) Long idGuarda) {
+		AgresionDTO dto = new AgresionDTO();
+		dto.setFecha(fecha);
+		dto.setGravedad(gravedad);
+		dto.setDescripcion(descripcion);
+		dto.setIdEvento(idEvento);
+		dto.setIdGuarda(idGuarda);
 		try {
 			agresionService.create(dto);
 			return new ResponseEntity<>("La agresion creada", HttpStatus.CREATED);
@@ -38,7 +51,19 @@ public class AgresionController {
 	}
 
 	@PutMapping("/actualizar/{id}")
-	public ResponseEntity<String> actualizar(@PathVariable Long id, @RequestBody AgresionDTO dto) {
+	public ResponseEntity<String> actualizar(
+			@PathVariable Long id,
+			@RequestParam(name = "fecha", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fecha,
+			@RequestParam(name = "gravedad", required = false) String gravedad,
+			@RequestParam(name = "descripcion", required = false) String descripcion,
+			@RequestParam(name = "idEvento", required = false) Long idEvento,
+			@RequestParam(name = "idGuarda", required = false) Long idGuarda) {
+		AgresionDTO dto = new AgresionDTO();
+		dto.setFecha(fecha);
+		dto.setGravedad(gravedad);
+		dto.setDescripcion(descripcion);
+		dto.setIdEvento(idEvento);
+		dto.setIdGuarda(idGuarda);
 		try {
 			agresionService.updateById(id, dto);
 			return new ResponseEntity<>("La agresion actualizada", HttpStatus.OK);
