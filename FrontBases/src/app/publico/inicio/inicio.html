@@ -1,54 +1,99 @@
-<header class="encabezado">
-  <h1 class="titulo-sistema">{{ nombreSistema }}</h1>
+<!-- ENCABEZADO: solo el botón, flotando arriba a la derecha -->
+<header class="encabezado" [class.encabezado-solido]="encabezadoSolido">
   <button class="btn-login">Iniciar sesión</button>
 </header>
 
+<!-- PORTADA: ocupa toda la pantalla -->
+<section class="hero">
+  <h1
+    class="hero-titulo"
+    [class.oculto]="!mostrarTitulo"
+    [class.animate__animated]="mostrarTitulo"
+    [class.animate__fadeInDown]="mostrarTitulo"
+  >
+    {{ nombreSistema }}
+  </h1>
+
+  <p
+    class="hero-subtitulo"
+    [class.oculto]="!mostrarSubtitulo"
+    [class.animate__animated]="mostrarSubtitulo"
+    [class.animate__fadeIn]="mostrarSubtitulo"
+  >
+    ¿Qué está pasando hoy? Consulta el estado de la evasión en el sistema.
+  </p>
+
+  <div
+    class="hero-indicadores"
+    [class.oculto]="!mostrarIndicadores"
+    [class.animate__animated]="mostrarIndicadores"
+    [class.animate__fadeInUp]="mostrarIndicadores"
+  >
+    <div class="indicador" *ngFor="let item of indicadores">
+      <span class="indicador-valor">{{ item.valor }}</span>
+      <span class="indicador-titulo">{{ item.titulo }}</span>
+      <span class="indicador-detalle">{{ item.detalle }}</span>
+    </div>
+  </div>
+
+  <p class="hero-pista animate__animated animate__bounce animate__infinite">
+    Desliza para ver más ↓
+  </p>
+</section>
+
+<!-- SECCIONES: aparecen al hacer scroll -->
 <main class="contenido">
-  <section class="bienvenida">
-    <h2>¿Qué está pasando hoy?</h2>
-    <p>Consulta en tiempo real el estado de la evasión en el sistema.</p>
+
+  <section
+    class="seccion"
+    [class.oculto]="!mostrarTroncales"
+    [class.animate__animated]="mostrarTroncales"
+    [class.animate__fadeInUp]="mostrarTroncales"
+    [class.animate__faster]="mostrarTroncales"
+  >
+    <h2 class="seccion-titulo">Troncales más afectadas</h2>
+
+    <div class="fila-troncal" *ngFor="let t of troncales">
+      <span class="troncal-nombre">{{ t.nombre }}</span>
+      <div class="barra">
+        <div
+          class="barra-relleno"
+          [style.transform]="mostrarTroncales ? 'scaleX(' + (t.porcentaje / 100) + ')' : 'scaleX(0)'"
+          [class.alto]="t.porcentaje >= 60"
+          [class.medio]="t.porcentaje >= 30 && t.porcentaje < 60"
+          [class.bajo]="t.porcentaje < 30"
+        ></div>
+      </div>
+      <span class="troncal-valor">{{ t.porcentaje }}%</span>
+    </div>
+
+    <p class="sin-datos" *ngIf="troncales.length === 0">
+      Todavía no hay datos de troncales.
+    </p>
   </section>
 
-  <section class="indicadores">
-    @for (item of indicadores; track item.titulo) {
-      <article class="tarjeta">
-        <span class="tarjeta-titulo">{{ item.titulo }}</span>
-        <span class="tarjeta-valor">{{ item.valor }}</span>
-        <span class="tarjeta-detalle">{{ item.detalle }}</span>
-      </article>
-    }
+  <section
+    class="seccion"
+    [class.oculto]="!mostrarMapa"
+    [class.animate__animated]="mostrarMapa"
+    [class.animate__fadeInUp]="mostrarMapa"
+    [class.animate__faster]="mostrarMapa"
+  >
+    <h2 class="seccion-titulo">Mapa</h2>
+    <div class="espacio-reservado">Aquí irá el mapa de estaciones</div>
   </section>
 
-  <section class="paneles">
-    <article class="panel panel-mapa">
-      <h3>Mapa</h3>
-      <div class="espacio-reservado">Aquí irá el mapa</div>
-    </article>
-
-    <article class="panel">
-      <h3>Troncales más afectadas</h3>
-      @for (t of troncales; track t.nombre) {
-        <div class="fila-troncal">
-          <span class="troncal-nombre">{{ t.nombre }}</span>
-          <div class="barra">
-            <div
-              class="barra-relleno"
-              [style.width.%]="t.porcentaje"
-              [class.alto]="t.porcentaje >= 60"
-              [class.medio]="t.porcentaje >= 30 && t.porcentaje < 60"
-              [class.bajo]="t.porcentaje < 30"
-            ></div>
-          </div>
-          <span class="troncal-valor">{{ t.porcentaje }}%</span>
-        </div>
-      }
-    </article>
-
-    <article class="panel">
-      <h3>Horas pico</h3>
-      <div class="espacio-reservado">Aquí irá la gráfica de horas pico</div>
-    </article>
+  <section
+    class="seccion"
+    [class.oculto]="!mostrarHoras"
+    [class.animate__animated]="mostrarHoras"
+    [class.animate__fadeInUp]="mostrarHoras"
+    [class.animate__faster]="mostrarHoras"
+  >
+    <h2 class="seccion-titulo">Horas pico</h2>
+    <div class="espacio-reservado">Aquí irá la gráfica de horas pico</div>
   </section>
+
 </main>
 
 <footer class="pie">
