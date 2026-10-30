@@ -11,11 +11,6 @@
   background-attachment: fixed;
 }
 
-/* Mientras el booleano es false, el bloque está invisible */
-.oculto {
-  opacity: 0;
-}
-
 .login {
   min-height: 100vh;
   box-sizing: border-box;
@@ -137,13 +132,6 @@
 @media (hover: hover) and (pointer: fine) {
   .volver:hover {
     border-bottom-color: #ffffff;
-  }
-}
-
-/* Si la persona pidió menos movimiento en su sistema, quitamos las animaciones */
-@media (prefers-reduced-motion: reduce) {
-  .animate__animated {
-    animation: none !important;
   }
 }
 
