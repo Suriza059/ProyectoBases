@@ -26,7 +26,7 @@ public class UsuarioGuardaController {
 	public ResponseEntity<String> crear(@RequestBody UsuarioGuardaDTO dto) {
 		try {
 			usuarioGuardaService.create(dto);
-			return new ResponseEntity<>("La activacion de guarda creada", HttpStatus.CREATED);
+			return new ResponseEntity<>("El guarda activado creado", HttpStatus.CREATED);
 		} catch (TransMilenioException e) {
 			return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
 		}
@@ -41,7 +41,7 @@ public class UsuarioGuardaController {
 	public ResponseEntity<String> actualizar(@PathVariable Long id, @RequestBody UsuarioGuardaDTO dto) {
 		try {
 			usuarioGuardaService.updateById(id, dto);
-			return new ResponseEntity<>("La activacion de guarda actualizada", HttpStatus.OK);
+			return new ResponseEntity<>("El guarda activado actualizado", HttpStatus.OK);
 		} catch (RegistroNoExisteException e) {
 			return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
 		} catch (TransMilenioException e) {
@@ -53,7 +53,7 @@ public class UsuarioGuardaController {
 	public ResponseEntity<String> eliminar(@PathVariable Long id) {
 		try {
 			usuarioGuardaService.deleteById(id);
-			return new ResponseEntity<>("La activacion de guarda eliminada", HttpStatus.OK);
+			return new ResponseEntity<>("El guarda activado eliminado", HttpStatus.OK);
 		} catch (RegistroNoExisteException e) {
 			return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
 		} catch (TransMilenioException e) {

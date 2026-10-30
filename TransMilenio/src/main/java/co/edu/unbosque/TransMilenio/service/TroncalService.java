@@ -32,8 +32,6 @@ public class TroncalService implements CRUDOPERATION<TroncalDTO> {
 
 	@Override
 	public void create(TroncalDTO data) {
-		if (troncalRepository.buscarPorNombre(data.getNombre()) != null)
-			LanzadorDeExcepciones.registroDuplicado("Ya existe una troncal con ese nombre");
 		Troncal entity = aEntity(data);
 		entity.setId(null);
 		troncalRepository.guardar(entity);
@@ -69,9 +67,6 @@ public class TroncalService implements CRUDOPERATION<TroncalDTO> {
 	public void updateById(Long id, TroncalDTO data) {
 		if (!troncalRepository.existe(id))
 			LanzadorDeExcepciones.registroNoExiste("La troncal");
-		Troncal otro = troncalRepository.buscarPorNombre(data.getNombre());
-		if (otro != null && !otro.getId().equals(id))
-			LanzadorDeExcepciones.registroDuplicado("Ya existe una troncal con ese nombre");
 		Troncal entity = aEntity(data);
 		entity.setId(id);
 		troncalRepository.guardar(entity);

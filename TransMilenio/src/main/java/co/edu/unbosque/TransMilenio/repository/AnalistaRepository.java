@@ -9,17 +9,10 @@ public class AnalistaRepository {
 
 	// Por ahora guarda en memoria. Aqui va la conexion a la base de datos hecha a mano.
 	private ArrayList<Analista> lista = new ArrayList<>();
-	private long siguienteId = 1;
 
 	public Analista guardar(Analista analista) {
-		if (analista.getId() == null) {
-			analista.setId(siguienteId);
-			siguienteId++;
-			lista.add(analista);
-			return analista;
-		}
 		for (int i = 0; i < lista.size(); i++) {
-			if (lista.get(i).getId().equals(analista.getId())) {
+			if (lista.get(i).getIdUsuario().equals(analista.getIdUsuario())) {
 				lista.set(i, analista);
 				return analista;
 			}
@@ -30,7 +23,7 @@ public class AnalistaRepository {
 
 	public Analista buscarPorId(Long id) {
 		for (Analista analista : lista) {
-			if (analista.getId().equals(id)) {
+			if (analista.getIdUsuario().equals(id)) {
 				return analista;
 			}
 		}

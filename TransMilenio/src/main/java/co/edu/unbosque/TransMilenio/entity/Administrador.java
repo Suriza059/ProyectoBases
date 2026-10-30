@@ -5,27 +5,26 @@ import java.util.Objects;
 
 public class Administrador {
 
-	private Long id;
+	private Long idUsuario;
 	private String areaGestion;
 	private LocalDate fechaGestion;
-	private Long idUsuario;
 
 	public Administrador() {
 	}
 
-	public Administrador(String areaGestion, LocalDate fechaGestion, Long idUsuario) {
+	public Administrador(Long idUsuario, String areaGestion, LocalDate fechaGestion) {
 		super();
+		this.idUsuario = idUsuario;
 		this.areaGestion = areaGestion;
 		this.fechaGestion = fechaGestion;
+	}
+
+	public Long getIdUsuario() {
+		return idUsuario;
+	}
+
+	public void setIdUsuario(Long idUsuario) {
 		this.idUsuario = idUsuario;
-	}
-
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
 	}
 
 	public String getAreaGestion() {
@@ -44,22 +43,14 @@ public class Administrador {
 		this.fechaGestion = fechaGestion;
 	}
 
-	public Long getIdUsuario() {
-		return idUsuario;
-	}
-
-	public void setIdUsuario(Long idUsuario) {
-		this.idUsuario = idUsuario;
-	}
-
 	@Override
 	public String toString() {
-		return "Administrador [id=" + id + ", areaGestion=" + areaGestion + ", fechaGestion=" + fechaGestion + ", idUsuario=" + idUsuario + "]";
+		return "Administrador [idUsuario=" + idUsuario + ", areaGestion=" + areaGestion + ", fechaGestion=" + fechaGestion + "]";
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(areaGestion, fechaGestion, id, idUsuario);
+		return Objects.hash(areaGestion, fechaGestion, idUsuario);
 	}
 
 	@Override
@@ -71,7 +62,7 @@ public class Administrador {
 		if (getClass() != obj.getClass())
 			return false;
 		Administrador other = (Administrador) obj;
-		return Objects.equals(areaGestion, other.areaGestion) && Objects.equals(fechaGestion, other.fechaGestion) && Objects.equals(id, other.id) && Objects.equals(idUsuario, other.idUsuario);
+		return Objects.equals(areaGestion, other.areaGestion) && Objects.equals(fechaGestion, other.fechaGestion) && Objects.equals(idUsuario, other.idUsuario);
 	}
 
 }

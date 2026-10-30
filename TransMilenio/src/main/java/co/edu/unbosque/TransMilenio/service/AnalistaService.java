@@ -28,25 +28,24 @@ public class AnalistaService implements CRUDOPERATION<AnalistaDTO> {
 
 	private Analista aEntity(AnalistaDTO dto) {
 		Analista entity = new Analista();
-		entity.setId(dto.getId());
-		entity.setAreaAnalisis(dto.getAreaAnalisis());
 		entity.setIdUsuario(dto.getIdUsuario());
+		entity.setAreaAnalisis(dto.getAreaAnalisis());
 		return entity;
 	}
 
 	private AnalistaDTO aDTO(Analista entity) {
 		AnalistaDTO dto = new AnalistaDTO();
-		dto.setId(entity.getId());
-		dto.setAreaAnalisis(entity.getAreaAnalisis());
 		dto.setIdUsuario(entity.getIdUsuario());
+		dto.setAreaAnalisis(entity.getAreaAnalisis());
 		return dto;
 	}
 
 	@Override
 	public void create(AnalistaDTO data) {
 		validar(data);
+		if (analistaRepository.existe(data.getIdUsuario()))
+			LanzadorDeExcepciones.registroDuplicado("Ese usuario ya es analista");
 		Analista entity = aEntity(data);
-		entity.setId(null);
 		analistaRepository.guardar(entity);
 	}
 
@@ -80,9 +79,10 @@ public class AnalistaService implements CRUDOPERATION<AnalistaDTO> {
 	public void updateById(Long id, AnalistaDTO data) {
 		if (!analistaRepository.existe(id))
 			LanzadorDeExcepciones.registroNoExiste("El analista");
+		data.setIdUsuario(id);
 		validar(data);
 		Analista entity = aEntity(data);
-		entity.setId(id);
+		entity.setIdUsuario(id);
 		analistaRepository.guardar(entity);
 	}
 }

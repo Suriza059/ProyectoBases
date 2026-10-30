@@ -6,15 +6,13 @@ public class Modalidad {
 
 	private Long id;
 	private String nombre;
-	private Long idEvento;
 
 	public Modalidad() {
 	}
 
-	public Modalidad(String nombre, Long idEvento) {
+	public Modalidad(String nombre) {
 		super();
 		this.nombre = nombre;
-		this.idEvento = idEvento;
 	}
 
 	public Long getId() {
@@ -33,22 +31,14 @@ public class Modalidad {
 		this.nombre = nombre;
 	}
 
-	public Long getIdEvento() {
-		return idEvento;
-	}
-
-	public void setIdEvento(Long idEvento) {
-		this.idEvento = idEvento;
-	}
-
 	@Override
 	public String toString() {
-		return "Modalidad [id=" + id + ", nombre=" + nombre + ", idEvento=" + idEvento + "]";
+		return "Modalidad [id=" + id + ", nombre=" + nombre + "]";
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(id, idEvento, nombre);
+		return Objects.hash(id, nombre);
 	}
 
 	@Override
@@ -60,7 +50,7 @@ public class Modalidad {
 		if (getClass() != obj.getClass())
 			return false;
 		Modalidad other = (Modalidad) obj;
-		return Objects.equals(id, other.id) && Objects.equals(idEvento, other.idEvento) && Objects.equals(nombre, other.nombre);
+		return Objects.equals(id, other.id) && Objects.equals(nombre, other.nombre);
 	}
 
 }

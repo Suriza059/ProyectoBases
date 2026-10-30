@@ -19,8 +19,8 @@ public class InfractorService implements CRUDOPERATION<InfractorDTO> {
 	private Infractor aEntity(InfractorDTO dto) {
 		Infractor entity = new Infractor();
 		entity.setId(dto.getId());
-		entity.setNumeroDocumento(dto.getNumeroDocumento());
 		entity.setTipoDocumento(dto.getTipoDocumento());
+		entity.setNumeroDocumento(dto.getNumeroDocumento());
 		entity.setNombre(dto.getNombre());
 		entity.setApellido(dto.getApellido());
 		return entity;
@@ -29,8 +29,8 @@ public class InfractorService implements CRUDOPERATION<InfractorDTO> {
 	private InfractorDTO aDTO(Infractor entity) {
 		InfractorDTO dto = new InfractorDTO();
 		dto.setId(entity.getId());
-		dto.setNumeroDocumento(entity.getNumeroDocumento());
 		dto.setTipoDocumento(entity.getTipoDocumento());
+		dto.setNumeroDocumento(entity.getNumeroDocumento());
 		dto.setNombre(entity.getNombre());
 		dto.setApellido(entity.getApellido());
 		return dto;
@@ -38,7 +38,7 @@ public class InfractorService implements CRUDOPERATION<InfractorDTO> {
 
 	@Override
 	public void create(InfractorDTO data) {
-		if (infractorRepository.buscarPorNumeroDocumento(data.getNumeroDocumento()) != null)
+		if (infractorRepository.buscarPorTipoDocumentoYNumeroDocumento(data.getTipoDocumento(), data.getNumeroDocumento()) != null)
 			LanzadorDeExcepciones.registroDuplicado("Ya existe un infractor con ese documento");
 		Infractor entity = aEntity(data);
 		entity.setId(null);
@@ -75,7 +75,7 @@ public class InfractorService implements CRUDOPERATION<InfractorDTO> {
 	public void updateById(Long id, InfractorDTO data) {
 		if (!infractorRepository.existe(id))
 			LanzadorDeExcepciones.registroNoExiste("El infractor");
-		Infractor otro = infractorRepository.buscarPorNumeroDocumento(data.getNumeroDocumento());
+		Infractor otro = infractorRepository.buscarPorTipoDocumentoYNumeroDocumento(data.getTipoDocumento(), data.getNumeroDocumento());
 		if (otro != null && !otro.getId().equals(id))
 			LanzadorDeExcepciones.registroDuplicado("Ya existe un infractor con ese documento");
 		Infractor entity = aEntity(data);

@@ -28,27 +28,26 @@ public class AdministradorService implements CRUDOPERATION<AdministradorDTO> {
 
 	private Administrador aEntity(AdministradorDTO dto) {
 		Administrador entity = new Administrador();
-		entity.setId(dto.getId());
+		entity.setIdUsuario(dto.getIdUsuario());
 		entity.setAreaGestion(dto.getAreaGestion());
 		entity.setFechaGestion(dto.getFechaGestion());
-		entity.setIdUsuario(dto.getIdUsuario());
 		return entity;
 	}
 
 	private AdministradorDTO aDTO(Administrador entity) {
 		AdministradorDTO dto = new AdministradorDTO();
-		dto.setId(entity.getId());
+		dto.setIdUsuario(entity.getIdUsuario());
 		dto.setAreaGestion(entity.getAreaGestion());
 		dto.setFechaGestion(entity.getFechaGestion());
-		dto.setIdUsuario(entity.getIdUsuario());
 		return dto;
 	}
 
 	@Override
 	public void create(AdministradorDTO data) {
 		validar(data);
+		if (administradorRepository.existe(data.getIdUsuario()))
+			LanzadorDeExcepciones.registroDuplicado("Ese usuario ya es administrador");
 		Administrador entity = aEntity(data);
-		entity.setId(null);
 		administradorRepository.guardar(entity);
 	}
 
@@ -82,9 +81,10 @@ public class AdministradorService implements CRUDOPERATION<AdministradorDTO> {
 	public void updateById(Long id, AdministradorDTO data) {
 		if (!administradorRepository.existe(id))
 			LanzadorDeExcepciones.registroNoExiste("El administrador");
+		data.setIdUsuario(id);
 		validar(data);
 		Administrador entity = aEntity(data);
-		entity.setId(id);
+		entity.setIdUsuario(id);
 		administradorRepository.guardar(entity);
 	}
 }

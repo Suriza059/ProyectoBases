@@ -37,10 +37,22 @@ public class EventoInfractorController {
 		return new ResponseEntity<>(eventoInfractorService.getAll(), HttpStatus.OK);
 	}
 
-	@DeleteMapping("/eliminar/{idEvento}/{idInfractor}")
-	public ResponseEntity<String> eliminar(@PathVariable Long idEvento, @PathVariable Long idInfractor) {
+	@PutMapping("/actualizar/{id}")
+	public ResponseEntity<String> actualizar(@PathVariable Long id, @RequestBody EventoInfractorDTO dto) {
 		try {
-			eventoInfractorService.deleteById(idEvento, idInfractor);
+			eventoInfractorService.updateById(id, dto);
+			return new ResponseEntity<>("La pareja evento-infractor actualizada", HttpStatus.OK);
+		} catch (RegistroNoExisteException e) {
+			return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+		} catch (TransMilenioException e) {
+			return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+		}
+	}
+
+	@DeleteMapping("/eliminar/{id}")
+	public ResponseEntity<String> eliminar(@PathVariable Long id) {
+		try {
+			eventoInfractorService.deleteById(id);
 			return new ResponseEntity<>("La pareja evento-infractor eliminada", HttpStatus.OK);
 		} catch (RegistroNoExisteException e) {
 			return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);

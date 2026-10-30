@@ -9,19 +9,19 @@ public class Agresion {
 	private LocalDate fecha;
 	private String gravedad;
 	private String descripcion;
-	private Long idGuarda;
 	private Long idEvento;
+	private Long idGuarda;
 
 	public Agresion() {
 	}
 
-	public Agresion(LocalDate fecha, String gravedad, String descripcion, Long idGuarda, Long idEvento) {
+	public Agresion(LocalDate fecha, String gravedad, String descripcion, Long idEvento, Long idGuarda) {
 		super();
 		this.fecha = fecha;
 		this.gravedad = gravedad;
 		this.descripcion = descripcion;
-		this.idGuarda = idGuarda;
 		this.idEvento = idEvento;
+		this.idGuarda = idGuarda;
 	}
 
 	public Long getId() {
@@ -56,14 +56,6 @@ public class Agresion {
 		this.descripcion = descripcion;
 	}
 
-	public Long getIdGuarda() {
-		return idGuarda;
-	}
-
-	public void setIdGuarda(Long idGuarda) {
-		this.idGuarda = idGuarda;
-	}
-
 	public Long getIdEvento() {
 		return idEvento;
 	}
@@ -72,9 +64,17 @@ public class Agresion {
 		this.idEvento = idEvento;
 	}
 
+	public Long getIdGuarda() {
+		return idGuarda;
+	}
+
+	public void setIdGuarda(Long idGuarda) {
+		this.idGuarda = idGuarda;
+	}
+
 	@Override
 	public String toString() {
-		return "Agresion [id=" + id + ", fecha=" + fecha + ", gravedad=" + gravedad + ", descripcion=" + descripcion + ", idGuarda=" + idGuarda + ", idEvento=" + idEvento + "]";
+		return "Agresion [id=" + id + ", fecha=" + fecha + ", gravedad=" + gravedad + ", descripcion=" + descripcion + ", idEvento=" + idEvento + ", idGuarda=" + idGuarda + "]";
 	}
 
 	@Override

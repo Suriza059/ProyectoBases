@@ -9,21 +9,17 @@ public class ComparendoDTO {
 	private LocalDate fecha;
 	private Long valor;
 	private String estado;
-	private Long idEvento;
-	private Long idInfractor;
-	private Long idPago;
+	private Long idEventoInfractor;
 
 	public ComparendoDTO() {
 	}
 
-	public ComparendoDTO(LocalDate fecha, Long valor, String estado, Long idEvento, Long idInfractor, Long idPago) {
+	public ComparendoDTO(LocalDate fecha, Long valor, String estado, Long idEventoInfractor) {
 		super();
 		this.fecha = fecha;
 		this.valor = valor;
 		this.estado = estado;
-		this.idEvento = idEvento;
-		this.idInfractor = idInfractor;
-		this.idPago = idPago;
+		this.idEventoInfractor = idEventoInfractor;
 	}
 
 	public Long getId() {
@@ -58,38 +54,22 @@ public class ComparendoDTO {
 		this.estado = estado;
 	}
 
-	public Long getIdEvento() {
-		return idEvento;
+	public Long getIdEventoInfractor() {
+		return idEventoInfractor;
 	}
 
-	public void setIdEvento(Long idEvento) {
-		this.idEvento = idEvento;
-	}
-
-	public Long getIdInfractor() {
-		return idInfractor;
-	}
-
-	public void setIdInfractor(Long idInfractor) {
-		this.idInfractor = idInfractor;
-	}
-
-	public Long getIdPago() {
-		return idPago;
-	}
-
-	public void setIdPago(Long idPago) {
-		this.idPago = idPago;
+	public void setIdEventoInfractor(Long idEventoInfractor) {
+		this.idEventoInfractor = idEventoInfractor;
 	}
 
 	@Override
 	public String toString() {
-		return "ComparendoDTO [id=" + id + ", fecha=" + fecha + ", valor=" + valor + ", estado=" + estado + ", idEvento=" + idEvento + ", idInfractor=" + idInfractor + ", idPago=" + idPago + "]";
+		return "ComparendoDTO [id=" + id + ", fecha=" + fecha + ", valor=" + valor + ", estado=" + estado + ", idEventoInfractor=" + idEventoInfractor + "]";
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(estado, fecha, id, idEvento, idInfractor, idPago, valor);
+		return Objects.hash(estado, fecha, id, idEventoInfractor, valor);
 	}
 
 	@Override
@@ -101,7 +81,7 @@ public class ComparendoDTO {
 		if (getClass() != obj.getClass())
 			return false;
 		ComparendoDTO other = (ComparendoDTO) obj;
-		return Objects.equals(estado, other.estado) && Objects.equals(fecha, other.fecha) && Objects.equals(id, other.id) && Objects.equals(idEvento, other.idEvento) && Objects.equals(idInfractor, other.idInfractor) && Objects.equals(idPago, other.idPago) && Objects.equals(valor, other.valor);
+		return Objects.equals(estado, other.estado) && Objects.equals(fecha, other.fecha) && Objects.equals(id, other.id) && Objects.equals(idEventoInfractor, other.idEventoInfractor) && Objects.equals(valor, other.valor);
 	}
 
 }

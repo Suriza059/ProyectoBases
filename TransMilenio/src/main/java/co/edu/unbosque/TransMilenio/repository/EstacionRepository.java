@@ -37,15 +37,6 @@ public class EstacionRepository {
 		return null;
 	}
 
-	public Estacion buscarPorNombre(String nombre) {
-		for (Estacion estacion : lista) {
-			if (estacion.getNombre() != null && estacion.getNombre().equals(nombre)) {
-				return estacion;
-			}
-		}
-		return null;
-	}
-
 	public List<Estacion> listar() {
 		return new ArrayList<>(lista);
 	}

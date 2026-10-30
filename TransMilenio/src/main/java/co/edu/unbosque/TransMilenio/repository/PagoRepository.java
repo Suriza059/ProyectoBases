@@ -37,15 +37,6 @@ public class PagoRepository {
 		return null;
 	}
 
-	public Pago buscarPorNumeroRecibido(String numeroRecibido) {
-		for (Pago pago : lista) {
-			if (pago.getNumeroRecibido() != null && pago.getNumeroRecibido().equals(numeroRecibido)) {
-				return pago;
-			}
-		}
-		return null;
-	}
-
 	public List<Pago> listar() {
 		return new ArrayList<>(lista);
 	}

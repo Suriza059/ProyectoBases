@@ -8,27 +8,22 @@ import co.edu.unbosque.TransMilenio.entity.Comparendo;
 import co.edu.unbosque.TransMilenio.exception.LanzadorDeExcepciones;
 import co.edu.unbosque.TransMilenio.repository.ComparendoRepository;
 import co.edu.unbosque.TransMilenio.repository.EventoInfractorRepository;
-import co.edu.unbosque.TransMilenio.repository.PagoRepository;
 
 public class ComparendoService implements CRUDOPERATION<ComparendoDTO> {
 
 	private ComparendoRepository comparendoRepository;
-	private PagoRepository pagoRepository;
 	private EventoInfractorRepository eventoInfractorRepository;
 
-	public ComparendoService(ComparendoRepository comparendoRepository, PagoRepository pagoRepository, EventoInfractorRepository eventoInfractorRepository) {
+	public ComparendoService(ComparendoRepository comparendoRepository, EventoInfractorRepository eventoInfractorRepository) {
 		this.comparendoRepository = comparendoRepository;
-		this.pagoRepository = pagoRepository;
 		this.eventoInfractorRepository = eventoInfractorRepository;
 	}
 
 	private void validar(ComparendoDTO data) {
-		if (data.getIdEvento() == null || data.getIdInfractor() == null)
-			LanzadorDeExcepciones.datoInvalido("El evento y el infractor son obligatorios");
-		if (!eventoInfractorRepository.existe(data.getIdEvento(), data.getIdInfractor()))
+		if (data.getIdEventoInfractor() == null)
+			LanzadorDeExcepciones.datoInvalido("El campo idEventoInfractor es obligatorio");
+		if (!eventoInfractorRepository.existe(data.getIdEventoInfractor()))
 			LanzadorDeExcepciones.relacionNoExiste("La pareja evento-infractor no existe");
-		if (data.getIdPago() != null && !pagoRepository.existe(data.getIdPago()))
-			LanzadorDeExcepciones.relacionNoExiste("El pago no existe");
 	}
 
 	private Comparendo aEntity(ComparendoDTO dto) {
@@ -37,9 +32,7 @@ public class ComparendoService implements CRUDOPERATION<ComparendoDTO> {
 		entity.setFecha(dto.getFecha());
 		entity.setValor(dto.getValor());
 		entity.setEstado(dto.getEstado());
-		entity.setIdEvento(dto.getIdEvento());
-		entity.setIdInfractor(dto.getIdInfractor());
-		entity.setIdPago(dto.getIdPago());
+		entity.setIdEventoInfractor(dto.getIdEventoInfractor());
 		return entity;
 	}
 
@@ -49,9 +42,7 @@ public class ComparendoService implements CRUDOPERATION<ComparendoDTO> {
 		dto.setFecha(entity.getFecha());
 		dto.setValor(entity.getValor());
 		dto.setEstado(entity.getEstado());
-		dto.setIdEvento(entity.getIdEvento());
-		dto.setIdInfractor(entity.getIdInfractor());
-		dto.setIdPago(entity.getIdPago());
+		dto.setIdEventoInfractor(entity.getIdEventoInfractor());
 		return dto;
 	}
 
@@ -60,7 +51,7 @@ public class ComparendoService implements CRUDOPERATION<ComparendoDTO> {
 		validar(data);
 		Comparendo entity = aEntity(data);
 		entity.setId(null);
-		entity.setEstado("pendiente");
+		entity.setEstado("Pendiente");
 		comparendoRepository.guardar(entity);
 	}
 

@@ -37,15 +37,6 @@ public class TroncalRepository {
 		return null;
 	}
 
-	public Troncal buscarPorNombre(String nombre) {
-		for (Troncal troncal : lista) {
-			if (troncal.getNombre() != null && troncal.getNombre().equals(nombre)) {
-				return troncal;
-			}
-		}
-		return null;
-	}
-
 	public List<Troncal> listar() {
 		return new ArrayList<>(lista);
 	}

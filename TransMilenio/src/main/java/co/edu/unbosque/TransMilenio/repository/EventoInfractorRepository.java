@@ -9,16 +9,38 @@ public class EventoInfractorRepository {
 
 	// Por ahora guarda en memoria. Aqui va la conexion a la base de datos hecha a mano.
 	private ArrayList<EventoInfractor> lista = new ArrayList<>();
+	private long siguienteId = 1;
 
 	public EventoInfractor guardar(EventoInfractor eventoInfractor) {
+		if (eventoInfractor.getId() == null) {
+			eventoInfractor.setId(siguienteId);
+			siguienteId++;
+			lista.add(eventoInfractor);
+			return eventoInfractor;
+		}
+		for (int i = 0; i < lista.size(); i++) {
+			if (lista.get(i).getId().equals(eventoInfractor.getId())) {
+				lista.set(i, eventoInfractor);
+				return eventoInfractor;
+			}
+		}
 		lista.add(eventoInfractor);
 		return eventoInfractor;
 	}
 
-	public EventoInfractor buscar(Long idEvento, Long idInfractor) {
-		for (EventoInfractor e : lista) {
-			if (e.getIdEvento().equals(idEvento) && e.getIdInfractor().equals(idInfractor)) {
-				return e;
+	public EventoInfractor buscarPorId(Long id) {
+		for (EventoInfractor eventoInfractor : lista) {
+			if (eventoInfractor.getId().equals(id)) {
+				return eventoInfractor;
+			}
+		}
+		return null;
+	}
+
+	public EventoInfractor buscarPorIdEventoYIdInfractor(Long idEvento, Long idInfractor) {
+		for (EventoInfractor eventoInfractor : lista) {
+			if (eventoInfractor.getIdEvento() != null && eventoInfractor.getIdEvento().equals(idEvento) && eventoInfractor.getIdInfractor() != null && eventoInfractor.getIdInfractor().equals(idInfractor)) {
+				return eventoInfractor;
 			}
 		}
 		return null;
@@ -28,16 +50,16 @@ public class EventoInfractorRepository {
 		return new ArrayList<>(lista);
 	}
 
-	public boolean eliminar(Long idEvento, Long idInfractor) {
-		EventoInfractor e = buscar(idEvento, idInfractor);
-		if (e == null)
+	public boolean eliminar(Long id) {
+		EventoInfractor eventoInfractor = buscarPorId(id);
+		if (eventoInfractor == null)
 			return false;
-		lista.remove(e);
+		lista.remove(eventoInfractor);
 		return true;
 	}
 
-	public boolean existe(Long idEvento, Long idInfractor) {
-		return buscar(idEvento, idInfractor) != null;
+	public boolean existe(Long id) {
+		return buscarPorId(id) != null;
 	}
 
 	public long contar() {

@@ -9,20 +9,23 @@ import co.edu.unbosque.TransMilenio.exception.LanzadorDeExcepciones;
 import co.edu.unbosque.TransMilenio.repository.EstacionRepository;
 import co.edu.unbosque.TransMilenio.repository.EventoRepository;
 import co.edu.unbosque.TransMilenio.repository.GuardaRepository;
+import co.edu.unbosque.TransMilenio.repository.ModalidadRepository;
 import co.edu.unbosque.TransMilenio.repository.TarifaRepository;
 
 public class EventoService implements CRUDOPERATION<EventoDTO> {
 
 	private EventoRepository eventoRepository;
 	private EstacionRepository estacionRepository;
-	private GuardaRepository guardaRepository;
 	private TarifaRepository tarifaRepository;
+	private ModalidadRepository modalidadRepository;
+	private GuardaRepository guardaRepository;
 
-	public EventoService(EventoRepository eventoRepository, EstacionRepository estacionRepository, GuardaRepository guardaRepository, TarifaRepository tarifaRepository) {
+	public EventoService(EventoRepository eventoRepository, EstacionRepository estacionRepository, TarifaRepository tarifaRepository, ModalidadRepository modalidadRepository, GuardaRepository guardaRepository) {
 		this.eventoRepository = eventoRepository;
 		this.estacionRepository = estacionRepository;
-		this.guardaRepository = guardaRepository;
 		this.tarifaRepository = tarifaRepository;
+		this.modalidadRepository = modalidadRepository;
+		this.guardaRepository = guardaRepository;
 	}
 
 	private void validar(EventoDTO data) {
@@ -30,14 +33,18 @@ public class EventoService implements CRUDOPERATION<EventoDTO> {
 			LanzadorDeExcepciones.datoInvalido("El campo idEstacion es obligatorio");
 		if (!estacionRepository.existe(data.getIdEstacion()))
 			LanzadorDeExcepciones.relacionNoExiste("La estacion no existe");
-		if (data.getIdGuarda() == null)
-			LanzadorDeExcepciones.datoInvalido("El campo idGuarda es obligatorio");
-		if (!guardaRepository.existe(data.getIdGuarda()))
-			LanzadorDeExcepciones.relacionNoExiste("El guarda no existe");
 		if (data.getIdTarifa() == null)
 			LanzadorDeExcepciones.datoInvalido("El campo idTarifa es obligatorio");
 		if (!tarifaRepository.existe(data.getIdTarifa()))
 			LanzadorDeExcepciones.relacionNoExiste("La tarifa no existe");
+		if (data.getIdModalidad() == null)
+			LanzadorDeExcepciones.datoInvalido("El campo idModalidad es obligatorio");
+		if (!modalidadRepository.existe(data.getIdModalidad()))
+			LanzadorDeExcepciones.relacionNoExiste("La modalidad no existe");
+		if (data.getIdGuarda() == null)
+			LanzadorDeExcepciones.datoInvalido("El campo idGuarda es obligatorio");
+		if (!guardaRepository.existe(data.getIdGuarda()))
+			LanzadorDeExcepciones.relacionNoExiste("El guarda no existe");
 	}
 
 	private Evento aEntity(EventoDTO dto) {
@@ -45,10 +52,10 @@ public class EventoService implements CRUDOPERATION<EventoDTO> {
 		entity.setId(dto.getId());
 		entity.setFecha(dto.getFecha());
 		entity.setNumeroPersonas(dto.getNumeroPersonas());
-		entity.setPerdida(dto.getPerdida());
 		entity.setIdEstacion(dto.getIdEstacion());
-		entity.setIdGuarda(dto.getIdGuarda());
 		entity.setIdTarifa(dto.getIdTarifa());
+		entity.setIdModalidad(dto.getIdModalidad());
+		entity.setIdGuarda(dto.getIdGuarda());
 		return entity;
 	}
 
@@ -57,10 +64,10 @@ public class EventoService implements CRUDOPERATION<EventoDTO> {
 		dto.setId(entity.getId());
 		dto.setFecha(entity.getFecha());
 		dto.setNumeroPersonas(entity.getNumeroPersonas());
-		dto.setPerdida(entity.getPerdida());
 		dto.setIdEstacion(entity.getIdEstacion());
-		dto.setIdGuarda(entity.getIdGuarda());
 		dto.setIdTarifa(entity.getIdTarifa());
+		dto.setIdModalidad(entity.getIdModalidad());
+		dto.setIdGuarda(entity.getIdGuarda());
 		return dto;
 	}
 

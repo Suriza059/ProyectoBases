@@ -5,35 +5,18 @@ import java.util.Objects;
 
 public class UsuarioGuardaDTO {
 
-	private Long id;
-	private LocalDate fechaActivacion;
 	private Long idUsuario;
+	private LocalDate fechaActivacion;
 	private Long idGuarda;
 
 	public UsuarioGuardaDTO() {
 	}
 
-	public UsuarioGuardaDTO(LocalDate fechaActivacion, Long idUsuario, Long idGuarda) {
+	public UsuarioGuardaDTO(Long idUsuario, LocalDate fechaActivacion, Long idGuarda) {
 		super();
-		this.fechaActivacion = fechaActivacion;
 		this.idUsuario = idUsuario;
-		this.idGuarda = idGuarda;
-	}
-
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
-	}
-
-	public LocalDate getFechaActivacion() {
-		return fechaActivacion;
-	}
-
-	public void setFechaActivacion(LocalDate fechaActivacion) {
 		this.fechaActivacion = fechaActivacion;
+		this.idGuarda = idGuarda;
 	}
 
 	public Long getIdUsuario() {
@@ -42,6 +25,14 @@ public class UsuarioGuardaDTO {
 
 	public void setIdUsuario(Long idUsuario) {
 		this.idUsuario = idUsuario;
+	}
+
+	public LocalDate getFechaActivacion() {
+		return fechaActivacion;
+	}
+
+	public void setFechaActivacion(LocalDate fechaActivacion) {
+		this.fechaActivacion = fechaActivacion;
 	}
 
 	public Long getIdGuarda() {
@@ -54,12 +45,12 @@ public class UsuarioGuardaDTO {
 
 	@Override
 	public String toString() {
-		return "UsuarioGuardaDTO [id=" + id + ", fechaActivacion=" + fechaActivacion + ", idUsuario=" + idUsuario + ", idGuarda=" + idGuarda + "]";
+		return "UsuarioGuardaDTO [idUsuario=" + idUsuario + ", fechaActivacion=" + fechaActivacion + ", idGuarda=" + idGuarda + "]";
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(fechaActivacion, id, idGuarda, idUsuario);
+		return Objects.hash(fechaActivacion, idGuarda, idUsuario);
 	}
 
 	@Override
@@ -71,7 +62,7 @@ public class UsuarioGuardaDTO {
 		if (getClass() != obj.getClass())
 			return false;
 		UsuarioGuardaDTO other = (UsuarioGuardaDTO) obj;
-		return Objects.equals(fechaActivacion, other.fechaActivacion) && Objects.equals(id, other.id) && Objects.equals(idGuarda, other.idGuarda) && Objects.equals(idUsuario, other.idUsuario);
+		return Objects.equals(fechaActivacion, other.fechaActivacion) && Objects.equals(idGuarda, other.idGuarda) && Objects.equals(idUsuario, other.idUsuario);
 	}
 
 }

@@ -13,24 +13,24 @@ import co.edu.unbosque.TransMilenio.repository.GuardaRepository;
 public class AgresionService implements CRUDOPERATION<AgresionDTO> {
 
 	private AgresionRepository agresionRepository;
-	private GuardaRepository guardaRepository;
 	private EventoRepository eventoRepository;
+	private GuardaRepository guardaRepository;
 
-	public AgresionService(AgresionRepository agresionRepository, GuardaRepository guardaRepository, EventoRepository eventoRepository) {
+	public AgresionService(AgresionRepository agresionRepository, EventoRepository eventoRepository, GuardaRepository guardaRepository) {
 		this.agresionRepository = agresionRepository;
-		this.guardaRepository = guardaRepository;
 		this.eventoRepository = eventoRepository;
+		this.guardaRepository = guardaRepository;
 	}
 
 	private void validar(AgresionDTO data) {
-		if (data.getIdGuarda() == null)
-			LanzadorDeExcepciones.datoInvalido("El campo idGuarda es obligatorio");
-		if (!guardaRepository.existe(data.getIdGuarda()))
-			LanzadorDeExcepciones.relacionNoExiste("El guarda no existe");
 		if (data.getIdEvento() == null)
 			LanzadorDeExcepciones.datoInvalido("El campo idEvento es obligatorio");
 		if (!eventoRepository.existe(data.getIdEvento()))
 			LanzadorDeExcepciones.relacionNoExiste("El evento no existe");
+		if (data.getIdGuarda() == null)
+			LanzadorDeExcepciones.datoInvalido("El campo idGuarda es obligatorio");
+		if (!guardaRepository.existe(data.getIdGuarda()))
+			LanzadorDeExcepciones.relacionNoExiste("El guarda no existe");
 	}
 
 	private Agresion aEntity(AgresionDTO dto) {
@@ -39,8 +39,8 @@ public class AgresionService implements CRUDOPERATION<AgresionDTO> {
 		entity.setFecha(dto.getFecha());
 		entity.setGravedad(dto.getGravedad());
 		entity.setDescripcion(dto.getDescripcion());
-		entity.setIdGuarda(dto.getIdGuarda());
 		entity.setIdEvento(dto.getIdEvento());
+		entity.setIdGuarda(dto.getIdGuarda());
 		return entity;
 	}
 
@@ -50,8 +50,8 @@ public class AgresionService implements CRUDOPERATION<AgresionDTO> {
 		dto.setFecha(entity.getFecha());
 		dto.setGravedad(entity.getGravedad());
 		dto.setDescripcion(entity.getDescripcion());
-		dto.setIdGuarda(entity.getIdGuarda());
 		dto.setIdEvento(entity.getIdEvento());
+		dto.setIdGuarda(entity.getIdGuarda());
 		return dto;
 	}
 

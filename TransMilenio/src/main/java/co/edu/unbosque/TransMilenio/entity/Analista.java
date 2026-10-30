@@ -4,32 +4,15 @@ import java.util.Objects;
 
 public class Analista {
 
-	private Long id;
-	private String areaAnalisis;
 	private Long idUsuario;
+	private String areaAnalisis;
 
 	public Analista() {
 	}
 
-	public Analista(String areaAnalisis, Long idUsuario) {
+	public Analista(Long idUsuario, String areaAnalisis) {
 		super();
-		this.areaAnalisis = areaAnalisis;
 		this.idUsuario = idUsuario;
-	}
-
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
-	}
-
-	public String getAreaAnalisis() {
-		return areaAnalisis;
-	}
-
-	public void setAreaAnalisis(String areaAnalisis) {
 		this.areaAnalisis = areaAnalisis;
 	}
 
@@ -41,14 +24,22 @@ public class Analista {
 		this.idUsuario = idUsuario;
 	}
 
+	public String getAreaAnalisis() {
+		return areaAnalisis;
+	}
+
+	public void setAreaAnalisis(String areaAnalisis) {
+		this.areaAnalisis = areaAnalisis;
+	}
+
 	@Override
 	public String toString() {
-		return "Analista [id=" + id + ", areaAnalisis=" + areaAnalisis + ", idUsuario=" + idUsuario + "]";
+		return "Analista [idUsuario=" + idUsuario + ", areaAnalisis=" + areaAnalisis + "]";
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(areaAnalisis, id, idUsuario);
+		return Objects.hash(areaAnalisis, idUsuario);
 	}
 
 	@Override
@@ -60,7 +51,7 @@ public class Analista {
 		if (getClass() != obj.getClass())
 			return false;
 		Analista other = (Analista) obj;
-		return Objects.equals(areaAnalisis, other.areaAnalisis) && Objects.equals(id, other.id) && Objects.equals(idUsuario, other.idUsuario);
+		return Objects.equals(areaAnalisis, other.areaAnalisis) && Objects.equals(idUsuario, other.idUsuario);
 	}
 
 }

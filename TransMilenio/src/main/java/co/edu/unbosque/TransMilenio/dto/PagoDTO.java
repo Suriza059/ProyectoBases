@@ -6,18 +6,20 @@ import java.util.Objects;
 public class PagoDTO {
 
 	private Long id;
-	private String numeroRecibido;
-	private LocalDate fecha;
 	private Long valor;
+	private String numeroRecibo;
+	private LocalDate fecha;
+	private Long idComparendo;
 
 	public PagoDTO() {
 	}
 
-	public PagoDTO(String numeroRecibido, LocalDate fecha, Long valor) {
+	public PagoDTO(Long valor, String numeroRecibo, LocalDate fecha, Long idComparendo) {
 		super();
-		this.numeroRecibido = numeroRecibido;
-		this.fecha = fecha;
 		this.valor = valor;
+		this.numeroRecibo = numeroRecibo;
+		this.fecha = fecha;
+		this.idComparendo = idComparendo;
 	}
 
 	public Long getId() {
@@ -28,12 +30,20 @@ public class PagoDTO {
 		this.id = id;
 	}
 
-	public String getNumeroRecibido() {
-		return numeroRecibido;
+	public Long getValor() {
+		return valor;
 	}
 
-	public void setNumeroRecibido(String numeroRecibido) {
-		this.numeroRecibido = numeroRecibido;
+	public void setValor(Long valor) {
+		this.valor = valor;
+	}
+
+	public String getNumeroRecibo() {
+		return numeroRecibo;
+	}
+
+	public void setNumeroRecibo(String numeroRecibo) {
+		this.numeroRecibo = numeroRecibo;
 	}
 
 	public LocalDate getFecha() {
@@ -44,22 +54,22 @@ public class PagoDTO {
 		this.fecha = fecha;
 	}
 
-	public Long getValor() {
-		return valor;
+	public Long getIdComparendo() {
+		return idComparendo;
 	}
 
-	public void setValor(Long valor) {
-		this.valor = valor;
+	public void setIdComparendo(Long idComparendo) {
+		this.idComparendo = idComparendo;
 	}
 
 	@Override
 	public String toString() {
-		return "PagoDTO [id=" + id + ", numeroRecibido=" + numeroRecibido + ", fecha=" + fecha + ", valor=" + valor + "]";
+		return "PagoDTO [id=" + id + ", valor=" + valor + ", numeroRecibo=" + numeroRecibo + ", fecha=" + fecha + ", idComparendo=" + idComparendo + "]";
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(fecha, id, numeroRecibido, valor);
+		return Objects.hash(fecha, id, idComparendo, numeroRecibo, valor);
 	}
 
 	@Override
@@ -71,7 +81,7 @@ public class PagoDTO {
 		if (getClass() != obj.getClass())
 			return false;
 		PagoDTO other = (PagoDTO) obj;
-		return Objects.equals(fecha, other.fecha) && Objects.equals(id, other.id) && Objects.equals(numeroRecibido, other.numeroRecibido) && Objects.equals(valor, other.valor);
+		return Objects.equals(fecha, other.fecha) && Objects.equals(id, other.id) && Objects.equals(idComparendo, other.idComparendo) && Objects.equals(numeroRecibo, other.numeroRecibo) && Objects.equals(valor, other.valor);
 	}
 
 }

@@ -8,22 +8,22 @@ public class EventoDTO {
 	private Long id;
 	private LocalDate fecha;
 	private Integer numeroPersonas;
-	private Long perdida;
 	private Long idEstacion;
-	private Long idGuarda;
 	private Long idTarifa;
+	private Long idModalidad;
+	private Long idGuarda;
 
 	public EventoDTO() {
 	}
 
-	public EventoDTO(LocalDate fecha, Integer numeroPersonas, Long perdida, Long idEstacion, Long idGuarda, Long idTarifa) {
+	public EventoDTO(LocalDate fecha, Integer numeroPersonas, Long idEstacion, Long idTarifa, Long idModalidad, Long idGuarda) {
 		super();
 		this.fecha = fecha;
 		this.numeroPersonas = numeroPersonas;
-		this.perdida = perdida;
 		this.idEstacion = idEstacion;
-		this.idGuarda = idGuarda;
 		this.idTarifa = idTarifa;
+		this.idModalidad = idModalidad;
+		this.idGuarda = idGuarda;
 	}
 
 	public Long getId() {
@@ -50,28 +50,12 @@ public class EventoDTO {
 		this.numeroPersonas = numeroPersonas;
 	}
 
-	public Long getPerdida() {
-		return perdida;
-	}
-
-	public void setPerdida(Long perdida) {
-		this.perdida = perdida;
-	}
-
 	public Long getIdEstacion() {
 		return idEstacion;
 	}
 
 	public void setIdEstacion(Long idEstacion) {
 		this.idEstacion = idEstacion;
-	}
-
-	public Long getIdGuarda() {
-		return idGuarda;
-	}
-
-	public void setIdGuarda(Long idGuarda) {
-		this.idGuarda = idGuarda;
 	}
 
 	public Long getIdTarifa() {
@@ -82,14 +66,30 @@ public class EventoDTO {
 		this.idTarifa = idTarifa;
 	}
 
+	public Long getIdModalidad() {
+		return idModalidad;
+	}
+
+	public void setIdModalidad(Long idModalidad) {
+		this.idModalidad = idModalidad;
+	}
+
+	public Long getIdGuarda() {
+		return idGuarda;
+	}
+
+	public void setIdGuarda(Long idGuarda) {
+		this.idGuarda = idGuarda;
+	}
+
 	@Override
 	public String toString() {
-		return "EventoDTO [id=" + id + ", fecha=" + fecha + ", numeroPersonas=" + numeroPersonas + ", perdida=" + perdida + ", idEstacion=" + idEstacion + ", idGuarda=" + idGuarda + ", idTarifa=" + idTarifa + "]";
+		return "EventoDTO [id=" + id + ", fecha=" + fecha + ", numeroPersonas=" + numeroPersonas + ", idEstacion=" + idEstacion + ", idTarifa=" + idTarifa + ", idModalidad=" + idModalidad + ", idGuarda=" + idGuarda + "]";
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(fecha, id, idEstacion, idGuarda, idTarifa, numeroPersonas, perdida);
+		return Objects.hash(fecha, id, idEstacion, idGuarda, idModalidad, idTarifa, numeroPersonas);
 	}
 
 	@Override
@@ -101,7 +101,7 @@ public class EventoDTO {
 		if (getClass() != obj.getClass())
 			return false;
 		EventoDTO other = (EventoDTO) obj;
-		return Objects.equals(fecha, other.fecha) && Objects.equals(id, other.id) && Objects.equals(idEstacion, other.idEstacion) && Objects.equals(idGuarda, other.idGuarda) && Objects.equals(idTarifa, other.idTarifa) && Objects.equals(numeroPersonas, other.numeroPersonas) && Objects.equals(perdida, other.perdida);
+		return Objects.equals(fecha, other.fecha) && Objects.equals(id, other.id) && Objects.equals(idEstacion, other.idEstacion) && Objects.equals(idGuarda, other.idGuarda) && Objects.equals(idModalidad, other.idModalidad) && Objects.equals(idTarifa, other.idTarifa) && Objects.equals(numeroPersonas, other.numeroPersonas);
 	}
 
 }

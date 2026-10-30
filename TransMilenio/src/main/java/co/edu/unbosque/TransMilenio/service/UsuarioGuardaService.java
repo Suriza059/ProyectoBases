@@ -35,18 +35,16 @@ public class UsuarioGuardaService implements CRUDOPERATION<UsuarioGuardaDTO> {
 
 	private UsuarioGuarda aEntity(UsuarioGuardaDTO dto) {
 		UsuarioGuarda entity = new UsuarioGuarda();
-		entity.setId(dto.getId());
-		entity.setFechaActivacion(dto.getFechaActivacion());
 		entity.setIdUsuario(dto.getIdUsuario());
+		entity.setFechaActivacion(dto.getFechaActivacion());
 		entity.setIdGuarda(dto.getIdGuarda());
 		return entity;
 	}
 
 	private UsuarioGuardaDTO aDTO(UsuarioGuarda entity) {
 		UsuarioGuardaDTO dto = new UsuarioGuardaDTO();
-		dto.setId(entity.getId());
-		dto.setFechaActivacion(entity.getFechaActivacion());
 		dto.setIdUsuario(entity.getIdUsuario());
+		dto.setFechaActivacion(entity.getFechaActivacion());
 		dto.setIdGuarda(entity.getIdGuarda());
 		return dto;
 	}
@@ -54,8 +52,9 @@ public class UsuarioGuardaService implements CRUDOPERATION<UsuarioGuardaDTO> {
 	@Override
 	public void create(UsuarioGuardaDTO data) {
 		validar(data);
+		if (usuarioGuardaRepository.existe(data.getIdUsuario()))
+			LanzadorDeExcepciones.registroDuplicado("Ese usuario ya tiene un guarda activado");
 		UsuarioGuarda entity = aEntity(data);
-		entity.setId(null);
 		usuarioGuardaRepository.guardar(entity);
 	}
 
@@ -71,7 +70,7 @@ public class UsuarioGuardaService implements CRUDOPERATION<UsuarioGuardaDTO> {
 	@Override
 	public void deleteById(Long id) {
 		if (!usuarioGuardaRepository.existe(id))
-			LanzadorDeExcepciones.registroNoExiste("La activacion de guarda");
+			LanzadorDeExcepciones.registroNoExiste("El guarda activado");
 		usuarioGuardaRepository.eliminar(id);
 	}
 
@@ -88,10 +87,11 @@ public class UsuarioGuardaService implements CRUDOPERATION<UsuarioGuardaDTO> {
 	@Override
 	public void updateById(Long id, UsuarioGuardaDTO data) {
 		if (!usuarioGuardaRepository.existe(id))
-			LanzadorDeExcepciones.registroNoExiste("La activacion de guarda");
+			LanzadorDeExcepciones.registroNoExiste("El guarda activado");
+		data.setIdUsuario(id);
 		validar(data);
 		UsuarioGuarda entity = aEntity(data);
-		entity.setId(id);
+		entity.setIdUsuario(id);
 		usuarioGuardaRepository.guardar(entity);
 	}
 }

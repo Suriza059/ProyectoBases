@@ -4,6 +4,7 @@ import java.util.Objects;
 
 public class EventoInfractorDTO {
 
+	private Long id;
 	private Long idEvento;
 	private Long idInfractor;
 
@@ -14,6 +15,14 @@ public class EventoInfractorDTO {
 		super();
 		this.idEvento = idEvento;
 		this.idInfractor = idInfractor;
+	}
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
 	}
 
 	public Long getIdEvento() {
@@ -34,12 +43,12 @@ public class EventoInfractorDTO {
 
 	@Override
 	public String toString() {
-		return "EventoInfractorDTO [idEvento=" + idEvento + ", idInfractor=" + idInfractor + "]";
+		return "EventoInfractorDTO [id=" + id + ", idEvento=" + idEvento + ", idInfractor=" + idInfractor + "]";
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(idEvento, idInfractor);
+		return Objects.hash(id, idEvento, idInfractor);
 	}
 
 	@Override
@@ -51,7 +60,7 @@ public class EventoInfractorDTO {
 		if (getClass() != obj.getClass())
 			return false;
 		EventoInfractorDTO other = (EventoInfractorDTO) obj;
-		return Objects.equals(idEvento, other.idEvento) && Objects.equals(idInfractor, other.idInfractor);
+		return Objects.equals(id, other.id) && Objects.equals(idEvento, other.idEvento) && Objects.equals(idInfractor, other.idInfractor);
 	}
 
 }

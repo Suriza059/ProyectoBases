@@ -5,18 +5,18 @@ import java.util.Objects;
 public class InfractorDTO {
 
 	private Long id;
-	private String numeroDocumento;
 	private String tipoDocumento;
+	private String numeroDocumento;
 	private String nombre;
 	private String apellido;
 
 	public InfractorDTO() {
 	}
 
-	public InfractorDTO(String numeroDocumento, String tipoDocumento, String nombre, String apellido) {
+	public InfractorDTO(String tipoDocumento, String numeroDocumento, String nombre, String apellido) {
 		super();
-		this.numeroDocumento = numeroDocumento;
 		this.tipoDocumento = tipoDocumento;
+		this.numeroDocumento = numeroDocumento;
 		this.nombre = nombre;
 		this.apellido = apellido;
 	}
@@ -29,20 +29,20 @@ public class InfractorDTO {
 		this.id = id;
 	}
 
-	public String getNumeroDocumento() {
-		return numeroDocumento;
-	}
-
-	public void setNumeroDocumento(String numeroDocumento) {
-		this.numeroDocumento = numeroDocumento;
-	}
-
 	public String getTipoDocumento() {
 		return tipoDocumento;
 	}
 
 	public void setTipoDocumento(String tipoDocumento) {
 		this.tipoDocumento = tipoDocumento;
+	}
+
+	public String getNumeroDocumento() {
+		return numeroDocumento;
+	}
+
+	public void setNumeroDocumento(String numeroDocumento) {
+		this.numeroDocumento = numeroDocumento;
 	}
 
 	public String getNombre() {
@@ -63,7 +63,7 @@ public class InfractorDTO {
 
 	@Override
 	public String toString() {
-		return "InfractorDTO [id=" + id + ", numeroDocumento=" + numeroDocumento + ", tipoDocumento=" + tipoDocumento + ", nombre=" + nombre + ", apellido=" + apellido + "]";
+		return "InfractorDTO [id=" + id + ", tipoDocumento=" + tipoDocumento + ", numeroDocumento=" + numeroDocumento + ", nombre=" + nombre + ", apellido=" + apellido + "]";
 	}
 
 	@Override

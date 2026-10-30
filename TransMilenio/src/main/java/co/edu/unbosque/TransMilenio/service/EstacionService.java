@@ -46,8 +46,6 @@ public class EstacionService implements CRUDOPERATION<EstacionDTO> {
 
 	@Override
 	public void create(EstacionDTO data) {
-		if (estacionRepository.buscarPorNombre(data.getNombre()) != null)
-			LanzadorDeExcepciones.registroDuplicado("Ya existe una estacion con ese nombre");
 		validar(data);
 		Estacion entity = aEntity(data);
 		entity.setId(null);
@@ -85,9 +83,6 @@ public class EstacionService implements CRUDOPERATION<EstacionDTO> {
 		if (!estacionRepository.existe(id))
 			LanzadorDeExcepciones.registroNoExiste("La estacion");
 		validar(data);
-		Estacion otro = estacionRepository.buscarPorNombre(data.getNombre());
-		if (otro != null && !otro.getId().equals(id))
-			LanzadorDeExcepciones.registroDuplicado("Ya existe una estacion con ese nombre");
 		Estacion entity = aEntity(data);
 		entity.setId(id);
 		estacionRepository.guardar(entity);

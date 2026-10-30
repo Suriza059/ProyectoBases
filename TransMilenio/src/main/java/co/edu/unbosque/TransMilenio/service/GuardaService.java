@@ -24,33 +24,33 @@ public class GuardaService implements CRUDOPERATION<GuardaDTO> {
 			LanzadorDeExcepciones.datoInvalido("El campo idEstacion es obligatorio");
 		if (!estacionRepository.existe(data.getIdEstacion()))
 			LanzadorDeExcepciones.relacionNoExiste("La estacion no existe");
-		if (data.getIdGuardaSuperior() != null && !guardaRepository.existe(data.getIdGuardaSuperior()))
-			LanzadorDeExcepciones.relacionNoExiste("El guarda superior no existe");
+		if (data.getIdSupervisor() != null && !guardaRepository.existe(data.getIdSupervisor()))
+			LanzadorDeExcepciones.relacionNoExiste("El supervisor no existe");
 	}
 
 	private Guarda aEntity(GuardaDTO dto) {
 		Guarda entity = new Guarda();
 		entity.setId(dto.getId());
+		entity.setTurno(dto.getTurno());
 		entity.setNombre(dto.getNombre());
 		entity.setApellido(dto.getApellido());
-		entity.setTurno(dto.getTurno());
-		entity.setCargo(dto.getCargo());
 		entity.setActivo(dto.getActivo());
+		entity.setCargo(dto.getCargo());
 		entity.setIdEstacion(dto.getIdEstacion());
-		entity.setIdGuardaSuperior(dto.getIdGuardaSuperior());
+		entity.setIdSupervisor(dto.getIdSupervisor());
 		return entity;
 	}
 
 	private GuardaDTO aDTO(Guarda entity) {
 		GuardaDTO dto = new GuardaDTO();
 		dto.setId(entity.getId());
+		dto.setTurno(entity.getTurno());
 		dto.setNombre(entity.getNombre());
 		dto.setApellido(entity.getApellido());
-		dto.setTurno(entity.getTurno());
-		dto.setCargo(entity.getCargo());
 		dto.setActivo(entity.getActivo());
+		dto.setCargo(entity.getCargo());
 		dto.setIdEstacion(entity.getIdEstacion());
-		dto.setIdGuardaSuperior(entity.getIdGuardaSuperior());
+		dto.setIdSupervisor(entity.getIdSupervisor());
 		return dto;
 	}
 

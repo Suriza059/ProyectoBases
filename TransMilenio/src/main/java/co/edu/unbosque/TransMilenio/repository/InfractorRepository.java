@@ -37,9 +37,9 @@ public class InfractorRepository {
 		return null;
 	}
 
-	public Infractor buscarPorNumeroDocumento(String numeroDocumento) {
+	public Infractor buscarPorTipoDocumentoYNumeroDocumento(String tipoDocumento, String numeroDocumento) {
 		for (Infractor infractor : lista) {
-			if (infractor.getNumeroDocumento() != null && infractor.getNumeroDocumento().equals(numeroDocumento)) {
+			if (infractor.getTipoDocumento() != null && infractor.getTipoDocumento().equals(tipoDocumento) && infractor.getNumeroDocumento() != null && infractor.getNumeroDocumento().equals(numeroDocumento)) {
 				return infractor;
 			}
 		}

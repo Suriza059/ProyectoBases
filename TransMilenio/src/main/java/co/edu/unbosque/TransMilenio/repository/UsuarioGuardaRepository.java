@@ -9,17 +9,10 @@ public class UsuarioGuardaRepository {
 
 	// Por ahora guarda en memoria. Aqui va la conexion a la base de datos hecha a mano.
 	private ArrayList<UsuarioGuarda> lista = new ArrayList<>();
-	private long siguienteId = 1;
 
 	public UsuarioGuarda guardar(UsuarioGuarda usuarioGuarda) {
-		if (usuarioGuarda.getId() == null) {
-			usuarioGuarda.setId(siguienteId);
-			siguienteId++;
-			lista.add(usuarioGuarda);
-			return usuarioGuarda;
-		}
 		for (int i = 0; i < lista.size(); i++) {
-			if (lista.get(i).getId().equals(usuarioGuarda.getId())) {
+			if (lista.get(i).getIdUsuario().equals(usuarioGuarda.getIdUsuario())) {
 				lista.set(i, usuarioGuarda);
 				return usuarioGuarda;
 			}
@@ -30,7 +23,7 @@ public class UsuarioGuardaRepository {
 
 	public UsuarioGuarda buscarPorId(Long id) {
 		for (UsuarioGuarda usuarioGuarda : lista) {
-			if (usuarioGuarda.getId().equals(id)) {
+			if (usuarioGuarda.getIdUsuario().equals(id)) {
 				return usuarioGuarda;
 			}
 		}

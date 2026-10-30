@@ -6,15 +6,13 @@ public class ModalidadDTO {
 
 	private Long id;
 	private String nombre;
-	private Long idEvento;
 
 	public ModalidadDTO() {
 	}
 
-	public ModalidadDTO(String nombre, Long idEvento) {
+	public ModalidadDTO(String nombre) {
 		super();
 		this.nombre = nombre;
-		this.idEvento = idEvento;
 	}
 
 	public Long getId() {
@@ -33,22 +31,14 @@ public class ModalidadDTO {
 		this.nombre = nombre;
 	}
 
-	public Long getIdEvento() {
-		return idEvento;
-	}
-
-	public void setIdEvento(Long idEvento) {
-		this.idEvento = idEvento;
-	}
-
 	@Override
 	public String toString() {
-		return "ModalidadDTO [id=" + id + ", nombre=" + nombre + ", idEvento=" + idEvento + "]";
+		return "ModalidadDTO [id=" + id + ", nombre=" + nombre + "]";
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(id, idEvento, nombre);
+		return Objects.hash(id, nombre);
 	}
 
 	@Override
@@ -60,7 +50,7 @@ public class ModalidadDTO {
 		if (getClass() != obj.getClass())
 			return false;
 		ModalidadDTO other = (ModalidadDTO) obj;
-		return Objects.equals(id, other.id) && Objects.equals(idEvento, other.idEvento) && Objects.equals(nombre, other.nombre);
+		return Objects.equals(id, other.id) && Objects.equals(nombre, other.nombre);
 	}
 
 }

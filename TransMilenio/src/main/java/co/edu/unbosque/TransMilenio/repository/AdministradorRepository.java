@@ -9,17 +9,10 @@ public class AdministradorRepository {
 
 	// Por ahora guarda en memoria. Aqui va la conexion a la base de datos hecha a mano.
 	private ArrayList<Administrador> lista = new ArrayList<>();
-	private long siguienteId = 1;
 
 	public Administrador guardar(Administrador administrador) {
-		if (administrador.getId() == null) {
-			administrador.setId(siguienteId);
-			siguienteId++;
-			lista.add(administrador);
-			return administrador;
-		}
 		for (int i = 0; i < lista.size(); i++) {
-			if (lista.get(i).getId().equals(administrador.getId())) {
+			if (lista.get(i).getIdUsuario().equals(administrador.getIdUsuario())) {
 				lista.set(i, administrador);
 				return administrador;
 			}
@@ -30,7 +23,7 @@ public class AdministradorRepository {
 
 	public Administrador buscarPorId(Long id) {
 		for (Administrador administrador : lista) {
-			if (administrador.getId().equals(id)) {
+			if (administrador.getIdUsuario().equals(id)) {
 				return administrador;
 			}
 		}

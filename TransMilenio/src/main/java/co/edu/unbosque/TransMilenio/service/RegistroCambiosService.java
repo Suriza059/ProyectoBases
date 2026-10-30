@@ -8,18 +8,25 @@ import co.edu.unbosque.TransMilenio.entity.RegistroCambios;
 import co.edu.unbosque.TransMilenio.exception.LanzadorDeExcepciones;
 import co.edu.unbosque.TransMilenio.repository.ComparendoRepository;
 import co.edu.unbosque.TransMilenio.repository.RegistroCambiosRepository;
+import co.edu.unbosque.TransMilenio.repository.UsuarioRepository;
 
 public class RegistroCambiosService implements CRUDOPERATION<RegistroCambiosDTO> {
 
 	private RegistroCambiosRepository registroCambiosRepository;
+	private UsuarioRepository usuarioRepository;
 	private ComparendoRepository comparendoRepository;
 
-	public RegistroCambiosService(RegistroCambiosRepository registroCambiosRepository, ComparendoRepository comparendoRepository) {
+	public RegistroCambiosService(RegistroCambiosRepository registroCambiosRepository, UsuarioRepository usuarioRepository, ComparendoRepository comparendoRepository) {
 		this.registroCambiosRepository = registroCambiosRepository;
+		this.usuarioRepository = usuarioRepository;
 		this.comparendoRepository = comparendoRepository;
 	}
 
 	private void validar(RegistroCambiosDTO data) {
+		if (data.getIdUsuario() == null)
+			LanzadorDeExcepciones.datoInvalido("El campo idUsuario es obligatorio");
+		if (!usuarioRepository.existe(data.getIdUsuario()))
+			LanzadorDeExcepciones.relacionNoExiste("El usuario no existe");
 		if (data.getIdComparendo() == null)
 			LanzadorDeExcepciones.datoInvalido("El campo idComparendo es obligatorio");
 		if (!comparendoRepository.existe(data.getIdComparendo()))
@@ -30,9 +37,10 @@ public class RegistroCambiosService implements CRUDOPERATION<RegistroCambiosDTO>
 		RegistroCambios entity = new RegistroCambios();
 		entity.setId(dto.getId());
 		entity.setFecha(dto.getFecha());
+		entity.setCampoModificado(dto.getCampoModificado());
 		entity.setValorAnterior(dto.getValorAnterior());
 		entity.setValorNuevo(dto.getValorNuevo());
-		entity.setCampoModificado(dto.getCampoModificado());
+		entity.setIdUsuario(dto.getIdUsuario());
 		entity.setIdComparendo(dto.getIdComparendo());
 		return entity;
 	}
@@ -41,9 +49,10 @@ public class RegistroCambiosService implements CRUDOPERATION<RegistroCambiosDTO>
 		RegistroCambiosDTO dto = new RegistroCambiosDTO();
 		dto.setId(entity.getId());
 		dto.setFecha(entity.getFecha());
+		dto.setCampoModificado(entity.getCampoModificado());
 		dto.setValorAnterior(entity.getValorAnterior());
 		dto.setValorNuevo(entity.getValorNuevo());
-		dto.setCampoModificado(entity.getCampoModificado());
+		dto.setIdUsuario(entity.getIdUsuario());
 		dto.setIdComparendo(entity.getIdComparendo());
 		return dto;
 	}
