@@ -1,0 +1,159 @@
+:host {
+  display: block;
+  min-height: 100vh;
+  font-family: 'Barlow', sans-serif;
+  color: #ffffff;
+  background-image:
+    linear-gradient(rgba(10, 10, 14, 0.55), rgba(10, 10, 14, 0.80)),
+    url('../inicio/fondo.jpg');
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+}
+
+/* Mientras el booleano es false, el bloque está invisible */
+.oculto {
+  opacity: 0;
+}
+
+.login {
+  min-height: 100vh;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 32px;
+  text-align: center;
+}
+
+.login-titulo {
+  margin: 0 0 12px;
+  font-family: 'Bebas Neue', Impact, sans-serif;
+  font-size: 4.5rem;
+  font-weight: normal;
+  line-height: 1;
+  letter-spacing: 2px;
+  text-shadow: 0 3px 12px rgba(0, 0, 0, 0.8);
+}
+
+.login-subtitulo {
+  margin: 0 0 48px;
+  font-size: 1.2rem;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.8);
+}
+
+/* FORMULARIO (sin caja: solo líneas debajo de cada campo) */
+.login-formulario {
+  width: 100%;
+  max-width: 380px;
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+}
+
+.campo-etiqueta {
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: #ff5a5f;
+  text-shadow: 0 2px 6px rgba(0, 0, 0, 0.8);
+}
+
+.campo {
+  margin-bottom: 28px;
+  padding: 10px 2px;
+  border: none;
+  border-bottom: 2px solid rgba(255, 255, 255, 0.6);
+  background-color: transparent;
+  color: #ffffff;
+  font-family: 'Barlow', sans-serif;
+  font-size: 1.2rem;
+  outline: none;
+  transition: border-color 150ms ease-out;
+}
+
+.campo::placeholder {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.campo:focus {
+  border-bottom-color: #e0212d;
+}
+
+/* MENSAJES */
+.mensaje-error {
+  margin: 0 0 20px;
+  font-weight: 600;
+  color: #ff6b6b;
+  text-shadow: 0 2px 6px rgba(0, 0, 0, 0.8);
+}
+
+.mensaje-exito {
+  margin: 0 0 20px;
+  font-weight: 600;
+  color: #69db7c;
+  text-shadow: 0 2px 6px rgba(0, 0, 0, 0.8);
+}
+
+/* BOTÓN */
+.btn-entrar {
+  padding: 12px 0;
+  border: 2px solid #ffffff;
+  border-radius: 6px;
+  background-color: #b3121f;
+  color: #ffffff;
+  font-family: 'Barlow', sans-serif;
+  font-size: 1.1rem;
+  font-weight: 600;
+  letter-spacing: 1px;
+  cursor: pointer;
+  transition: background-color 150ms ease-out, color 150ms ease-out, transform 150ms ease-out;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .btn-entrar:hover {
+    background-color: #ffffff;
+    color: #b3121f;
+  }
+}
+
+.btn-entrar:active {
+  transform: scale(0.97);
+}
+
+/* ENLACE PARA VOLVER */
+.volver {
+  margin-top: 36px;
+  color: #ffffff;
+  font-size: 1rem;
+  text-decoration: none;
+  text-shadow: 0 2px 6px rgba(0, 0, 0, 0.8);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.5);
+  transition: border-color 150ms ease-out;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .volver:hover {
+    border-bottom-color: #ffffff;
+  }
+}
+
+/* Si la persona pidió menos movimiento en su sistema, quitamos las animaciones */
+@media (prefers-reduced-motion: reduce) {
+  .animate__animated {
+    animation: none !important;
+  }
+}
+
+/* CELULAR */
+@media (max-width: 800px) {
+  .login-titulo {
+    font-size: 3rem;
+  }
+
+  .login-subtitulo {
+    font-size: 1.05rem;
+  }
+}

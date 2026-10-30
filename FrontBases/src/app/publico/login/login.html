@@ -1,0 +1,63 @@
+<section class="login">
+
+  <h1
+    class="login-titulo"
+    [class.oculto]="!mostrarTitulo"
+    [class.animate__animated]="mostrarTitulo"
+    [class.animate__fadeInDown]="mostrarTitulo"
+  >
+    Iniciar sesión
+  </h1>
+
+  <p
+    class="login-subtitulo"
+    [class.oculto]="!mostrarTitulo"
+    [class.animate__animated]="mostrarTitulo"
+    [class.animate__fadeIn]="mostrarTitulo"
+  >
+    Acceso para administrador, analista y guarda
+  </p>
+
+  <form
+    class="login-formulario"
+    (ngSubmit)="ingresar()"
+    [class.oculto]="!mostrarFormulario"
+    [class.animate__animated]="mostrarFormulario"
+    [class.animate__fadeInUp]="mostrarFormulario"
+  >
+    <label class="campo-etiqueta" for="usuario">Usuario</label>
+    <input
+      class="campo"
+      id="usuario"
+      name="usuario"
+      type="text"
+      placeholder="Escribe tu usuario"
+      autocomplete="username"
+      [(ngModel)]="usuario"
+    >
+
+    <label class="campo-etiqueta" for="contrasena">Contraseña</label>
+    <input
+      class="campo"
+      id="contrasena"
+      name="contrasena"
+      type="password"
+      placeholder="Escribe tu contraseña"
+      autocomplete="current-password"
+      [(ngModel)]="contrasena"
+    >
+
+    <p class="mensaje-error animate__animated animate__shakeX" *ngIf="error">
+      {{ error }}
+    </p>
+
+    <p class="mensaje-exito animate__animated animate__fadeIn" *ngIf="rolIniciado">
+      Ingresaste como {{ rolIniciado }}. Aquí se abrirá tu panel.
+    </p>
+
+    <button class="btn-entrar" type="submit">Entrar</button>
+  </form>
+
+  <a class="volver" routerLink="/">← Volver al inicio</a>
+
+</section>

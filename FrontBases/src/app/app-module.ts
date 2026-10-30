@@ -1,13 +1,15 @@
 import { NgModule, provideBrowserGlobalErrorListeners } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
+import { FormsModule } from '@angular/forms';
 
 import { AppRoutingModule } from './app-routing-module';
 import { App } from './app';
 import { Inicio } from './publico/inicio/inicio';
+import { Login } from './publico/login/login';
 
 @NgModule({
-  declarations: [App, Inicio],
-  imports: [BrowserModule, AppRoutingModule],
+  declarations: [App, Inicio, Login],
+  imports: [BrowserModule, FormsModule, AppRoutingModule],
   providers: [provideBrowserGlobalErrorListeners()],
   bootstrap: [App],
 })
