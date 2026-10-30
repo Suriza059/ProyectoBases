@@ -1,0 +1,230 @@
+:host {
+  display: block;
+  min-height: 100vh;
+  font-family: 'Barlow', sans-serif;
+  color: #ffffff;
+  background-image:
+    linear-gradient(rgba(10, 10, 14, 0.55), rgba(10, 10, 14, 0.80)),
+    url('../../publico/inicio/fondo.jpg');
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+}
+
+/* BARRA DE ARRIBA */
+.barra {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 32px;
+  background-color: #b3121f;
+}
+
+.barra-titulo {
+  font-family: 'Bebas Neue', Impact, sans-serif;
+  font-size: 1.8rem;
+  letter-spacing: 1.5px;
+}
+
+.btn-salir {
+  padding: 8px 22px;
+  border: 2px solid #ffffff;
+  border-radius: 6px;
+  background-color: transparent;
+  color: #ffffff;
+  font-family: 'Barlow', sans-serif;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 150ms ease-out, color 150ms ease-out, transform 150ms ease-out;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .btn-salir:hover {
+    background-color: #ffffff;
+    color: #b3121f;
+  }
+}
+
+.btn-salir:active {
+  transform: scale(0.97);
+}
+
+/* CONTENIDO */
+.panel {
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 48px 32px 64px;
+}
+
+.panel-titulo {
+  margin: 0 0 8px;
+  font-family: 'Bebas Neue', Impact, sans-serif;
+  font-size: 3.6rem;
+  font-weight: normal;
+  line-height: 1;
+  letter-spacing: 2px;
+  text-shadow: 0 3px 12px rgba(0, 0, 0, 0.8);
+}
+
+.panel-subtitulo {
+  margin: 0 0 40px;
+  font-size: 1.1rem;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.8);
+}
+
+/* FORMULARIO (sin caja: solo líneas debajo de cada campo) */
+.formulario {
+  display: flex;
+  flex-direction: column;
+}
+
+.fila-campos {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0 32px;
+}
+
+.grupo {
+  flex: 1;
+  min-width: 240px;
+  display: flex;
+  flex-direction: column;
+}
+
+.campo-etiqueta {
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: #ff5a5f;
+  text-shadow: 0 2px 6px rgba(0, 0, 0, 0.8);
+}
+
+.campo {
+  margin-bottom: 28px;
+  padding: 10px 2px;
+  border: none;
+  border-bottom: 2px solid rgba(255, 255, 255, 0.6);
+  background-color: transparent;
+  color: #ffffff;
+  color-scheme: dark;
+  font-family: 'Barlow', sans-serif;
+  font-size: 1.2rem;
+  outline: none;
+  transition: border-color 150ms ease-out;
+}
+
+.campo::placeholder {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.campo:focus {
+  border-bottom-color: #e0212d;
+}
+
+/* Las opciones de las listas se ven sobre fondo blanco para poder leerlas */
+.campo option {
+  color: #1a1a1a;
+  background-color: #ffffff;
+}
+
+/* MENSAJES */
+.mensaje-error {
+  margin: 0 0 20px;
+  font-weight: 600;
+  color: #ff6b6b;
+  text-shadow: 0 2px 6px rgba(0, 0, 0, 0.8);
+}
+
+.mensaje-exito {
+  margin: 0 0 20px;
+  font-weight: 600;
+  color: #69db7c;
+  text-shadow: 0 2px 6px rgba(0, 0, 0, 0.8);
+}
+
+/* BOTÓN */
+.btn-registrar {
+  align-self: flex-start;
+  padding: 12px 36px;
+  border: 2px solid #ffffff;
+  border-radius: 6px;
+  background-color: #b3121f;
+  color: #ffffff;
+  font-family: 'Barlow', sans-serif;
+  font-size: 1.1rem;
+  font-weight: 600;
+  letter-spacing: 1px;
+  cursor: pointer;
+  transition: background-color 150ms ease-out, color 150ms ease-out, transform 150ms ease-out;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .btn-registrar:hover {
+    background-color: #ffffff;
+    color: #b3121f;
+  }
+}
+
+.btn-registrar:active {
+  transform: scale(0.97);
+}
+
+/* EVENTOS REGISTRADOS */
+.recientes {
+  margin-top: 56px;
+  padding-top: 32px;
+  border-top: 1px solid rgba(255, 255, 255, 0.35);
+}
+
+.recientes-titulo {
+  display: inline-block;
+  margin: 0 0 24px;
+  padding-bottom: 4px;
+  border-bottom: 4px solid #e0212d;
+  font-family: 'Bebas Neue', Impact, sans-serif;
+  font-size: 2.2rem;
+  font-weight: normal;
+  letter-spacing: 1px;
+  text-shadow: 0 3px 10px rgba(0, 0, 0, 0.8);
+}
+
+.sin-datos {
+  font-style: italic;
+  text-shadow: 0 2px 6px rgba(0, 0, 0, 0.8);
+}
+
+.fila-evento {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 24px;
+  padding: 12px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.25);
+  text-shadow: 0 2px 6px rgba(0, 0, 0, 0.8);
+}
+
+.evento-fecha {
+  width: 110px;
+  font-weight: 600;
+}
+
+.evento-dato {
+  flex: 1;
+  min-width: 120px;
+}
+
+/* CELULAR */
+@media (max-width: 800px) {
+  .panel-titulo {
+    font-size: 2.6rem;
+  }
+
+  .barra {
+    padding: 14px 20px;
+  }
+
+  .panel {
+    padding: 32px 20px 48px;
+  }
+}
