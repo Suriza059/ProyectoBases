@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { AuthService } from '../../services/auth.service';
 
 @Component({
@@ -7,7 +7,7 @@ import { AuthService } from '../../services/auth.service';
   templateUrl: './login.html',
   styleUrl: './login.css',
 })
-export class Login implements OnInit {
+export class Login {
   usuario = '';
   contrasena = '';
   error = '';
@@ -15,32 +15,18 @@ export class Login implements OnInit {
   // Por ahora, el rol con el que se ingresó (para mostrar un mensaje)
   rolIniciado = '';
 
-  // BOOLEANOS DE ANIMACIÓN
-  mostrarTitulo = false;
-  mostrarFormulario = false;
-
   constructor(private authService: AuthService) {}
-
-  ngOnInit(): void {
-    setTimeout(() => {
-      this.mostrarTitulo = true;
-    }, 200);
-
-    setTimeout(() => {
-      this.mostrarFormulario = true;
-    }, 700);
-  }
 
   ingresar(): void {
     this.error = '';
     this.rolIniciado = '';
 
     if (!this.usuario || this.usuario.trim() === '') {
-      this.mostrarError('El usuario es obligatorio');
+      this.error = 'El usuario es obligatorio';
       return;
     }
     if (!this.contrasena || this.contrasena.trim() === '') {
-      this.mostrarError('La contraseña es obligatoria');
+      this.error = 'La contraseña es obligatoria';
       return;
     }
 
@@ -63,19 +49,10 @@ export class Login implements OnInit {
         //   }
       },
       error: (err) => {
-        this.mostrarError(
-          typeof err.error === 'string' ? err.error : 'Error al iniciar sesión'
-        );
+        this.error = typeof err.error === 'string'
+          ? err.error
+          : 'Error al iniciar sesión';
       },
     });
-  }
-
-  // Borra el mensaje y lo vuelve a poner un instante después, para que
-  // la animación de sacudida se repita en cada intento fallido
-  mostrarError(texto: string): void {
-    this.error = '';
-    setTimeout(() => {
-      this.error = texto;
-    }, 50);
   }
 }
