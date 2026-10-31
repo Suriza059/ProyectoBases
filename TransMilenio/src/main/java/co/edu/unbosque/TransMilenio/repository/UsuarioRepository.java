@@ -7,7 +7,6 @@ import co.edu.unbosque.TransMilenio.entity.Usuario;
 
 public class UsuarioRepository {
 
-	// Por ahora guarda en memoria. Aqui va la conexion a la base de datos hecha a mano.
 	private ArrayList<Usuario> lista = new ArrayList<>();
 	private long siguienteId = 1;
 
@@ -31,6 +30,15 @@ public class UsuarioRepository {
 	public Usuario buscarPorId(Long id) {
 		for (Usuario usuario : lista) {
 			if (usuario.getId().equals(id)) {
+				return usuario;
+			}
+		}
+		return null;
+	}
+
+	public Usuario buscarPorNombreUsuario(String nombreUsuario) {
+		for (Usuario usuario : lista) {
+			if (usuario.getNombreUsuario() != null && usuario.getNombreUsuario().equals(nombreUsuario)) {
 				return usuario;
 			}
 		}
