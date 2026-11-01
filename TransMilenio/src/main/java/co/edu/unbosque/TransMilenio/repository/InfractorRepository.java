@@ -7,7 +7,6 @@ import co.edu.unbosque.TransMilenio.entity.Infractor;
 
 public class InfractorRepository {
 
-	// Por ahora guarda en memoria. Aqui va la conexion a la base de datos hecha a mano.
 	private ArrayList<Infractor> lista = new ArrayList<>();
 	private long siguienteId = 1;
 

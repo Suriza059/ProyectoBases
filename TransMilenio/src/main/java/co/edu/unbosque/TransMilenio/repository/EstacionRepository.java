@@ -7,7 +7,6 @@ import co.edu.unbosque.TransMilenio.entity.Estacion;
 
 public class EstacionRepository {
 
-	// Por ahora guarda en memoria. Aqui va la conexion a la base de datos hecha a mano.
 	private ArrayList<Estacion> lista = new ArrayList<>();
 	private long siguienteId = 1;
 

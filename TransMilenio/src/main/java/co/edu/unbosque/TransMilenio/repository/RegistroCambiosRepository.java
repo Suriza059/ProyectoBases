@@ -7,7 +7,6 @@ import co.edu.unbosque.TransMilenio.entity.RegistroCambios;
 
 public class RegistroCambiosRepository {
 
-	// Por ahora guarda en memoria. Aqui va la conexion a la base de datos hecha a mano.
 	private ArrayList<RegistroCambios> lista = new ArrayList<>();
 	private long siguienteId = 1;
 

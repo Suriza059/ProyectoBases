@@ -8,7 +8,6 @@ import java.util.Base64;
 
 public class PasswordUtil {
 
-	// Guarda la contrasena como "sal:hash". Nunca se guarda en texto plano.
 	public static String encriptar(String contrasena) {
 		byte[] sal = new byte[16];
 		new SecureRandom().nextBytes(sal);

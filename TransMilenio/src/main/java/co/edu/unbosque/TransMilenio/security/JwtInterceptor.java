@@ -7,7 +7,10 @@ import jakarta.servlet.http.HttpServletResponse;
 
 public class JwtInterceptor implements HandlerInterceptor {
 
-	private static final String[] SOLO_ADMIN = { "/usuario", "/administrador", "/analista", "/usuarioGuarda", "/registroCambios" };
+	private static final String[] SOLO_ADMIN = { "/usuario", "/administrador", "/analista", "/usuarioGuarda",
+			"/registroCambios" };
+
+	private static final String[] SOLO_ADMIN_ESCRIBIR = { "/troncal", "/estacion", "/tarifa", "/modalidad" };
 
 	private JwtUtil jwtUtil;
 
@@ -37,6 +40,12 @@ public class JwtInterceptor implements HandlerInterceptor {
 		for (String prefijo : SOLO_ADMIN) {
 			if (ruta.startsWith(prefijo) && !"Administrador".equals(rol)) {
 				responder(response, 403, "Solo el Administrador puede usar esta ruta");
+				return false;
+			}
+		}
+		for (String prefijo : SOLO_ADMIN_ESCRIBIR) {
+			if (ruta.startsWith(prefijo) && !request.getMethod().equals("GET") && !"Administrador".equals(rol)) {
+				responder(response, 403, "Solo el Administrador puede crear, cambiar o borrar en esta ruta");
 				return false;
 			}
 		}

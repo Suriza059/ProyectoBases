@@ -7,7 +7,6 @@ import co.edu.unbosque.TransMilenio.entity.Evento;
 
 public class EventoRepository {
 
-	// Por ahora guarda en memoria. Aqui va la conexion a la base de datos hecha a mano.
 	private ArrayList<Evento> lista = new ArrayList<>();
 	private long siguienteId = 1;
 
