@@ -1,6 +1,5 @@
 package co.edu.unbosque.TransMilenio.configuration;
 
-
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -20,9 +19,11 @@ import co.edu.unbosque.TransMilenio.repository.TarifaRepository;
 import co.edu.unbosque.TransMilenio.repository.TroncalRepository;
 import co.edu.unbosque.TransMilenio.repository.UsuarioGuardaRepository;
 import co.edu.unbosque.TransMilenio.repository.UsuarioRepository;
+import co.edu.unbosque.TransMilenio.security.JwtUtil;
 import co.edu.unbosque.TransMilenio.service.AdministradorService;
 import co.edu.unbosque.TransMilenio.service.AgresionService;
 import co.edu.unbosque.TransMilenio.service.AnalistaService;
+import co.edu.unbosque.TransMilenio.service.AuthService;
 import co.edu.unbosque.TransMilenio.service.ComparendoService;
 import co.edu.unbosque.TransMilenio.service.EstacionService;
 import co.edu.unbosque.TransMilenio.service.EventoInfractorService;
@@ -36,6 +37,10 @@ import co.edu.unbosque.TransMilenio.service.TarifaService;
 import co.edu.unbosque.TransMilenio.service.TroncalService;
 import co.edu.unbosque.TransMilenio.service.UsuarioGuardaService;
 import co.edu.unbosque.TransMilenio.service.UsuarioService;
+import io.swagger.v3.oas.models.Components;
+import io.swagger.v3.oas.models.OpenAPI;
+import io.swagger.v3.oas.models.security.SecurityRequirement;
+import io.swagger.v3.oas.models.security.SecurityScheme;
 
 @Configuration
 public class AppConfig {
@@ -120,7 +125,6 @@ public class AppConfig {
 		return new AnalistaRepository();
 	}
 
-	// Services
 	@Bean
 	public TroncalService troncalService(TroncalRepository troncalRepository) {
 		return new TroncalService(troncalRepository);
@@ -183,7 +187,9 @@ public class AppConfig {
 
 	@Bean
 	public UsuarioService usuarioService(UsuarioRepository usuarioRepository) {
-		return new UsuarioService(usuarioRepository);
+		UsuarioService servicio = new UsuarioService(usuarioRepository);
+		servicio.crearAdministradorInicial();
+		return servicio;
 	}
 
 	@Bean
@@ -199,5 +205,23 @@ public class AppConfig {
 	@Bean
 	public AnalistaService analistaService(AnalistaRepository analistaRepository, UsuarioRepository usuarioRepository) {
 		return new AnalistaService(analistaRepository, usuarioRepository);
+	}
+
+	@Bean
+	public JwtUtil jwtUtil() {
+		return new JwtUtil();
+	}
+
+	@Bean
+	public AuthService authService(UsuarioRepository usuarioRepository, JwtUtil jwtUtil) {
+		return new AuthService(usuarioRepository, jwtUtil);
+	}
+
+	@Bean
+	public OpenAPI openAPI() {
+		return new OpenAPI()
+				.addSecurityItem(new SecurityRequirement().addList("bearerAuth"))
+				.components(new Components().addSecuritySchemes("bearerAuth",
+						new SecurityScheme().type(SecurityScheme.Type.HTTP).scheme("bearer").bearerFormat("JWT")));
 	}
 }

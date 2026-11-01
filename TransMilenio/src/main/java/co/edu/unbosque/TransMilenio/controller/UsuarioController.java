@@ -24,9 +24,13 @@ public class UsuarioController {
 
 	@PostMapping("/crear")
 	public ResponseEntity<String> crear(
-			@RequestParam(name = "rol", required = false) String rol) {
+			@RequestParam(name = "rol", required = false) String rol,
+			@RequestParam(name = "nombreUsuario", required = false) String nombreUsuario,
+			@RequestParam(name = "contrasena", required = false) String contrasena) {
 		UsuarioDTO dto = new UsuarioDTO();
 		dto.setRol(rol);
+		dto.setNombreUsuario(nombreUsuario);
+		dto.setContrasena(contrasena);
 		try {
 			usuarioService.create(dto);
 			return new ResponseEntity<>("El usuario creado", HttpStatus.CREATED);
@@ -43,9 +47,13 @@ public class UsuarioController {
 	@PutMapping("/actualizar/{id}")
 	public ResponseEntity<String> actualizar(
 			@PathVariable Long id,
-			@RequestParam(name = "rol", required = false) String rol) {
+			@RequestParam(name = "rol", required = false) String rol,
+			@RequestParam(name = "nombreUsuario", required = false) String nombreUsuario,
+			@RequestParam(name = "contrasena", required = false) String contrasena) {
 		UsuarioDTO dto = new UsuarioDTO();
 		dto.setRol(rol);
+		dto.setNombreUsuario(nombreUsuario);
+		dto.setContrasena(contrasena);
 		try {
 			usuarioService.updateById(id, dto);
 			return new ResponseEntity<>("El usuario actualizado", HttpStatus.OK);

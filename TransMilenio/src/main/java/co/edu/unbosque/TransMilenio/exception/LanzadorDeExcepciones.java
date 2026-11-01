@@ -17,4 +17,8 @@ public class LanzadorDeExcepciones {
 	public static void datoInvalido(String mensaje) {
 		throw new DatoInvalidoException(mensaje);
 	}
+
+	public static void credencialesInvalidas() {
+		throw new CredencialesInvalidasException("Usuario o contrasena incorrectos");
+	}
 }

@@ -6,13 +6,17 @@ public class Usuario {
 
 	private Long id;
 	private String rol;
+	private String nombreUsuario;
+	private String contrasena;
 
 	public Usuario() {
 	}
 
-	public Usuario(String rol) {
+	public Usuario(String rol, String nombreUsuario, String contrasena) {
 		super();
 		this.rol = rol;
+		this.nombreUsuario = nombreUsuario;
+		this.contrasena = contrasena;
 	}
 
 	public Long getId() {
@@ -31,14 +35,30 @@ public class Usuario {
 		this.rol = rol;
 	}
 
+	public String getNombreUsuario() {
+		return nombreUsuario;
+	}
+
+	public void setNombreUsuario(String nombreUsuario) {
+		this.nombreUsuario = nombreUsuario;
+	}
+
+	public String getContrasena() {
+		return contrasena;
+	}
+
+	public void setContrasena(String contrasena) {
+		this.contrasena = contrasena;
+	}
+
 	@Override
 	public String toString() {
-		return "Usuario [id=" + id + ", rol=" + rol + "]";
+		return "Usuario [id=" + id + ", rol=" + rol + ", nombreUsuario=" + nombreUsuario + ", contrasena=" + contrasena + "]";
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(id, rol);
+		return Objects.hash(contrasena, id, nombreUsuario, rol);
 	}
 
 	@Override
@@ -50,7 +70,7 @@ public class Usuario {
 		if (getClass() != obj.getClass())
 			return false;
 		Usuario other = (Usuario) obj;
-		return Objects.equals(id, other.id) && Objects.equals(rol, other.rol);
+		return Objects.equals(contrasena, other.contrasena) && Objects.equals(id, other.id) && Objects.equals(nombreUsuario, other.nombreUsuario) && Objects.equals(rol, other.rol);
 	}
 
 }
