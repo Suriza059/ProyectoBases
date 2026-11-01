@@ -1,0 +1,242 @@
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Work+Sans:wght@400;500;600&display=swap');
+
+.guarda-pagina {
+  display: flex;
+  min-height: 100vh;
+  background-color: #17140f;
+  color: #f3ede0;
+  font-family: 'Work Sans', Arial, sans-serif;
+}
+
+/* ---------- Menú ---------- */
+.guarda-menu {
+  display: flex;
+  flex-direction: column;
+  width: 300px;
+  padding: 48px 32px;
+  border-right: 2px solid #f2b705;
+}
+
+.guarda-menu-etiqueta {
+  margin: 0 0 8px 0;
+  font-size: 13px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: #f2b705;
+}
+
+.guarda-menu-titulo {
+  margin: 0 0 48px 0;
+  font-family: 'Bebas Neue', Impact, sans-serif;
+  font-size: 64px;
+  line-height: 0.95;
+  letter-spacing: 1px;
+}
+
+.guarda-enlace {
+  padding: 14px 0;
+  border: none;
+  border-bottom: 1px solid #4a4336;
+  background: none;
+  color: #bfb8a8;
+  font-size: 17px;
+  text-align: left;
+  cursor: pointer;
+  transition: color 150ms ease-out, padding-left 150ms ease-out;
+}
+
+.guarda-enlace-activo {
+  color: #f2b705;
+  padding-left: 12px;
+  font-weight: 600;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .guarda-enlace:hover {
+    color: #f2b705;
+    padding-left: 12px;
+  }
+}
+
+.guarda-salir {
+  margin-top: auto;
+  padding: 12px 0;
+  border: none;
+  background: none;
+  color: #bfb8a8;
+  font-size: 15px;
+  text-align: left;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+/* ---------- Contenido ---------- */
+.guarda-contenido {
+  flex: 1;
+  padding: 48px 64px;
+  max-width: 900px;
+}
+
+.seccion-titulo {
+  margin: 0 0 8px 0;
+  font-family: 'Bebas Neue', Impact, sans-serif;
+  font-size: 56px;
+  letter-spacing: 1px;
+}
+
+.seccion-texto {
+  margin: 0 0 32px 0;
+  color: #bfb8a8;
+  font-size: 17px;
+}
+
+/* ---------- Formularios ---------- */
+.campo {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  margin-bottom: 28px;
+}
+
+.campo-fila {
+  display: flex;
+  gap: 32px;
+  flex-wrap: wrap;
+}
+
+.campo-etiqueta {
+  margin-bottom: 6px;
+  font-size: 13px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: #f2b705;
+}
+
+.campo-linea {
+  padding: 10px 0;
+  border: none;
+  border-bottom: 2px solid #6b624f;
+  background: none;
+  color: #f3ede0;
+  font-size: 20px;
+  font-family: inherit;
+  outline: none;
+  transition: border-color 150ms ease-out;
+}
+
+.campo-linea:focus {
+  border-bottom-color: #f2b705;
+}
+
+.campo-linea option {
+  background-color: #17140f;
+  color: #f3ede0;
+}
+
+.campo-texto {
+  resize: vertical;
+}
+
+.boton-guarda {
+  margin-top: 8px;
+  padding: 14px 40px;
+  border: none;
+  background-color: #f2b705;
+  color: #17140f;
+  font-family: 'Bebas Neue', Impact, sans-serif;
+  font-size: 24px;
+  letter-spacing: 2px;
+  cursor: pointer;
+  transition: transform 150ms ease-out;
+}
+
+.boton-guarda:active {
+  transform: scale(0.97);
+}
+
+/* ---------- Mensajes ---------- */
+.mensaje-exito {
+  margin: 0 0 24px 0;
+  padding-left: 12px;
+  border-left: 4px solid #7bc47f;
+  color: #7bc47f;
+  font-size: 17px;
+}
+
+.mensaje-error {
+  margin: 0 0 24px 0;
+  padding-left: 12px;
+  border-left: 4px solid #ff6b57;
+  color: #ff6b57;
+  font-size: 17px;
+}
+
+/* ---------- Lista de registros ---------- */
+.fila-registro {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  padding: 18px 0;
+  border-bottom: 1px solid #4a4336;
+  transition: transform 150ms ease-out;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .fila-registro:hover {
+    transform: translateX(8px);
+  }
+}
+
+.fila-numero {
+  min-width: 48px;
+  font-family: 'Bebas Neue', Impact, sans-serif;
+  font-size: 32px;
+  color: #f2b705;
+}
+
+.fila-datos {
+  flex: 1;
+  min-width: 0;
+}
+
+.fila-principal {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.fila-secundario {
+  margin: 4px 0 0 0;
+  color: #bfb8a8;
+  font-size: 15px;
+  overflow-wrap: anywhere;
+}
+
+.fila-personas {
+  flex-shrink: 0;
+  font-size: 15px;
+  color: #bfb8a8;
+}
+
+/* ---------- Pantallas pequeñas ---------- */
+@media (max-width: 768px) {
+  .guarda-pagina {
+    flex-direction: column;
+  }
+  .guarda-menu {
+    width: auto;
+    padding: 32px 24px;
+    border-right: none;
+    border-bottom: 2px solid #f2b705;
+  }
+  .guarda-menu-titulo {
+    font-size: 48px;
+    margin-bottom: 24px;
+  }
+  .guarda-salir {
+    margin-top: 24px;
+  }
+  .guarda-contenido {
+    padding: 32px 24px;
+  }
+}

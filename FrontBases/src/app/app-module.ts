@@ -9,6 +9,7 @@ import { Login } from './publico/login/login';
 import { RegistrarEvento } from './guarda/registrar-evento/registrar-evento';
 import {Guarda} from './guarda/guarda';
 
+
 @NgModule({
   declarations: [App, Inicio, Login, RegistrarEvento, Guarda],
   imports: [BrowserModule, FormsModule, AppRoutingModule],
