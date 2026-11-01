@@ -61,7 +61,7 @@
         </div>
         <div class="campo">
           <label class="campo-etiqueta">Fecha</label>
-          <input class="campo-linea" type="date" [(ngModel)]="nuevoColado.fecha">
+          <input class="campo-linea" type="date" [max]="fechaHoy" [(ngModel)]="nuevoColado.fecha">
         </div>
       </div>
 
@@ -89,6 +89,8 @@
     <section *ngIf="seccionActiva === 'agresion'">
       <h2 class="seccion-titulo">Registrar una agresión</h2>
       <p class="seccion-texto">Escoge el evento en el que ocurrió y cuenta qué pasó.</p>
+
+      <p class="seccion-texto" *ngIf="registros.length === 0">Primero registra un colado para poder ligar la agresión a un evento.</p>
 
       <div class="campo">
         <label class="campo-etiqueta">Evento</label>

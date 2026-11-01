@@ -15,6 +15,9 @@ export class Guarda implements OnInit {
   // Animación de entrada (setTimeout + booleano)
   entradaLista: boolean = false;
 
+  // Fecha de hoy en formato aaaa-mm-dd (se calcula en ngOnInit)
+  fechaHoy: string = '';
+
   // Mensajes para el guarda
   mensajeExito: string = '';
   mensajeError: string = '';
@@ -31,11 +34,8 @@ export class Guarda implements OnInit {
     fecha: ''
   };
 
-  // Eventos registrados (por ahora de prueba, luego vendrán del back)
-  registros: any[] = [
-    { id: 1, fecha: '2026-10-28', estacion: 'Portal Norte', modalidad: 'Por el torniquete', numeroPersonas: 3 },
-    { id: 2, fecha: '2026-10-29', estacion: 'Calle 100', modalidad: 'Por la puerta', numeroPersonas: 1 },
-  ];
+  // Eventos registrados (empieza vacío; luego vendrán del back)
+  registros: any[] = [];
 
   // Formulario de registrar agresión
   nuevaAgresion = {
@@ -49,9 +49,20 @@ export class Guarda implements OnInit {
   constructor(private router: Router) {}
 
   ngOnInit(): void {
+    this.fechaHoy = this.obtenerFechaHoy();
+
     setTimeout(() => {
       this.entradaLista = true;
     }, 100);
+  }
+
+  // Devuelve la fecha de hoy como texto aaaa-mm-dd
+  obtenerFechaHoy(): string {
+    const hoy = new Date();
+    const anio = hoy.getFullYear();
+    const mes = String(hoy.getMonth() + 1).padStart(2, '0');
+    const dia = String(hoy.getDate()).padStart(2, '0');
+    return anio + '-' + mes + '-' + dia;
   }
 
   cambiarSeccion(nombre: string): void {
@@ -66,6 +77,10 @@ export class Guarda implements OnInit {
 
     if (!this.nuevoColado.estacion || !this.nuevoColado.modalidad || !this.nuevoColado.fecha) {
       this.mensajeError = 'Falta llenar la estación, la modalidad o la fecha.';
+      return;
+    }
+    if (this.nuevoColado.fecha > this.fechaHoy) {
+      this.mensajeError = 'La fecha no puede ser posterior a hoy.';
       return;
     }
     if (this.nuevoColado.numeroPersonas < 1) {
