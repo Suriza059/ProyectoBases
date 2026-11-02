@@ -7,12 +7,12 @@ import jakarta.servlet.http.HttpServletResponse;
 
 public class JwtInterceptor implements HandlerInterceptor {
 
-	// Rutas que solo puede usar el Administrador (con cualquier metodo)
-	private static final String[] SOLO_ADMIN = { "/usuario", "/administrador", "/analista", "/usuarioGuarda", "/registroCambios" };
+	private static final String[] SOLO_ADMIN = { "/usuario", "/administrador", "/analista", "/usuarioGuarda",
+			"/registroCambios" };
 
-	// NUEVO: rutas que todos pueden leer (GET), pero donde solo el Administrador
-	// puede crear, editar o eliminar (POST, PUT, DELETE)
-	private static final String[] ESCRITURA_SOLO_ADMIN = { "/estacion", "/modalidad", "/tarifa", "/troncal", "/guarda" };
+	// Rutas que todos pueden leer (GET), pero donde solo el Administrador
+	// puede crear, cambiar o borrar (POST, PUT, DELETE)
+	private static final String[] SOLO_ADMIN_ESCRIBIR = { "/troncal", "/estacion", "/tarifa", "/modalidad", "/guarda" };
 
 	private JwtUtil jwtUtil;
 
@@ -45,12 +45,9 @@ public class JwtInterceptor implements HandlerInterceptor {
 				return false;
 			}
 		}
-
-		// NUEVO: si no es GET, en estas rutas solo puede el Administrador
-		String metodo = request.getMethod();
-		for (String prefijo : ESCRITURA_SOLO_ADMIN) {
-			if (ruta.startsWith(prefijo) && !metodo.equals("GET") && !"Administrador".equals(rol)) {
-				responder(response, 403, "Solo el Administrador puede crear, editar o eliminar en esta ruta");
+		for (String prefijo : SOLO_ADMIN_ESCRIBIR) {
+			if (ruta.startsWith(prefijo) && !request.getMethod().equals("GET") && !"Administrador".equals(rol)) {
+				responder(response, 403, "Solo el Administrador puede crear, cambiar o borrar en esta ruta");
 				return false;
 			}
 		}

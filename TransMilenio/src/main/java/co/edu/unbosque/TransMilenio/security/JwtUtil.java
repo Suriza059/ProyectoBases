@@ -11,9 +11,7 @@ import io.jsonwebtoken.security.Keys;
 
 public class JwtUtil {
 
-	// Debe tener minimo 32 caracteres. Cambiala por una propia.
 	private static final String SECRETO = "TransMilenio-clave-secreta-JWT-cambiala-por-una-propia-2026";
-	// 2 horas
 	private static final long DURACION = 2L * 60 * 60 * 1000;
 
 	private Key clave = Keys.hmacShaKeyFor(SECRETO.getBytes(StandardCharsets.UTF_8));
@@ -30,7 +28,6 @@ public class JwtUtil {
 				.compact();
 	}
 
-	// Devuelve null si el token es invalido o esta vencido
 	private Claims leer(String token) {
 		try {
 			return Jwts.parserBuilder().setSigningKey(clave).build().parseClaimsJws(token).getBody();

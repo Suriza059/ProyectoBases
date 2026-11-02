@@ -7,7 +7,6 @@ import co.edu.unbosque.TransMilenio.entity.Modalidad;
 
 public class ModalidadRepository {
 
-	// Por ahora guarda en memoria. Aqui va la conexion a la base de datos hecha a mano.
 	private ArrayList<Modalidad> lista = new ArrayList<>();
 	private long siguienteId = 1;
 

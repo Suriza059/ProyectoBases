@@ -7,7 +7,6 @@ import co.edu.unbosque.TransMilenio.entity.Pago;
 
 public class PagoRepository {
 
-	// Por ahora guarda en memoria. Aqui va la conexion a la base de datos hecha a mano.
 	private ArrayList<Pago> lista = new ArrayList<>();
 	private long siguienteId = 1;
 

@@ -7,7 +7,6 @@ import co.edu.unbosque.TransMilenio.entity.Administrador;
 
 public class AdministradorRepository {
 
-	// Por ahora guarda en memoria. Aqui va la conexion a la base de datos hecha a mano.
 	private ArrayList<Administrador> lista = new ArrayList<>();
 
 	public Administrador guardar(Administrador administrador) {

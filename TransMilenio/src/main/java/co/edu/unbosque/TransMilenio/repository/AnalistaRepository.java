@@ -7,7 +7,6 @@ import co.edu.unbosque.TransMilenio.entity.Analista;
 
 public class AnalistaRepository {
 
-	// Por ahora guarda en memoria. Aqui va la conexion a la base de datos hecha a mano.
 	private ArrayList<Analista> lista = new ArrayList<>();
 
 	public Analista guardar(Analista analista) {
