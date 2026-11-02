@@ -6,11 +6,15 @@ import { AppRoutingModule } from './app-routing-module';
 import { App } from './app';
 import { Inicio } from './publico/inicio/inicio';
 import { Login } from './publico/login/login';
+import { RegistrarEvento } from './guarda/registrar-evento/registrar-evento';
+import {Guarda} from './guarda/guarda';
+import { provideHttpClient } from '@angular/common/http';
+
 
 @NgModule({
-  declarations: [App, Inicio, Login],
+  declarations: [App, Inicio, Login, RegistrarEvento, Guarda],
   imports: [BrowserModule, FormsModule, AppRoutingModule],
-  providers: [provideBrowserGlobalErrorListeners()],
+  providers: [provideBrowserGlobalErrorListeners(), provideHttpClient()],
   bootstrap: [App],
 })
 export class AppModule {}

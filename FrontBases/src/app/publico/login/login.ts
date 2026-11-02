@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { ChangeDetectorRef, Component } from '@angular/core';
+import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 
 @Component({
@@ -12,10 +13,14 @@ export class Login {
   contrasena = '';
   error = '';
 
-  // Por ahora, el rol con el que se ingresó (para mostrar un mensaje)
+  // Para los roles que todavía no tienen panel
   rolIniciado = '';
 
-  constructor(private authService: AuthService) {}
+  constructor(
+    private router: Router,
+    private authService: AuthService,
+    private cambios: ChangeDetectorRef
+  ) {}
 
   ingresar(): void {
     this.error = '';
@@ -31,27 +36,40 @@ export class Login {
     }
 
     this.authService.login(this.usuario.trim(), this.contrasena).subscribe({
-      next: (response) => {
-        this.authService.guardarToken(response.token);
-        this.authService.guardarRol(response.role);
-        this.authService.guardarId(response.id);
+      next: (token) => {
+        const contenido = this.authService.leerContenidoToken(token);
+        console.log('Contenido del token:', contenido); // BORRAR después de probar
 
-        this.rolIniciado = response.role;
+        if (!contenido || !contenido.rol) {
+          this.error = 'No se pudo leer la respuesta del servidor';
+          this.cambios.detectChanges();
+          return;
+        }
 
-        // MÁS ADELANTE (cuando existan los paneles): inyectar Router en el
-        // constructor (private router: Router) y enviar a cada rol a su panel:
-        //   if (response.role === 'ADMIN') {
-        //     this.router.navigate(['/admin']);
-        //   } else if (response.role === 'ANALISTA') {
-        //     this.router.navigate(['/analista']);
-        //   } else {
-        //     this.router.navigate(['/guarda']);
-        //   }
+        this.authService.guardarToken(token);
+        this.authService.guardarRol(contenido.rol);
+        this.authService.guardarIdUsuario(contenido.idUsuario);
+
+        // Se compara en minúsculas para que no importe cómo escribe el rol el back
+        if (String(contenido.rol).toLowerCase() === 'guarda') {
+          this.router.navigate(['/guarda']);
+        } else {
+          // Los paneles de Administrador y Analista todavía no existen
+          this.rolIniciado = contenido.rol;
+          this.cambios.detectChanges();
+        }
       },
       error: (err) => {
-        this.error = typeof err.error === 'string'
-          ? err.error
-          : 'Error al iniciar sesión';
+        console.log('Error del login:', err); // BORRAR después de probar
+
+        if (err.status === 0) {
+          this.error = 'No se pudo conectar con el servidor. Revisa que el back esté prendido.';
+        } else if (typeof err.error === 'string' && err.error !== '') {
+          this.error = err.error;
+        } else {
+          this.error = 'Error al iniciar sesión';
+        }
+        this.cambios.detectChanges();
       },
     });
   }

@@ -10,7 +10,9 @@ public class JwtInterceptor implements HandlerInterceptor {
 	private static final String[] SOLO_ADMIN = { "/usuario", "/administrador", "/analista", "/usuarioGuarda",
 			"/registroCambios" };
 
-	private static final String[] SOLO_ADMIN_ESCRIBIR = { "/troncal", "/estacion", "/tarifa", "/modalidad" };
+	// Rutas que todos pueden leer (GET), pero donde solo el Administrador
+	// puede crear, cambiar o borrar (POST, PUT, DELETE)
+	private static final String[] SOLO_ADMIN_ESCRIBIR = { "/troncal", "/estacion", "/tarifa", "/modalidad", "/guarda" };
 
 	private JwtUtil jwtUtil;
 

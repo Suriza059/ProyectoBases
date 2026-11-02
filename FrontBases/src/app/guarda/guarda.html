@@ -1,1 +1,140 @@
-<p>guarda works!</p>
+<div class="guarda-pagina">
+
+  <!-- Menú de la izquierda -->
+  <aside class="guarda-menu">
+    <p class="guarda-menu-etiqueta">Panel del guarda</p>
+    <h1 class="guarda-menu-titulo">Turno<br>en curso</h1>
+
+    <button class="guarda-enlace"
+            [class.guarda-enlace-activo]="seccionActiva === 'registrar'"
+            (click)="cambiarSeccion('registrar')">
+      1. Registrar colado
+    </button>
+    <button class="guarda-enlace"
+            [class.guarda-enlace-activo]="seccionActiva === 'registros'"
+            (click)="cambiarSeccion('registros')">
+      2. Mis registros
+    </button>
+    <button class="guarda-enlace"
+            [class.guarda-enlace-activo]="seccionActiva === 'agresion'"
+            (click)="cambiarSeccion('agresion')">
+      3. Registrar agresión
+    </button>
+
+    <button class="guarda-salir" (click)="cerrarSesion()">Cerrar sesión</button>
+  </aside>
+
+  <!-- Contenido de la derecha -->
+  <main class="guarda-contenido"
+        [class.animate__animated]="entradaLista"
+        [class.animate__fadeInUp]="entradaLista">
+
+    <!-- Mensajes -->
+    <p class="mensaje-exito" *ngIf="mensajeExito">{{ mensajeExito }}</p>
+    <p class="mensaje-error" *ngIf="mensajeError">{{ mensajeError }}</p>
+
+    <!-- SECCIÓN 1: registrar colado -->
+    <section *ngIf="seccionActiva === 'registrar'">
+      <h2 class="seccion-titulo">Registrar un colado</h2>
+      <p class="seccion-texto">Llena los datos del evento tal como lo viste en la estación.</p>
+
+      <div class="campo">
+        <label class="campo-etiqueta">Estación</label>
+        <select class="campo-linea" [(ngModel)]="nuevoColado.idEstacion">
+          <option [ngValue]="null">Escoge una estación</option>
+          <option *ngFor="let estacion of estacionesActivas()" [ngValue]="estacion.id">
+            {{ estacion.nombre | titlecase }}
+          </option>
+        </select>
+      </div>
+
+      <div class="campo">
+        <label class="campo-etiqueta">Modalidad</label>
+        <select class="campo-linea" [(ngModel)]="nuevoColado.idModalidad">
+          <option [ngValue]="null">Escoge una modalidad</option>
+          <option *ngFor="let modalidad of modalidades" [ngValue]="modalidad.id">
+            {{ modalidad.nombre | titlecase }}
+          </option>
+        </select>
+      </div>
+
+      <div class="campo-fila">
+        <div class="campo">
+          <label class="campo-etiqueta">Número de personas</label>
+          <input class="campo-linea" type="number" min="1" [(ngModel)]="nuevoColado.numeroPersonas">
+        </div>
+        <div class="campo">
+          <label class="campo-etiqueta">Fecha</label>
+          <input class="campo-linea" type="date" [max]="fechaHoy" [(ngModel)]="nuevoColado.fecha">
+        </div>
+      </div>
+
+      <button class="boton-guarda" (click)="registrarColado()">Guardar colado</button>
+    </section>
+
+    <!-- SECCIÓN 2: mis registros -->
+    <section *ngIf="seccionActiva === 'registros'">
+      <h2 class="seccion-titulo">Mis registros</h2>
+      <p class="seccion-texto">Estos son los colados que has registrado.</p>
+
+      <p class="seccion-texto" *ngIf="registros.length === 0">Todavía no has registrado ningún colado.</p>
+
+      <div class="fila-registro" *ngFor="let registro of registros">
+        <span class="fila-numero">#{{ registro.id }}</span>
+        <div class="fila-datos">
+          <p class="fila-principal">{{ nombreEstacion(registro.idEstacion) | titlecase }}</p>
+          <p class="fila-secundario">{{ nombreModalidad(registro.idModalidad) | titlecase }} · {{ registro.fecha }}</p>
+        </div>
+        <span class="fila-personas">{{ registro.numeroPersonas }} {{ registro.numeroPersonas === 1 ? 'persona' : 'personas' }}</span>
+      </div>
+    </section>
+
+    <!-- SECCIÓN 3: registrar agresión -->
+    <section *ngIf="seccionActiva === 'agresion'">
+      <h2 class="seccion-titulo">Registrar una agresión</h2>
+      <p class="seccion-texto">Escoge el evento en el que ocurrió y cuenta qué pasó.</p>
+
+      <p class="seccion-texto" *ngIf="registros.length === 0">Primero registra un colado para poder ligar la agresión a un evento.</p>
+
+      <div class="campo">
+        <label class="campo-etiqueta">Evento</label>
+        <select class="campo-linea" [(ngModel)]="nuevaAgresion.idEvento">
+          <option [ngValue]="null">Escoge un evento</option>
+          <option *ngFor="let registro of registros" [ngValue]="registro.id">
+            #{{ registro.id }} · {{ nombreEstacion(registro.idEstacion) | titlecase }} · {{ registro.fecha }}
+          </option>
+        </select>
+      </div>
+
+      <div class="campo-fila">
+        <div class="campo">
+          <label class="campo-etiqueta">Gravedad</label>
+          <select class="campo-linea" [(ngModel)]="nuevaAgresion.gravedad">
+            <option value="">Escoge la gravedad</option>
+            <option *ngFor="let gravedad of gravedades" [value]="gravedad">{{ gravedad }}</option>
+          </select>
+        </div>
+        <div class="campo">
+          <label class="campo-etiqueta">Fecha</label>
+          <input class="campo-linea" type="date" [max]="fechaHoy" [(ngModel)]="nuevaAgresion.fecha">
+        </div>
+      </div>
+
+      <div class="campo">
+        <label class="campo-etiqueta">¿Qué pasó?</label>
+        <textarea class="campo-linea campo-texto" rows="3" [(ngModel)]="nuevaAgresion.descripcion"></textarea>
+      </div>
+
+      <button class="boton-guarda" (click)="registrarAgresion()">Guardar agresión</button>
+
+      <div class="fila-registro" *ngFor="let agresion of agresiones">
+        <span class="fila-numero">#{{ agresion.idEvento }}</span>
+        <div class="fila-datos">
+          <p class="fila-principal">{{ agresion.gravedad | titlecase }} · {{ agresion.fecha }}</p>
+          <p class="fila-secundario">{{ agresion.descripcion }}</p>
+        </div>
+      </div>
+    </section>
+
+  </main>
+</div>

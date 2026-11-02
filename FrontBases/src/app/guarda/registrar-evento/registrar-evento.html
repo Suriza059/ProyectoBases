@@ -1,0 +1,81 @@
+<header class="barra">
+  <span class="barra-titulo">Panel del guarda</span>
+  <button class="btn-salir" type="button" (click)="cerrarSesion()">Cerrar sesión</button>
+</header>
+
+<main class="panel">
+
+  <h1 class="panel-titulo">Registrar evento</h1>
+  <p class="panel-subtitulo">Todos los campos son obligatorios.</p>
+
+  <form class="formulario" (ngSubmit)="registrar()">
+
+    <div class="fila-campos">
+      <div class="grupo">
+        <label class="campo-etiqueta" for="fecha">Fecha</label>
+        <input
+          class="campo"
+          id="fecha"
+          name="fecha"
+          type="date"
+          [max]="hoy"
+          [(ngModel)]="fecha"
+        >
+      </div>
+
+      <div class="grupo">
+        <label class="campo-etiqueta" for="numeroPersonas">Número de personas</label>
+        <input
+          class="campo"
+          id="numeroPersonas"
+          name="numeroPersonas"
+          type="number"
+          min="1"
+          placeholder="Ej: 3"
+          [(ngModel)]="numeroPersonas"
+        >
+      </div>
+    </div>
+
+    <div class="fila-campos">
+      <div class="grupo">
+        <label class="campo-etiqueta" for="idEstacion">Estación</label>
+        <select class="campo" id="idEstacion" name="idEstacion" [(ngModel)]="idEstacion">
+          <option [ngValue]="null">Selecciona la estación</option>
+          <option *ngFor="let e of estaciones" [ngValue]="e.id">{{ e.nombre }}</option>
+        </select>
+      </div>
+
+      <div class="grupo">
+        <label class="campo-etiqueta" for="idModalidad">Modalidad</label>
+        <select class="campo" id="idModalidad" name="idModalidad" [(ngModel)]="idModalidad">
+          <option [ngValue]="null">Selecciona la modalidad</option>
+          <option *ngFor="let m of modalidades" [ngValue]="m.id">{{ m.nombre }}</option>
+        </select>
+      </div>
+    </div>
+
+    <p class="mensaje-error" *ngIf="error">{{ error }}</p>
+    <p class="mensaje-exito" *ngIf="exito">{{ exito }}</p>
+
+    <button class="btn-registrar" type="submit">Registrar evento</button>
+  </form>
+
+  <section class="recientes">
+    <h2 class="recientes-titulo">Eventos registrados</h2>
+
+    <p class="sin-datos" *ngIf="eventosRegistrados.length === 0">
+      Todavía no has registrado eventos.
+    </p>
+
+    <div class="fila-evento" *ngFor="let ev of eventosRegistrados">
+      <span class="evento-fecha">{{ ev.fecha }}</span>
+      <span class="evento-dato">{{ ev.estacion }}</span>
+      <span class="evento-dato">{{ ev.modalidad }}</span>
+      <span class="evento-dato">
+        {{ ev.numeroPersonas }} {{ ev.numeroPersonas === 1 ? 'persona' : 'personas' }}
+      </span>
+    </div>
+  </section>
+
+</main>
