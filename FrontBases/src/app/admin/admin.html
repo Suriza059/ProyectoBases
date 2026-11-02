@@ -1,0 +1,298 @@
+<div class="admin-pagina">
+
+  <!-- Barra de arriba -->
+  <header class="admin-barra">
+    <div class="admin-marca">
+      <span class="admin-marca-etiqueta">TransMilenio</span>
+      <span class="admin-marca-titulo">Administración</span>
+    </div>
+
+    <nav class="admin-nav">
+      <button class="admin-pestana"
+              [class.admin-pestana-activa]="seccionActiva === 'comparendos'"
+              (click)="cambiarSeccion('comparendos')">
+        Comparendos
+      </button>
+      <button class="admin-pestana"
+              [class.admin-pestana-activa]="seccionActiva === 'pagos'"
+              (click)="cambiarSeccion('pagos')">
+        Pagos
+      </button>
+      <button class="admin-pestana"
+              [class.admin-pestana-activa]="seccionActiva === 'modalidades'"
+              (click)="cambiarSeccion('modalidades')">
+        Modalidades
+      </button>
+      <button class="admin-pestana"
+              [class.admin-pestana-activa]="seccionActiva === 'usuarios'"
+              (click)="cambiarSeccion('usuarios')">
+        Usuarios
+      </button>
+      <button class="admin-pestana"
+              [class.admin-pestana-activa]="seccionActiva === 'cambios'"
+              (click)="cambiarSeccion('cambios')">
+        Registro de cambios
+      </button>
+    </nav>
+
+    <button class="admin-salir" (click)="cerrarSesion()">Cerrar sesión</button>
+  </header>
+
+  <!-- Contenido -->
+  <main class="admin-contenido"
+        [class.animate__animated]="entradaLista"
+        [class.animate__fadeIn]="entradaLista">
+
+    <!-- Mensajes -->
+    <p class="mensaje-exito" *ngIf="mensajeExito">{{ mensajeExito }}</p>
+    <p class="mensaje-error" *ngIf="mensajeError">{{ mensajeError }}</p>
+
+    <!-- SECCIÓN 1: comparendos -->
+    <section *ngIf="seccionActiva === 'comparendos'">
+      <div class="admin-encabezado">
+        <div>
+          <h2 class="admin-titulo">Comparendos</h2>
+          <p class="admin-texto">Todos nacen pendientes. Después pasan a pagado, cuando se registra el pago, o a anulado.</p>
+        </div>
+        <div class="admin-campo">
+          <label class="admin-etiqueta">Filtrar por estado</label>
+          <select class="admin-control" [(ngModel)]="filtroEstado">
+            <option value="todos">Todos</option>
+            <option value="pendiente">Pendientes</option>
+            <option value="pagado">Pagados</option>
+            <option value="anulado">Anulados</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="admin-datos">
+        <div class="admin-dato">
+          <p class="admin-dato-numero">{{ contarEstado('pendiente') }}</p>
+          <p class="admin-dato-etiqueta">Pendientes</p>
+        </div>
+        <div class="admin-dato">
+          <p class="admin-dato-numero">{{ contarEstado('pagado') }}</p>
+          <p class="admin-dato-etiqueta">Pagados</p>
+        </div>
+        <div class="admin-dato">
+          <p class="admin-dato-numero">{{ contarEstado('anulado') }}</p>
+          <p class="admin-dato-etiqueta">Anulados</p>
+        </div>
+      </div>
+
+      <div class="admin-tabla-envoltura">
+        <p class="admin-vacio" *ngIf="comparendosFiltrados().length === 0">No hay comparendos para mostrar.</p>
+
+        <table class="admin-tabla" *ngIf="comparendosFiltrados().length > 0">
+          <thead>
+          <tr>
+            <th>N°</th>
+            <th>Fecha</th>
+            <th>Valor</th>
+            <th>Estado</th>
+            <th></th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr *ngFor="let comparendo of comparendosFiltrados()">
+            <td class="admin-numero">#{{ comparendo.id }}</td>
+            <td>{{ comparendo.fecha }}</td>
+            <td>{{ comparendo.valor | currency:'COP':'symbol-narrow':'1.0-0' }}</td>
+            <td><span class="insignia" [ngClass]="claseEstado(comparendo.estado)">{{ comparendo.estado | titlecase }}</span></td>
+            <td class="admin-acciones">
+              <button class="admin-boton-suave" *ngIf="esPendiente(comparendo)" (click)="anularComparendo(comparendo)">
+                Anular
+              </button>
+            </td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- SECCIÓN 2: pagos -->
+    <section *ngIf="seccionActiva === 'pagos'">
+      <div class="admin-encabezado">
+        <div>
+          <h2 class="admin-titulo">Pagos</h2>
+          <p class="admin-texto">Cada comparendo tiene máximo un pago, por el valor completo.</p>
+        </div>
+      </div>
+
+      <div class="admin-tarjeta">
+        <h3 class="admin-subtitulo">Registrar un pago</h3>
+        <p class="admin-texto admin-texto-tarjeta" *ngIf="comparendosPendientes().length === 0">
+          No hay comparendos pendientes para pagar.
+        </p>
+
+        <div class="admin-formulario">
+          <div class="admin-campo">
+            <label class="admin-etiqueta">Comparendo pendiente</label>
+            <select class="admin-control" [(ngModel)]="nuevoPago.idComparendo">
+              <option [ngValue]="null">Escoge un comparendo</option>
+              <option *ngFor="let comparendo of comparendosPendientes()" [ngValue]="comparendo.id">
+                #{{ comparendo.id }} · {{ comparendo.fecha }}
+              </option>
+            </select>
+          </div>
+
+          <div class="admin-campo">
+            <label class="admin-etiqueta">Valor a pagar</label>
+            <input class="admin-control" type="text" readonly
+                   [value]="valorSeleccionado() === null ? '' : (valorSeleccionado() | currency:'COP':'symbol-narrow':'1.0-0')">
+          </div>
+
+          <div class="admin-campo">
+            <label class="admin-etiqueta">Número de recibo</label>
+            <input class="admin-control" type="text" [(ngModel)]="nuevoPago.numeroRecibo">
+          </div>
+
+          <div class="admin-campo">
+            <label class="admin-etiqueta">Fecha del pago</label>
+            <input class="admin-control" type="date" [max]="fechaHoy" [(ngModel)]="nuevoPago.fecha">
+          </div>
+
+          <div class="admin-campo">
+            <button class="admin-boton" (click)="registrarPago()">Guardar pago</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="admin-tabla-envoltura">
+        <p class="admin-vacio" *ngIf="pagos.length === 0">Todavía no hay pagos registrados.</p>
+
+        <table class="admin-tabla" *ngIf="pagos.length > 0">
+          <thead>
+          <tr>
+            <th>N°</th>
+            <th>Recibo</th>
+            <th>Fecha</th>
+            <th>Valor</th>
+            <th>Comparendo</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr *ngFor="let pago of pagos">
+            <td class="admin-numero">#{{ pago.id }}</td>
+            <td>{{ pago.numeroRecibo }}</td>
+            <td>{{ pago.fecha }}</td>
+            <td>{{ pago.valor | currency:'COP':'symbol-narrow':'1.0-0' }}</td>
+            <td class="admin-numero">#{{ pago.idComparendo }}</td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- SECCIÓN 3: modalidades -->
+    <section *ngIf="seccionActiva === 'modalidades'">
+      <div class="admin-encabezado">
+        <div>
+          <h2 class="admin-titulo">Modalidades</h2>
+          <p class="admin-texto">Las formas de colarse que pueden escoger los guardas al registrar un evento.</p>
+        </div>
+      </div>
+
+      <div class="admin-tarjeta">
+        <h3 class="admin-subtitulo">Agregar una modalidad</h3>
+        <div class="admin-formulario">
+          <div class="admin-campo">
+            <label class="admin-etiqueta">Nombre</label>
+            <input class="admin-control" type="text" [(ngModel)]="nuevaModalidad.nombre">
+          </div>
+          <div class="admin-campo">
+            <button class="admin-boton" (click)="crearModalidad()">Agregar</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="admin-tabla-envoltura">
+        <p class="admin-vacio" *ngIf="modalidades.length === 0">Todavía no hay modalidades.</p>
+
+        <table class="admin-tabla" *ngIf="modalidades.length > 0">
+          <thead>
+          <tr>
+            <th>N°</th>
+            <th>Nombre</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr *ngFor="let modalidad of modalidades">
+            <td class="admin-numero">#{{ modalidad.id }}</td>
+            <td>{{ modalidad.nombre | titlecase }}</td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- SECCIÓN 4: usuarios -->
+    <section *ngIf="seccionActiva === 'usuarios'">
+      <div class="admin-encabezado">
+        <div>
+          <h2 class="admin-titulo">Usuarios</h2>
+          <p class="admin-texto">Las cuentas para entrar al sistema. Cada una es administrador, analista o guarda.</p>
+        </div>
+      </div>
+
+      <div class="admin-tabla-envoltura">
+        <p class="admin-vacio" *ngIf="usuarios.length === 0">Todavía no hay usuarios.</p>
+
+        <table class="admin-tabla" *ngIf="usuarios.length > 0">
+          <thead>
+          <tr>
+            <th>N°</th>
+            <th>Rol</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr *ngFor="let usuario of usuarios">
+            <td class="admin-numero">#{{ usuario.id }}</td>
+            <td><span class="insignia insignia-rol">{{ usuario.rol | titlecase }}</span></td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- SECCIÓN 5: registro de cambios -->
+    <section *ngIf="seccionActiva === 'cambios'">
+      <div class="admin-encabezado">
+        <div>
+          <h2 class="admin-titulo">Registro de cambios</h2>
+          <p class="admin-texto">Quién cambió el estado o el valor de un comparendo, y de qué a qué.</p>
+        </div>
+      </div>
+
+      <div class="admin-tabla-envoltura">
+        <p class="admin-vacio" *ngIf="registroCambios.length === 0">Todavía no hay cambios registrados.</p>
+
+        <table class="admin-tabla" *ngIf="registroCambios.length > 0">
+          <thead>
+          <tr>
+            <th>N°</th>
+            <th>Fecha</th>
+            <th>Comparendo</th>
+            <th>Campo</th>
+            <th>Antes</th>
+            <th>Después</th>
+            <th>Usuario</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr *ngFor="let cambio of registroCambios">
+            <td class="admin-numero">#{{ cambio.id }}</td>
+            <td>{{ cambio.fecha }}</td>
+            <td class="admin-numero">#{{ cambio.idComparendo }}</td>
+            <td>{{ cambio.campoModificado | titlecase }}</td>
+            <td>{{ cambio.valorAnterior }}</td>
+            <td>{{ cambio.valorNuevo }}</td>
+            <td class="admin-numero">#{{ cambio.idUsuario }}</td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+  </main>
+</div>

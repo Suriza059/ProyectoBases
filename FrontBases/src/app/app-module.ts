@@ -7,12 +7,12 @@ import { App } from './app';
 import { Inicio } from './publico/inicio/inicio';
 import { Login } from './publico/login/login';
 import { RegistrarEvento } from './guarda/registrar-evento/registrar-evento';
-import {Guarda} from './guarda/guarda';
+import { Guarda } from './guarda/guarda';
 import { provideHttpClient } from '@angular/common/http';
-
+import { Admin } from './admin/admin';
 
 @NgModule({
-  declarations: [App, Inicio, Login, RegistrarEvento, Guarda],
+  declarations: [App, Inicio, Login, RegistrarEvento, Guarda, Admin],
   imports: [BrowserModule, FormsModule, AppRoutingModule],
   providers: [provideBrowserGlobalErrorListeners(), provideHttpClient()],
   bootstrap: [App],

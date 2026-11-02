@@ -1,0 +1,393 @@
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500&family=IBM+Plex+Sans:wght@400;500;600&display=swap');
+
+.admin-pagina {
+  --fondo: #f3f5f8;
+  --tarjeta: #ffffff;
+  --tinta: #1b2a41;
+  --tinta-suave: #5c6b7f;
+  --borde: #d9e0ea;
+  --linea-suave: #edf1f6;
+  --acento: #0e7c86;
+  --acento-oscuro: #0a5a62;
+  --barra: #1b2a41;
+
+  min-height: 100vh;
+  background-color: var(--fondo);
+  color: var(--tinta);
+  font-family: 'IBM Plex Sans', Arial, sans-serif;
+}
+
+/* ---------- Barra de arriba ---------- */
+.admin-barra {
+  display: flex;
+  align-items: center;
+  gap: 32px;
+  padding: 0 40px;
+  background-color: var(--barra);
+  color: #ffffff;
+}
+
+.admin-marca {
+  display: flex;
+  flex-direction: column;
+  padding: 14px 0;
+}
+
+.admin-marca-etiqueta {
+  font-size: 11px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: #8fd3da;
+}
+
+.admin-marca-titulo {
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.admin-nav {
+  display: flex;
+  flex: 1;
+  align-self: stretch;
+  gap: 4px;
+  overflow-x: auto;
+}
+
+.admin-pestana {
+  padding: 0 16px;
+  border: none;
+  border-bottom: 3px solid transparent;
+  background: none;
+  color: #b9c4d4;
+  font-family: inherit;
+  font-size: 15px;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: color 150ms ease-out, border-color 150ms ease-out;
+}
+
+.admin-pestana-activa {
+  color: #ffffff;
+  border-bottom-color: #5ed0d9;
+  font-weight: 500;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .admin-pestana:hover {
+    color: #ffffff;
+  }
+}
+
+.admin-salir {
+  padding: 8px 16px;
+  border: 1px solid #4b5d78;
+  border-radius: 6px;
+  background: none;
+  color: #d6deea;
+  font-family: inherit;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 150ms ease-out;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .admin-salir:hover {
+    background-color: #2a3c58;
+  }
+}
+
+/* ---------- Contenido ---------- */
+.admin-contenido {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 40px;
+}
+
+.admin-encabezado {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 24px;
+  margin-bottom: 24px;
+}
+
+.admin-titulo {
+  margin: 0 0 4px 0;
+  font-size: 28px;
+  font-weight: 600;
+}
+
+.admin-subtitulo {
+  margin: 0 0 16px 0;
+  font-size: 17px;
+  font-weight: 600;
+}
+
+.admin-texto {
+  margin: 0;
+  color: var(--tinta-suave);
+  font-size: 15px;
+}
+
+.admin-texto-tarjeta {
+  margin-bottom: 16px;
+}
+
+/* ---------- Datos resumen ---------- */
+.admin-datos {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.admin-dato {
+  flex: 1;
+  min-width: 140px;
+  padding: 16px 20px;
+  border: 1px solid var(--borde);
+  border-radius: 8px;
+  background-color: var(--tarjeta);
+}
+
+.admin-dato-numero {
+  margin: 0;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 32px;
+  font-weight: 500;
+}
+
+.admin-dato-etiqueta {
+  margin: 0;
+  color: var(--tinta-suave);
+  font-size: 13px;
+}
+
+/* ---------- Formularios ---------- */
+.admin-tarjeta {
+  margin-bottom: 24px;
+  padding: 24px;
+  border: 1px solid var(--borde);
+  border-radius: 8px;
+  background-color: var(--tarjeta);
+}
+
+.admin-formulario {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px 20px;
+  align-items: end;
+}
+
+.admin-campo {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.admin-etiqueta {
+  color: var(--tinta-suave);
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.admin-control {
+  padding: 10px 12px;
+  border: 1px solid var(--borde);
+  border-radius: 6px;
+  background-color: #ffffff;
+  color: var(--tinta);
+  font-family: inherit;
+  font-size: 15px;
+  transition: border-color 150ms ease-out;
+}
+
+.admin-control:focus {
+  border-color: var(--acento);
+  outline: 2px solid var(--acento);
+  outline-offset: -1px;
+}
+
+.admin-control[readonly] {
+  background-color: var(--fondo);
+  color: var(--tinta-suave);
+}
+
+.admin-boton {
+  padding: 11px 20px;
+  border: none;
+  border-radius: 6px;
+  background-color: var(--acento);
+  color: #ffffff;
+  font-family: inherit;
+  font-size: 15px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 150ms ease-out, transform 150ms ease-out;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .admin-boton:hover {
+    background-color: var(--acento-oscuro);
+  }
+}
+
+.admin-boton:active {
+  transform: scale(0.97);
+}
+
+.admin-boton-suave {
+  padding: 6px 14px;
+  border: 1px solid #c9a3a3;
+  border-radius: 6px;
+  background: none;
+  color: #8a3030;
+  font-family: inherit;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 150ms ease-out, transform 150ms ease-out;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .admin-boton-suave:hover {
+    background-color: #f6e0e0;
+  }
+}
+
+.admin-boton-suave:active {
+  transform: scale(0.97);
+}
+
+/* ---------- Mensajes ---------- */
+.mensaje-exito {
+  margin: 0 0 20px 0;
+  padding: 12px 16px;
+  border-radius: 6px;
+  background-color: #ddf3e6;
+  color: #17623d;
+  font-size: 15px;
+}
+
+.mensaje-error {
+  margin: 0 0 20px 0;
+  padding: 12px 16px;
+  border-radius: 6px;
+  background-color: #f6e0e0;
+  color: #8a3030;
+  font-size: 15px;
+}
+
+/* ---------- Tablas ---------- */
+.admin-tabla-envoltura {
+  overflow-x: auto;
+  border: 1px solid var(--borde);
+  border-radius: 8px;
+  background-color: var(--tarjeta);
+}
+
+.admin-tabla {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 15px;
+}
+
+.admin-tabla th {
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--borde);
+  background-color: #f8fafc;
+  color: var(--tinta-suave);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  text-align: left;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.admin-tabla td {
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--linea-suave);
+}
+
+.admin-tabla tr:last-child td {
+  border-bottom: none;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .admin-tabla tbody tr:hover {
+    background-color: #f8fafc;
+  }
+}
+
+.admin-numero {
+  font-family: 'IBM Plex Mono', monospace;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.admin-acciones {
+  text-align: right;
+}
+
+.admin-vacio {
+  margin: 0;
+  padding: 32px;
+  color: var(--tinta-suave);
+  text-align: center;
+}
+
+/* ---------- Etiquetas de estado ---------- */
+.insignia {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.insignia-pendiente {
+  background-color: #fdf1d3;
+  color: #7a5200;
+}
+
+.insignia-pagado {
+  background-color: #ddf3e6;
+  color: #17623d;
+}
+
+.insignia-anulado {
+  background-color: #f6e0e0;
+  color: #8a3030;
+}
+
+.insignia-rol {
+  background-color: #e3ecf7;
+  color: #24456f;
+}
+
+/* ---------- Pantallas pequeñas ---------- */
+@media (max-width: 768px) {
+  .admin-barra {
+    flex-wrap: wrap;
+    gap: 0 16px;
+    padding: 0 16px;
+  }
+  .admin-marca {
+    flex: 1;
+  }
+  .admin-salir {
+    order: 2;
+  }
+  .admin-nav {
+    order: 3;
+    flex-basis: 100%;
+    padding-bottom: 0;
+  }
+  .admin-pestana {
+    padding: 14px 12px;
+  }
+  .admin-contenido {
+    padding: 24px 16px;
+  }
+}

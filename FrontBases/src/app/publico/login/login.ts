@@ -51,10 +51,14 @@ export class Login {
         this.authService.guardarIdUsuario(contenido.idUsuario);
 
         // Se compara en minúsculas para que no importe cómo escribe el rol el back
-        if (String(contenido.rol).toLowerCase() === 'guarda') {
+        const rol = String(contenido.rol).toLowerCase();
+
+        if (rol === 'guarda') {
           this.router.navigate(['/guarda']);
+        } else if (rol === 'administrador') {
+          this.router.navigate(['/admin']);
         } else {
-          // Los paneles de Administrador y Analista todavía no existen
+          // El panel de Analista todavía no existe
           this.rolIniciado = contenido.rol;
           this.cambios.detectChanges();
         }
