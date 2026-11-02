@@ -1,40 +1,40 @@
 import { Injectable } from '@angular/core';
-import { Observable, of, throwError } from 'rxjs';
-
-interface UsuarioPrueba {
-  usuario: string;
-  contrasena: string;
-  rol: string;
-  id: number;
-}
+import { HttpClient, HttpParams } from '@angular/common/http';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
-  // SIMULACIÓN: usuarios de prueba. Cuando exista el backend, esta lista se borra.
-  private usuariosPrueba: UsuarioPrueba[] = [
-    { usuario: 'admin', contrasena: '1234', rol: 'ADMIN', id: 1 },
-    { usuario: 'analista', contrasena: '1234', rol: 'ANALISTA', id: 2 },
-    { usuario: 'guarda', contrasena: '1234', rol: 'GUARDA', id: 3 },
-  ];
+  // Dirección del back (Spring Boot)
+  private urlBase = 'http://localhost:8080';
 
-  // Simula la respuesta del back: si los datos son correctos devuelve
-  // token, rol e id; si no, devuelve un error con el texto del mensaje
-  login(usuario: string, contrasena: string): Observable<any> {
-    for (const u of this.usuariosPrueba) {
-      if (u.usuario === usuario && u.contrasena === contrasena) {
-        return of({ token: 'token-de-prueba', role: u.rol, id: u.id });
-      }
-    }
-    return throwError(() => ({ error: 'Usuario o contraseña incorrectos' }));
+  constructor(private http: HttpClient) {}
+
+  // Llama al login del back. Manda usuario y contraseña en la URL
+  // y recibe el token como texto
+  login(usuario: string, contrasena: string): Observable<string> {
+    const parametros = new HttpParams()
+      .set('nombreUsuario', usuario)
+      .set('contrasena', contrasena);
+
+    return this.http.post(this.urlBase + '/auth/login', null, {
+      params: parametros,
+      responseType: 'text',
+    });
   }
 
-  // MÁS ADELANTE, con el backend, solo cambia el método login():
-  //   constructor(private http: HttpClient) {}
-  //   login(usuario, contrasena) {
-  //     return this.http.post<any>('http://localhost:8080/...', { usuario, contrasena });
-  //   }
+  // Traduce la parte del medio del token y devuelve su contenido
+  // (rol, idUsuario...). Si algo falla devuelve null
+  leerContenidoToken(token: string): any {
+    try {
+      const parteMedio = token.split('.')[1];
+      const texto = parteMedio.replace(/-/g, '+').replace(/_/g, '/');
+      return JSON.parse(atob(texto));
+    } catch (e) {
+      return null;
+    }
+  }
 
   guardarToken(token: string): void {
     localStorage.setItem('token', token);
@@ -44,12 +44,20 @@ export class AuthService {
     localStorage.setItem('rol', rol);
   }
 
-  guardarId(id: number): void {
-    localStorage.setItem('id', String(id));
+  guardarIdUsuario(id: number): void {
+    localStorage.setItem('idUsuario', String(id));
+  }
+
+  obtenerToken(): string | null {
+    return localStorage.getItem('token');
   }
 
   obtenerRol(): string | null {
     return localStorage.getItem('rol');
+  }
+
+  obtenerIdUsuario(): string | null {
+    return localStorage.getItem('idUsuario');
   }
 
   cerrarSesion(): void {
