@@ -251,6 +251,179 @@
       </div>
     </section>
 
+    <!-- ========== GUARDAS ========== -->
+    <section *ngIf="seccionActual === 'guardas'">
+      <h2 class="seccion-titulo animate__animated animate__fadeInUp">Guardas</h2>
+      <p class="seccion-texto animate__animated animate__fadeInUp">Registra a los guardas, su turno y la estación donde trabajan. El supervisor es opcional.</p>
+
+      <p class="mensaje-error" *ngIf="estaciones.length === 0">
+        Primero crea al menos una estación en la sección Estaciones.
+      </p>
+
+      <div class="panel animate__animated animate__fadeInUp">
+        <div class="campo-fila">
+          <div class="campo">
+            <label class="campo-etiqueta">Nombre</label>
+            <input
+              class="campo-linea"
+              type="text"
+              placeholder="Ejemplo: Laura"
+              [(ngModel)]="nuevaGuarda.nombre">
+          </div>
+
+          <div class="campo">
+            <label class="campo-etiqueta">Apellido</label>
+            <input
+              class="campo-linea"
+              type="text"
+              placeholder="Ejemplo: Gómez"
+              [(ngModel)]="nuevaGuarda.apellido">
+          </div>
+        </div>
+
+        <div class="campo-fila">
+          <div class="campo">
+            <label class="campo-etiqueta">Turno</label>
+            <select class="campo-linea" [(ngModel)]="nuevaGuarda.turno">
+              <option value="">Escoge un turno</option>
+              <option *ngFor="let turno of turnos" [value]="turno">{{ turno }}</option>
+            </select>
+          </div>
+
+          <div class="campo">
+            <label class="campo-etiqueta">Cargo</label>
+            <select class="campo-linea" [(ngModel)]="nuevaGuarda.cargo">
+              <option value="">Escoge un cargo</option>
+              <option *ngFor="let cargo of cargos" [value]="cargo">{{ cargo }}</option>
+            </select>
+          </div>
+
+          <div class="campo">
+            <label class="campo-etiqueta">¿Activo?</label>
+            <select class="campo-linea" [(ngModel)]="nuevaGuarda.activo">
+              <option *ngFor="let opcion of opcionesActiva" [value]="opcion">{{ opcion }}</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="campo-fila">
+          <div class="campo">
+            <label class="campo-etiqueta">Estación</label>
+            <select class="campo-linea" [(ngModel)]="nuevaGuarda.idEstacion">
+              <option [ngValue]="null">Escoge una estación</option>
+              <option *ngFor="let estacion of estaciones" [ngValue]="estacion.id">{{ estacion.nombre }}</option>
+            </select>
+          </div>
+
+          <div class="campo">
+            <label class="campo-etiqueta">Supervisor (opcional)</label>
+            <select class="campo-linea" [(ngModel)]="nuevaGuarda.idSupervisor">
+              <option [ngValue]="null">Sin supervisor</option>
+              <option *ngFor="let guarda of guardas" [ngValue]="guarda.id">{{ guarda.nombre }} {{ guarda.apellido }}</option>
+            </select>
+          </div>
+        </div>
+
+        <button type="button" class="boton-admin" (click)="crearGuarda()">Crear guarda</button>
+      </div>
+
+      <h3 class="admin-subtitulo">Guardas registrados</h3>
+
+      <p class="seccion-texto" *ngIf="guardas.length === 0">Todavía no hay guardas creados.</p>
+
+      <div class="lista animate__animated animate__fadeInUp" *ngIf="guardas.length > 0">
+        <div class="fila-registro" *ngFor="let guarda of guardas">
+          <span class="fila-numero">{{ guarda.id }}</span>
+
+          <!-- Fila normal -->
+          <ng-container *ngIf="guardaEditandoId !== guarda.id">
+            <div class="fila-datos">
+              <p class="fila-principal">{{ guarda.nombre }} {{ guarda.apellido }}</p>
+              <p class="fila-secundario">
+                {{ nombreEstacion(guarda.idEstacion) }} · {{ guarda.turno }} · {{ guarda.cargo }}
+              </p>
+              <p class="fila-secundario">
+                {{ guarda.idSupervisor ? 'Supervisor: ' + nombreGuarda(guarda.idSupervisor) : 'Sin supervisor' }}
+              </p>
+            </div>
+
+            <span class="insignia" [class.insignia-inactiva]="!guardaEstaActivo(guarda)">
+              {{ guardaEstaActivo(guarda) ? 'Activo' : 'Inactivo' }}
+            </span>
+
+            <div class="fila-acciones">
+              <button type="button" class="accion-texto" (click)="empezarEdicionGuarda(guarda)">Editar</button>
+              <button type="button" class="accion-texto accion-peligro" (click)="eliminarGuarda(guarda)">Eliminar</button>
+            </div>
+          </ng-container>
+
+          <!-- Fila en modo edición -->
+          <ng-container *ngIf="guardaEditandoId === guarda.id">
+            <div class="fila-datos">
+              <div class="campo-fila">
+                <div class="campo">
+                  <label class="campo-etiqueta">Nombre</label>
+                  <input class="campo-linea campo-editar" type="text" [(ngModel)]="guardaEditada.nombre">
+                </div>
+
+                <div class="campo">
+                  <label class="campo-etiqueta">Apellido</label>
+                  <input class="campo-linea campo-editar" type="text" [(ngModel)]="guardaEditada.apellido">
+                </div>
+              </div>
+
+              <div class="campo-fila">
+                <div class="campo">
+                  <label class="campo-etiqueta">Turno</label>
+                  <select class="campo-linea" [(ngModel)]="guardaEditada.turno">
+                    <option *ngFor="let turno of turnos" [value]="turno">{{ turno }}</option>
+                  </select>
+                </div>
+
+                <div class="campo">
+                  <label class="campo-etiqueta">Cargo</label>
+                  <select class="campo-linea" [(ngModel)]="guardaEditada.cargo">
+                    <option *ngFor="let cargo of cargos" [value]="cargo">{{ cargo }}</option>
+                  </select>
+                </div>
+
+                <div class="campo">
+                  <label class="campo-etiqueta">¿Activo?</label>
+                  <select class="campo-linea" [(ngModel)]="guardaEditada.activo">
+                    <option *ngFor="let opcion of opcionesActiva" [value]="opcion">{{ opcion }}</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="campo-fila">
+                <div class="campo">
+                  <label class="campo-etiqueta">Estación</label>
+                  <select class="campo-linea" [(ngModel)]="guardaEditada.idEstacion">
+                    <option *ngFor="let estacion of estaciones" [ngValue]="estacion.id">{{ estacion.nombre }}</option>
+                  </select>
+                </div>
+
+                <div class="campo">
+                  <label class="campo-etiqueta">Supervisor</label>
+                  <select class="campo-linea" [(ngModel)]="guardaEditada.idSupervisor">
+                    <option [ngValue]="null">Sin supervisor</option>
+                    <ng-container *ngFor="let otro of guardas">
+                      <option *ngIf="otro.id !== guardaEditandoId" [ngValue]="otro.id">{{ otro.nombre }} {{ otro.apellido }}</option>
+                    </ng-container>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <div class="fila-acciones">
+              <button type="button" class="accion-texto" (click)="guardarEdicionGuarda()">Guardar</button>
+              <button type="button" class="accion-texto" (click)="cancelarEdicionGuarda()">Cancelar</button>
+            </div>
+          </ng-container>
+        </div>
+      </div>
+    </section>
+
     <!-- ========== LAS DEMÁS SECCIONES (todavía vacías) ========== -->
     <!-- ========== TARIFAS ========== -->
     <section *ngIf="seccionActual === 'tarifas'">
