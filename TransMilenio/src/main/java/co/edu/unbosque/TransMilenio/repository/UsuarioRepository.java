@@ -45,6 +45,15 @@ public class UsuarioRepository {
 		return null;
 	}
 
+	public Usuario buscarPorCorreo(String correo) {
+		for (Usuario usuario : lista) {
+			if (usuario.getCorreo() != null && usuario.getCorreo().equalsIgnoreCase(correo)) {
+				return usuario;
+			}
+		}
+		return null;
+	}
+
 	public List<Usuario> listar() {
 		return new ArrayList<>(lista);
 	}

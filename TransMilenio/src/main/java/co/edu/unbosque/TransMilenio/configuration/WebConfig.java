@@ -7,15 +7,32 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import co.edu.unbosque.TransMilenio.security.JwtInterceptor;
 import co.edu.unbosque.TransMilenio.security.JwtUtil;
 
+/**
+ * Configuracion web. Registra el JwtInterceptor para que revise todas las rutas, excepto el login
+ * (/auth/**), Swagger y /error.
+ */
 @Configuration
 public class WebConfig implements WebMvcConfigurer {
 
+	/**
+	 * Utilidad de tokens que se le entrega al interceptor.
+	 */
 	private JwtUtil jwtUtil;
 
+	/**
+	 * Crea la configuracion web.
+	 *
+	 * @param jwtUtil la utilidad de tokens
+	 */
 	public WebConfig(JwtUtil jwtUtil) {
 		this.jwtUtil = jwtUtil;
 	}
 
+	/**
+	 * Registra el JwtInterceptor en todas las rutas, salvo las publicas (/auth/**, Swagger y /error).
+	 *
+	 * @param registry el registro de interceptores de Spring
+	 */
 	@Override
 	public void addInterceptors(InterceptorRegistry registry) {
 		registry.addInterceptor(new JwtInterceptor(jwtUtil))

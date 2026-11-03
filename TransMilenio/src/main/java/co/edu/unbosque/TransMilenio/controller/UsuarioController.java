@@ -26,14 +26,16 @@ public class UsuarioController {
 	public ResponseEntity<String> crear(
 			@RequestParam(name = "rol", required = false) String rol,
 			@RequestParam(name = "nombreUsuario", required = false) String nombreUsuario,
-			@RequestParam(name = "contrasena", required = false) String contrasena) {
+			@RequestParam(name = "contrasena", required = false) String contrasena,
+			@RequestParam(name = "correo", required = false) String correo) {
 		UsuarioDTO dto = new UsuarioDTO();
 		dto.setRol(rol);
 		dto.setNombreUsuario(nombreUsuario);
 		dto.setContrasena(contrasena);
+		dto.setCorreo(correo);
 		try {
 			usuarioService.create(dto);
-			return new ResponseEntity<>("El usuario creado", HttpStatus.CREATED);
+			return new ResponseEntity<>("El usuario creado. Se envio un correo para confirmar el correo electronico", HttpStatus.CREATED);
 		} catch (TransMilenioException e) {
 			return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
 		}
@@ -49,11 +51,13 @@ public class UsuarioController {
 			@PathVariable Long id,
 			@RequestParam(name = "rol", required = false) String rol,
 			@RequestParam(name = "nombreUsuario", required = false) String nombreUsuario,
-			@RequestParam(name = "contrasena", required = false) String contrasena) {
+			@RequestParam(name = "contrasena", required = false) String contrasena,
+			@RequestParam(name = "correo", required = false) String correo) {
 		UsuarioDTO dto = new UsuarioDTO();
 		dto.setRol(rol);
 		dto.setNombreUsuario(nombreUsuario);
 		dto.setContrasena(contrasena);
+		dto.setCorreo(correo);
 		try {
 			usuarioService.updateById(id, dto);
 			return new ResponseEntity<>("El usuario actualizado", HttpStatus.OK);

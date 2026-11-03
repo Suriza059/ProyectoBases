@@ -13,17 +13,42 @@ import co.edu.unbosque.TransMilenio.exception.RegistroNoExisteException;
 import co.edu.unbosque.TransMilenio.exception.TransMilenioException;
 import co.edu.unbosque.TransMilenio.service.AgresionService;
 
+/**
+ * Controlador REST de la agresion. Ruta base: /agresion. Recibe cada dato como parametro, arma el DTO y
+ * llama a AgresionService. Cualquier rol con sesion puede usar estas rutas.
+ *
+ * <p>Las excepciones del sistema se convierten en respuestas HTTP: 404 si el registro no existe y 400 para
+ * el resto de errores.
+ */
 @RestController
 @RequestMapping("/agresion")
 @CrossOrigin(origins = { "http://localhost:4200", "http://localhost:8080", "*" })
 public class AgresionController {
 
+	/**
+	 * Servicio de la agresion que usa esta clase.
+	 */
 	private AgresionService agresionService;
 
+	/**
+	 * Crea el controlador.
+	 *
+	 * @param agresionService el servicio de la agresion
+	 */
 	public AgresionController(AgresionService agresionService) {
 		this.agresionService = agresionService;
 	}
 
+	/**
+	 * POST /agresion/crear. Crea una agresion nueva.
+	 *
+	 * @param fecha la fecha de la agresion
+	 * @param gravedad la gravedad de la agresion
+	 * @param descripcion la descripcion de la agresion
+	 * @param idEvento el identificador del evento en el que ocurrio la agresion (llave foranea)
+	 * @param idGuarda el identificador del guarda involucrado en la agresion (llave foranea)
+	 * @return 201 con un mensaje si se creo, o 400 con el mensaje del error
+	 */
 	@PostMapping("/crear")
 	public ResponseEntity<String> crear(
 			@RequestParam(name = "fecha", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fecha,
@@ -45,11 +70,27 @@ public class AgresionController {
 		}
 	}
 
+	/**
+	 * GET /agresion/todos. Lista todos los registros.
+	 *
+	 * @return 200 con la lista de registros
+	 */
 	@GetMapping("/todos")
 	public ResponseEntity<List<AgresionDTO>> todos() {
 		return new ResponseEntity<>(agresionService.getAll(), HttpStatus.OK);
 	}
 
+	/**
+	 * PUT /agresion/actualizar/{id}. Actualiza una agresion existente.
+	 *
+	 * @param id el identificador del registro a actualizar
+	 * @param fecha la fecha de la agresion
+	 * @param gravedad la gravedad de la agresion
+	 * @param descripcion la descripcion de la agresion
+	 * @param idEvento el identificador del evento en el que ocurrio la agresion (llave foranea)
+	 * @param idGuarda el identificador del guarda involucrado en la agresion (llave foranea)
+	 * @return 200 con un mensaje si se actualizo, 404 si no existe, o 400 con el mensaje del error
+	 */
 	@PutMapping("/actualizar/{id}")
 	public ResponseEntity<String> actualizar(
 			@PathVariable Long id,
@@ -74,6 +115,12 @@ public class AgresionController {
 		}
 	}
 
+	/**
+	 * DELETE /agresion/eliminar/{id}. Elimina una agresion.
+	 *
+	 * @param id el identificador del registro a eliminar
+	 * @return 200 con un mensaje si se elimino, 404 si no existe, o 400 con el mensaje del error
+	 */
 	@DeleteMapping("/eliminar/{id}")
 	public ResponseEntity<String> eliminar(@PathVariable Long id) {
 		try {
