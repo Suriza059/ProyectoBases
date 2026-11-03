@@ -11,17 +11,41 @@ import co.edu.unbosque.TransMilenio.exception.RegistroNoExisteException;
 import co.edu.unbosque.TransMilenio.exception.TransMilenioException;
 import co.edu.unbosque.TransMilenio.service.InfractorService;
 
+/**
+ * Controlador REST del infractor. Ruta base: /infractor. Recibe cada dato como parametro, arma el DTO y
+ * llama a InfractorService. Cualquier rol con sesion puede usar estas rutas.
+ *
+ * <p>Las excepciones del sistema se convierten en respuestas HTTP: 404 si el registro no existe y 400 para
+ * el resto de errores.
+ */
 @RestController
 @RequestMapping("/infractor")
 @CrossOrigin(origins = { "http://localhost:4200", "http://localhost:8080", "*" })
 public class InfractorController {
 
+	/**
+	 * Servicio del infractor que usa esta clase.
+	 */
 	private InfractorService infractorService;
 
+	/**
+	 * Crea el controlador.
+	 *
+	 * @param infractorService el servicio del infractor
+	 */
 	public InfractorController(InfractorService infractorService) {
 		this.infractorService = infractorService;
 	}
 
+	/**
+	 * POST /infractor/crear. Crea un infractor nuevo.
+	 *
+	 * @param tipoDocumento el tipo de documento del infractor (por ejemplo, CC)
+	 * @param numeroDocumento el numero de documento del infractor
+	 * @param nombre el nombre del infractor
+	 * @param apellido el apellido del infractor
+	 * @return 201 con un mensaje si se creo, o 400 con el mensaje del error
+	 */
 	@PostMapping("/crear")
 	public ResponseEntity<String> crear(
 			@RequestParam(name = "tipoDocumento", required = false) String tipoDocumento,
@@ -41,11 +65,26 @@ public class InfractorController {
 		}
 	}
 
+	/**
+	 * GET /infractor/todos. Lista todos los registros.
+	 *
+	 * @return 200 con la lista de registros
+	 */
 	@GetMapping("/todos")
 	public ResponseEntity<List<InfractorDTO>> todos() {
 		return new ResponseEntity<>(infractorService.getAll(), HttpStatus.OK);
 	}
 
+	/**
+	 * PUT /infractor/actualizar/{id}. Actualiza un infractor existente.
+	 *
+	 * @param id el identificador del registro a actualizar
+	 * @param tipoDocumento el tipo de documento del infractor (por ejemplo, CC)
+	 * @param numeroDocumento el numero de documento del infractor
+	 * @param nombre el nombre del infractor
+	 * @param apellido el apellido del infractor
+	 * @return 200 con un mensaje si se actualizo, 404 si no existe, o 400 con el mensaje del error
+	 */
 	@PutMapping("/actualizar/{id}")
 	public ResponseEntity<String> actualizar(
 			@PathVariable Long id,
@@ -68,6 +107,12 @@ public class InfractorController {
 		}
 	}
 
+	/**
+	 * DELETE /infractor/eliminar/{id}. Elimina un infractor.
+	 *
+	 * @param id el identificador del registro a eliminar
+	 * @return 200 con un mensaje si se elimino, 404 si no existe, o 400 con el mensaje del error
+	 */
 	@DeleteMapping("/eliminar/{id}")
 	public ResponseEntity<String> eliminar(@PathVariable Long id) {
 		try {

@@ -21,4 +21,8 @@ public class LanzadorDeExcepciones {
 	public static void credencialesInvalidas() {
 		throw new CredencialesInvalidasException("Usuario o contrasena incorrectos");
 	}
+
+	public static void correoNoConfirmado() {
+		throw new CorreoNoConfirmadoException("Debes confirmar tu correo antes de iniciar sesion. Revisa tu bandeja de entrada");
+	}
 }

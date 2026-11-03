@@ -22,6 +22,8 @@ public class AuthService {
 		Usuario usuario = usuarioRepository.buscarPorNombreUsuario(nombreUsuario);
 		if (usuario == null || !PasswordUtil.verificar(contrasena, usuario.getContrasena()))
 			LanzadorDeExcepciones.credencialesInvalidas();
+		if (!"S".equals(usuario.getCorreoConfirmado()))
+			LanzadorDeExcepciones.correoNoConfirmado();
 		return jwtUtil.generarToken(usuario.getId(), usuario.getNombreUsuario(), usuario.getRol());
 	}
 }

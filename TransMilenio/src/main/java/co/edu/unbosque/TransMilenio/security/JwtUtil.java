@@ -13,6 +13,7 @@ public class JwtUtil {
 
 	private static final String SECRETO = "TransMilenio-clave-secreta-JWT-cambiala-por-una-propia-2026";
 	private static final long DURACION = 2L * 60 * 60 * 1000;
+	private static final long DURACION_CONFIRMACION = 24L * 60 * 60 * 1000;
 
 	private Key clave = Keys.hmacShaKeyFor(SECRETO.getBytes(StandardCharsets.UTF_8));
 
@@ -28,6 +29,18 @@ public class JwtUtil {
 				.compact();
 	}
 
+	public String generarTokenConfirmacion(Long idUsuario, String correo) {
+		Date ahora = new Date();
+		return Jwts.builder()
+				.setSubject(String.valueOf(idUsuario))
+				.claim("tipo", "confirmacion")
+				.claim("correo", correo)
+				.setIssuedAt(ahora)
+				.setExpiration(new Date(ahora.getTime() + DURACION_CONFIRMACION))
+				.signWith(clave, SignatureAlgorithm.HS256)
+				.compact();
+	}
+
 	private Claims leer(String token) {
 		try {
 			return Jwts.parserBuilder().setSigningKey(clave).build().parseClaimsJws(token).getBody();
@@ -37,7 +50,8 @@ public class JwtUtil {
 	}
 
 	public boolean esValido(String token) {
-		return leer(token) != null;
+		Claims claims = leer(token);
+		return claims != null && claims.get("rol", String.class) != null;
 	}
 
 	public String obtenerNombre(String token) {
@@ -52,5 +66,23 @@ public class JwtUtil {
 		if (claims == null)
 			return null;
 		return claims.get("rol", String.class);
+	}
+
+	public Long obtenerIdConfirmacion(String token) {
+		Claims claims = leer(token);
+		if (claims == null || !"confirmacion".equals(claims.get("tipo", String.class)))
+			return null;
+		try {
+			return Long.valueOf(claims.getSubject());
+		} catch (NumberFormatException e) {
+			return null;
+		}
+	}
+
+	public String obtenerCorreoConfirmacion(String token) {
+		Claims claims = leer(token);
+		if (claims == null)
+			return null;
+		return claims.get("correo", String.class);
 	}
 }

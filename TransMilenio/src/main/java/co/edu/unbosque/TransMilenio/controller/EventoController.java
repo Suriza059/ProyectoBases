@@ -13,17 +13,44 @@ import co.edu.unbosque.TransMilenio.exception.RegistroNoExisteException;
 import co.edu.unbosque.TransMilenio.exception.TransMilenioException;
 import co.edu.unbosque.TransMilenio.service.EventoService;
 
+/**
+ * Controlador REST del evento. Ruta base: /evento. Recibe cada dato como parametro, arma el DTO y llama a
+ * EventoService. Cualquier rol con sesion puede usar estas rutas.
+ *
+ * <p>Las excepciones del sistema se convierten en respuestas HTTP: 404 si el registro no existe y 400 para
+ * el resto de errores.
+ */
 @RestController
 @RequestMapping("/evento")
 @CrossOrigin(origins = { "http://localhost:4200", "http://localhost:8080", "*" })
 public class EventoController {
 
+	/**
+	 * Servicio del evento que usa esta clase.
+	 */
 	private EventoService eventoService;
 
+	/**
+	 * Crea el controlador.
+	 *
+	 * @param eventoService el servicio del evento
+	 */
 	public EventoController(EventoService eventoService) {
 		this.eventoService = eventoService;
 	}
 
+	/**
+	 * POST /evento/crear. Crea un evento nuevo.
+	 *
+	 * @param fecha la fecha en que ocurrio el evento
+	 * @param numeroPersonas la cantidad de personas involucradas en el evento
+	 * @param idEstacion el identificador de la estacion donde ocurrio el evento (llave foranea)
+	 * @param idTarifa el identificador de la tarifa vigente cuando ocurrio el evento, dato historico (llave
+	 *     foranea)
+	 * @param idModalidad el identificador de la modalidad del evento (llave foranea)
+	 * @param idGuarda el identificador del guarda asociado al evento (llave foranea)
+	 * @return 201 con un mensaje si se creo, o 400 con el mensaje del error
+	 */
 	@PostMapping("/crear")
 	public ResponseEntity<String> crear(
 			@RequestParam(name = "fecha", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fecha,
@@ -47,11 +74,29 @@ public class EventoController {
 		}
 	}
 
+	/**
+	 * GET /evento/todos. Lista todos los registros.
+	 *
+	 * @return 200 con la lista de registros
+	 */
 	@GetMapping("/todos")
 	public ResponseEntity<List<EventoDTO>> todos() {
 		return new ResponseEntity<>(eventoService.getAll(), HttpStatus.OK);
 	}
 
+	/**
+	 * PUT /evento/actualizar/{id}. Actualiza un evento existente.
+	 *
+	 * @param id el identificador del registro a actualizar
+	 * @param fecha la fecha en que ocurrio el evento
+	 * @param numeroPersonas la cantidad de personas involucradas en el evento
+	 * @param idEstacion el identificador de la estacion donde ocurrio el evento (llave foranea)
+	 * @param idTarifa el identificador de la tarifa vigente cuando ocurrio el evento, dato historico (llave
+	 *     foranea)
+	 * @param idModalidad el identificador de la modalidad del evento (llave foranea)
+	 * @param idGuarda el identificador del guarda asociado al evento (llave foranea)
+	 * @return 200 con un mensaje si se actualizo, 404 si no existe, o 400 con el mensaje del error
+	 */
 	@PutMapping("/actualizar/{id}")
 	public ResponseEntity<String> actualizar(
 			@PathVariable Long id,
@@ -78,6 +123,12 @@ public class EventoController {
 		}
 	}
 
+	/**
+	 * DELETE /evento/eliminar/{id}. Elimina un evento.
+	 *
+	 * @param id el identificador del registro a eliminar
+	 * @return 200 con un mensaje si se elimino, 404 si no existe, o 400 con el mensaje del error
+	 */
 	@DeleteMapping("/eliminar/{id}")
 	public ResponseEntity<String> eliminar(@PathVariable Long id) {
 		try {
