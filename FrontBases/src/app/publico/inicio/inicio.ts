@@ -1,4 +1,6 @@
-import { Component, HostListener, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, HostListener, OnInit } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+
 
 interface Troncal {
   nombre: string;
@@ -22,13 +24,8 @@ export class Inicio implements OnInit {
     { titulo: 'Estación crítica', valor: 'Estación de ejemplo', detalle: 'más colados hoy' },
   ];
 
-  // CAMBIA ESTOS NOMBRES por las troncales que van a evaluar
-  troncales: Troncal[] = [
-    { nombre: 'Autonorte', porcentaje: 85 },
-    { nombre: 'Caracas', porcentaje: 62 },
-    { nombre: 'Calle 80', porcentaje: 45 },
-    { nombre: 'Américas', porcentaje: 28 },
-  ];
+  // Las troncales vienen del back (las calcula con los colados registrados)
+  troncales: Troncal[] = [];
 
   // BOOLEANOS DE ANIMACIÓN: false = oculto, true = aparece con animación
   mostrarTitulo = false;
@@ -41,8 +38,14 @@ export class Inicio implements OnInit {
   // true cuando el usuario baja: el encabezado se pone rojo
   encabezadoSolido = false;
 
+  constructor(
+    private http: HttpClient,
+    private cambios: ChangeDetectorRef
+  ) {}
+
   // Al cargar la página, los bloques del inicio aparecen uno tras otro
   ngOnInit(): void {
+    this.cargarTroncales();
     setTimeout(() => {
       this.mostrarTitulo = true;
     }, 200);
@@ -54,6 +57,20 @@ export class Inicio implements OnInit {
     setTimeout(() => {
       this.mostrarIndicadores = true;
     }, 1200);
+  }
+  // Pide al back el ranking de troncales (ruta pública, no lleva token)
+  cargarTroncales(): void {
+    this.http.get<Troncal[]>('http://localhost:8080/estadistica/troncales').subscribe({
+      next: (lista) => {
+        this.troncales = lista;
+        this.cambios.detectChanges();
+      },
+      error: () => {
+        // Si el back no responde, la lista queda vacía y sale "Todavía no hay datos de troncales"
+        this.troncales = [];
+        this.cambios.detectChanges();
+      }
+    });
   }
 
   // Se ejecuta cada vez que el usuario hace scroll

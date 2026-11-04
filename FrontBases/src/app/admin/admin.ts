@@ -130,7 +130,7 @@ export class Admin implements OnInit {
 
   // OJO: confirma con Esteban que estos sean los textos que acepta el back
   // ("Administrador" tiene que ir exactamente así)
-  roles: string[] = ['Administrador', 'Guarda'];
+  roles: string[] = ['Administrador', 'Guarda', 'Analista'];
 
   // Formulario de crear usuario
   nuevoUsuario = {
