@@ -305,6 +305,12 @@
   color: #ff6b7d;
 }
 
+/* NUEVO: etiqueta roja para el rol Administrador */
+.insignia-admin {
+  background-color: rgba(228, 17, 47, 0.18);
+  color: #ff4d63;
+}
+
 /* Botones de texto de cada fila */
 .fila-acciones {
   display: flex;
@@ -340,6 +346,28 @@
   .accion-peligro:hover {
     color: #ff8a98;
   }
+}
+
+/* ---------- NUEVO: Registro de cambios ---------- */
+.cambio-anterior {
+  color: #9a9ba5;
+  text-decoration: line-through;
+}
+
+.cambio-flecha {
+  margin: 0 10px;
+  color: #e4112f;
+}
+
+.cambio-nuevo {
+  color: #5fd38a;
+  font-weight: 600;
+}
+
+.fecha-cambio {
+  flex-shrink: 0;
+  color: #9a9ba5;
+  font-size: 14px;
 }
 
 /* ---------- Pantallas pequeñas ---------- */
