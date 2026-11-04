@@ -4,25 +4,38 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import co.edu.unbosque.TransMilenio.exception.CorreoNoConfirmadoException;
 import co.edu.unbosque.TransMilenio.exception.CredencialesInvalidasException;
-import co.edu.unbosque.TransMilenio.exception.TransMilenioException;
 import co.edu.unbosque.TransMilenio.service.AuthService;
-import co.edu.unbosque.TransMilenio.service.ConfirmacionService;
 
+/**
+ * Controlador REST del inicio de sesion. Ruta base: /auth. Es publico: no necesita token.
+ */
 @RestController
 @RequestMapping("/auth")
 @CrossOrigin(origins = { "http://localhost:4200", "http://localhost:8080", "*" })
 public class AuthController {
 
+	/**
+	 * Servicio que valida las credenciales.
+	 */
 	private AuthService authService;
-	private ConfirmacionService confirmacionService;
 
-	public AuthController(AuthService authService, ConfirmacionService confirmacionService) {
+	/**
+	 * Crea el controlador.
+	 *
+	 * @param authService el servicio de autenticacion
+	 */
+	public AuthController(AuthService authService) {
 		this.authService = authService;
-		this.confirmacionService = confirmacionService;
 	}
 
+	/**
+	 * POST /auth/login. Inicia sesion con usuario y contrasena.
+	 *
+	 * @param nombreUsuario el nombre de usuario
+	 * @param contrasena la contrasena
+	 * @return 200 con el token JWT si los datos son correctos, 401 con un mensaje si no lo son
+	 */
 	@PostMapping("/login")
 	public ResponseEntity<String> login(
 			@RequestParam(name = "nombreUsuario", required = false) String nombreUsuario,
@@ -32,26 +45,6 @@ public class AuthController {
 			return new ResponseEntity<>(token, HttpStatus.OK);
 		} catch (CredencialesInvalidasException e) {
 			return new ResponseEntity<>(e.getMessage(), HttpStatus.UNAUTHORIZED);
-		} catch (CorreoNoConfirmadoException e) {
-			return new ResponseEntity<>(e.getMessage(), HttpStatus.FORBIDDEN);
 		}
-	}
-
-	// Es el enlace que llega en el correo. Se abre desde el navegador.
-	@GetMapping("/confirmar")
-	public ResponseEntity<String> confirmar(@RequestParam(name = "token", required = false) String token) {
-		try {
-			String mensaje = confirmacionService.confirmar(token);
-			return new ResponseEntity<>(mensaje, HttpStatus.OK);
-		} catch (TransMilenioException e) {
-			return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
-		}
-	}
-
-	@PostMapping("/reenviar-confirmacion")
-	public ResponseEntity<String> reenviarConfirmacion(
-			@RequestParam(name = "nombreUsuario", required = false) String nombreUsuario) {
-		confirmacionService.reenviar(nombreUsuario);
-		return new ResponseEntity<>("Si el usuario existe y su correo no esta confirmado, se envio un nuevo correo", HttpStatus.OK);
 	}
 }

@@ -2,8 +2,6 @@ package co.edu.unbosque.TransMilenio.configuration;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.env.Environment;
-import org.springframework.mail.javamail.JavaMailSender;
 
 import co.edu.unbosque.TransMilenio.repository.AdministradorRepository;
 import co.edu.unbosque.TransMilenio.repository.AgresionRepository;
@@ -27,8 +25,6 @@ import co.edu.unbosque.TransMilenio.service.AgresionService;
 import co.edu.unbosque.TransMilenio.service.AnalistaService;
 import co.edu.unbosque.TransMilenio.service.AuthService;
 import co.edu.unbosque.TransMilenio.service.ComparendoService;
-import co.edu.unbosque.TransMilenio.service.ConfirmacionService;
-import co.edu.unbosque.TransMilenio.service.CorreoService;
 import co.edu.unbosque.TransMilenio.service.EstacionService;
 import co.edu.unbosque.TransMilenio.service.EventoInfractorService;
 import co.edu.unbosque.TransMilenio.service.EventoService;
@@ -368,22 +364,8 @@ public class AppConfig {
 	 * @return el UsuarioService
 	 */
 	@Bean
-	public CorreoService correoService(JavaMailSender mailSender, Environment env) {
-		String remitente = env.getProperty("spring.mail.username");
-		String urlBase = env.getProperty("app.url-base", "http://localhost:8080");
-		return new CorreoService(mailSender, remitente, urlBase);
-	}
-
-	@Bean
-	public ConfirmacionService confirmacionService(UsuarioRepository usuarioRepository, JwtUtil jwtUtil,
-			CorreoService correoService) {
-		return new ConfirmacionService(usuarioRepository, jwtUtil, correoService);
-	}
-
-	@Bean
-	public UsuarioService usuarioService(UsuarioRepository usuarioRepository,
-			ConfirmacionService confirmacionService) {
-		UsuarioService servicio = new UsuarioService(usuarioRepository, confirmacionService);
+	public UsuarioService usuarioService(UsuarioRepository usuarioRepository) {
+		UsuarioService servicio = new UsuarioService(usuarioRepository);
 		servicio.crearAdministradorInicial();
 		return servicio;
 	}
