@@ -1,0 +1,93 @@
+<div class="analista-pagina">
+
+  <aside class="analista-menu animate__animated animate__fadeInLeft">
+    <p class="analista-menu-etiqueta">Panel de análisis</p>
+
+    <div class="analista-menu-marca">
+      <i class="bi bi-bar-chart-line-fill analista-menu-icono"></i>
+      <h1 class="analista-menu-titulo">Analista</h1>
+    </div>
+
+    <nav class="analista-menu-lista">
+      <button type="button" class="analista-enlace" [class.analista-enlace-activo]="seccionActual === 'troncales'" (click)="cambiarSeccion('troncales')">Troncales</button>
+      <button type="button" class="analista-enlace" [class.analista-enlace-activo]="seccionActual === 'colados'" (click)="cambiarSeccion('colados')">Colados registrados</button>
+    </nav>
+
+    <button type="button" class="analista-salir" (click)="cerrarSesion()">Cerrar sesión</button>
+  </aside>
+
+  <main class="analista-contenido">
+
+    <p class="mensaje-error" *ngIf="mensajeError">{{ mensajeError }}</p>
+
+    <!-- ========== TRONCALES ========== -->
+    <section *ngIf="seccionActual === 'troncales'">
+      <h2 class="seccion-titulo animate__animated animate__fadeInUp">Troncales más afectadas</h2>
+      <p class="seccion-texto animate__animated animate__fadeInUp">Este es el mismo ranking que ve la gente en la pantalla principal. Lo calcula el sistema con los colados registrados: cada porcentaje es la parte del total que ocurrió en esa troncal.</p>
+
+      <button type="button" class="boton-analista animate__animated animate__fadeInUp" (click)="cargarRanking()">
+        Actualizar ranking <i class="bi bi-arrow-repeat"></i>
+      </button>
+
+      <p class="seccion-texto texto-vacio" *ngIf="troncales.length === 0">Todavía no hay colados registrados para analizar.</p>
+
+      <!-- La troncal que va de primera -->
+      <div class="destacada animate__animated animate__fadeInUp" *ngIf="troncales.length > 0">
+        <span class="destacada-etiqueta">La más afectada</span>
+        <p class="destacada-nombre">{{ troncales[0].nombre }}</p>
+        <p class="destacada-detalle">{{ troncales[0].porcentaje }}% de los colados · {{ troncales[0].personas }} {{ troncales[0].personas === 1 ? 'persona' : 'personas' }}</p>
+      </div>
+
+      <div class="ranking" *ngIf="troncales.length > 0">
+        <div
+          class="fila-ranking animate__animated animate__fadeInUp"
+          *ngFor="let t of troncales; let i = index"
+          [style.animation-delay]="(i * 80) + 'ms'">
+
+          <span class="ranking-puesto">{{ i + 1 }}</span>
+
+          <div class="ranking-centro">
+            <div class="ranking-textos">
+              <span class="ranking-nombre">{{ t.nombre }}</span>
+              <span class="ranking-personas">{{ t.personas }} {{ t.personas === 1 ? 'persona' : 'personas' }}</span>
+            </div>
+
+            <div class="ranking-barra">
+              <div
+                class="ranking-relleno"
+                [style.transform]="barrasListas ? 'scaleX(' + (t.porcentaje / 100) + ')' : 'scaleX(0)'"
+                [class.nivel-alto]="t.porcentaje >= 40"
+                [class.nivel-medio]="t.porcentaje >= 20 && t.porcentaje < 40"
+                [class.nivel-bajo]="t.porcentaje < 20"
+              ></div>
+            </div>
+          </div>
+
+          <span class="ranking-valor">{{ t.porcentaje }}%</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========== COLADOS REGISTRADOS ========== -->
+    <section *ngIf="seccionActual === 'colados'">
+      <h2 class="seccion-titulo animate__animated animate__fadeInUp">Colados registrados</h2>
+      <p class="seccion-texto animate__animated animate__fadeInUp">Los colados que han registrado los guardas, del más reciente al más antiguo. Se muestran los primeros 50.</p>
+
+      <p class="seccion-texto" *ngIf="eventos.length === 0">Todavía no hay colados registrados.</p>
+
+      <div class="lista animate__animated animate__fadeInUp" *ngIf="eventos.length > 0">
+        <div class="fila-registro" *ngFor="let evento of eventos | slice:0:50">
+          <span class="fila-numero">{{ evento.id }}</span>
+
+          <div class="fila-datos">
+            <p class="fila-principal">{{ nombreEstacion(evento.idEstacion) }}</p>
+            <p class="fila-secundario">{{ nombreModalidad(evento.idModalidad) }} · {{ formatearFecha(evento.fecha) }}</p>
+          </div>
+
+          <span class="insignia">{{ evento.numeroPersonas }} {{ evento.numeroPersonas === 1 ? 'persona' : 'personas' }}</span>
+        </div>
+      </div>
+    </section>
+
+  </main>
+</div>

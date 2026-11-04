@@ -12,80 +12,100 @@
 .guarda-menu {
   display: flex;
   flex-direction: column;
-  width: 300px;
-  padding: 48px 32px;
-  border-right: 2px solid #f2b705;
+  width: 260px;
+  padding: 36px 20px 32px 20px;
+  border-right: 1px solid #f2b705;
+  animation-duration: 0.5s;
 }
 
 .guarda-menu-etiqueta {
-  margin: 0 0 8px 0;
-  font-size: 13px;
+  margin: 0 0 6px 8px;
+  font-size: 12px;
   letter-spacing: 3px;
   text-transform: uppercase;
   color: #f2b705;
 }
 
 .guarda-menu-titulo {
-  margin: 0 0 48px 0;
+  margin: 0 0 40px 8px;
   font-family: 'Bebas Neue', Impact, sans-serif;
-  font-size: 64px;
+  font-size: 60px;
   line-height: 0.95;
   letter-spacing: 1px;
 }
 
 .guarda-enlace {
-  padding: 14px 0;
-  border: none;
-  border-bottom: 1px solid #4a4336;
+  display: block;
+  margin-bottom: 6px;
+  padding: 12px 16px;
+  border: 1px solid transparent;
+  border-radius: 10px;
   background: none;
   color: #bfb8a8;
-  font-size: 17px;
+  font-size: 16px;
+  font-family: inherit;
   text-align: left;
   cursor: pointer;
-  transition: color 150ms ease-out, padding-left 150ms ease-out;
+  transition: color 150ms ease-out, background-color 150ms ease-out, border-color 150ms ease-out, box-shadow 150ms ease-out;
+}
+
+.guarda-enlace:active {
+  transform: scale(0.97);
 }
 
 .guarda-enlace-activo {
   color: #f2b705;
-  padding-left: 12px;
   font-weight: 600;
+  background-color: rgba(242, 183, 5, 0.08);
+  border-color: #f2b705;
+  box-shadow: 0 0 18px rgba(242, 183, 5, 0.35);
 }
 
 @media (hover: hover) and (pointer: fine) {
   .guarda-enlace:hover {
     color: #f2b705;
-    padding-left: 12px;
+    background-color: rgba(243, 237, 224, 0.05);
+  }
+
+  .guarda-enlace-activo:hover {
+    color: #f2b705;
+    background-color: rgba(242, 183, 5, 0.08);
   }
 }
 
 .guarda-salir {
   margin-top: auto;
-  padding: 12px 0;
+  padding: 12px 16px;
   border: none;
   background: none;
   color: #bfb8a8;
   font-size: 15px;
+  font-family: inherit;
   text-align: left;
-  text-decoration: underline;
   cursor: pointer;
+}
+
+.guarda-salir:active {
+  transform: scale(0.97);
 }
 
 /* ---------- Contenido ---------- */
 .guarda-contenido {
   flex: 1;
-  padding: 48px 64px;
-  max-width: 900px;
+  min-width: 0;
+  max-width: 1000px;
+  padding: 48px 56px;
 }
 
 .seccion-titulo {
   margin: 0 0 8px 0;
   font-family: 'Bebas Neue', Impact, sans-serif;
-  font-size: 56px;
+  font-size: 64px;
   letter-spacing: 1px;
 }
 
 .seccion-texto {
-  margin: 0 0 32px 0;
+  margin: 0 0 28px 0;
   color: #bfb8a8;
   font-size: 17px;
 }
@@ -95,37 +115,40 @@
   display: flex;
   flex-direction: column;
   flex: 1;
-  margin-bottom: 28px;
+  min-width: 200px;
+  margin-bottom: 20px;
 }
 
 .campo-fila {
   display: flex;
-  gap: 32px;
+  gap: 20px;
   flex-wrap: wrap;
 }
 
 .campo-etiqueta {
-  margin-bottom: 6px;
-  font-size: 13px;
+  margin-bottom: 8px;
+  font-size: 12px;
   letter-spacing: 2px;
   text-transform: uppercase;
   color: #f2b705;
 }
 
 .campo-linea {
-  padding: 10px 0;
-  border: none;
-  border-bottom: 2px solid #6b624f;
-  background: none;
+  padding: 14px 16px;
+  border: 1px solid #6b624f;
+  border-radius: 8px;
+  background-color: #17140f;
   color: #f3ede0;
-  font-size: 20px;
+  color-scheme: dark;
+  font-size: 17px;
   font-family: inherit;
   outline: none;
-  transition: border-color 150ms ease-out;
+  transition: border-color 150ms ease-out, box-shadow 150ms ease-out;
 }
 
 .campo-linea:focus {
-  border-bottom-color: #f2b705;
+  border-color: #f2b705;
+  box-shadow: 0 0 12px rgba(242, 183, 5, 0.35);
 }
 
 .campo-linea option {
@@ -138,15 +161,18 @@
 }
 
 .boton-guarda {
+  display: inline-block;
   margin-top: 8px;
-  padding: 14px 40px;
+  padding: 12px 28px;
   border: none;
+  border-radius: 8px;
   background-color: #f2b705;
   color: #17140f;
   font-family: 'Bebas Neue', Impact, sans-serif;
-  font-size: 24px;
-  letter-spacing: 2px;
+  font-size: 22px;
+  letter-spacing: 1.5px;
   cursor: pointer;
+  box-shadow: 0 0 18px rgba(242, 183, 5, 0.35);
   transition: transform 150ms ease-out;
 }
 
@@ -175,22 +201,26 @@
 .fila-registro {
   display: flex;
   align-items: center;
-  gap: 24px;
-  padding: 18px 0;
-  border-bottom: 1px solid #4a4336;
-  transition: transform 150ms ease-out;
+  gap: 20px;
+  margin-bottom: 12px;
+  padding: 16px 24px;
+  border: 1px solid #4a4336;
+  border-radius: 12px;
+  transition: transform 150ms ease-out, background-color 150ms ease-out, border-color 150ms ease-out;
 }
 
 @media (hover: hover) and (pointer: fine) {
   .fila-registro:hover {
-    transform: translateX(8px);
+    transform: translateY(-2px);
+    background-color: rgba(243, 237, 224, 0.04);
+    border-color: #f2b705;
   }
 }
 
 .fila-numero {
-  min-width: 48px;
+  min-width: 36px;
   font-family: 'Bebas Neue', Impact, sans-serif;
-  font-size: 32px;
+  font-size: 30px;
   color: #f2b705;
 }
 
@@ -201,8 +231,9 @@
 
 .fila-principal {
   margin: 0;
-  font-size: 20px;
+  font-size: 18px;
   font-weight: 600;
+  overflow-wrap: anywhere;
 }
 
 .fila-secundario {
@@ -214,7 +245,10 @@
 
 .fila-personas {
   flex-shrink: 0;
-  font-size: 15px;
+  padding: 4px 14px;
+  border: 1px solid #4a4336;
+  border-radius: 999px;
+  font-size: 14px;
   color: #bfb8a8;
 }
 
@@ -225,18 +259,25 @@
   }
   .guarda-menu {
     width: auto;
-    padding: 32px 24px;
+    padding: 28px 16px;
     border-right: none;
-    border-bottom: 2px solid #f2b705;
+    border-bottom: 1px solid #f2b705;
   }
   .guarda-menu-titulo {
     font-size: 48px;
     margin-bottom: 24px;
   }
   .guarda-salir {
-    margin-top: 24px;
+    margin-top: 16px;
   }
   .guarda-contenido {
-    padding: 32px 24px;
+    padding: 32px 20px;
+  }
+  .seccion-titulo {
+    font-size: 48px;
+  }
+  .fila-registro {
+    flex-wrap: wrap;
+    padding: 16px;
   }
 }

@@ -424,7 +424,6 @@
       </div>
     </section>
 
-    <!-- ========== LAS DEMÁS SECCIONES (todavía vacías) ========== -->
     <!-- ========== TARIFAS ========== -->
     <section *ngIf="seccionActual === 'tarifas'">
       <h2 class="seccion-titulo animate__animated animate__fadeInUp">Tarifas</h2>
@@ -523,14 +522,136 @@
       </div>
     </section>
 
-    <section *ngIf="seccionActual === 'usuarios'" class="animate__animated animate__fadeIn">
-      <h2 class="seccion-titulo">Usuarios</h2>
-      <p class="seccion-texto">Aquí va la lista de usuarios.</p>
+    <!-- ========== USUARIOS ========== -->
+    <section *ngIf="seccionActual === 'usuarios'">
+      <h2 class="seccion-titulo animate__animated animate__fadeInUp">Usuarios</h2>
+      <p class="seccion-texto animate__animated animate__fadeInUp">Crea las cuentas para entrar al sistema y escoge si cada una es de administrador o de guarda.</p>
+
+      <div class="panel animate__animated animate__fadeInUp">
+        <div class="campo-fila">
+          <div class="campo">
+            <label class="campo-etiqueta">Nombre de usuario</label>
+            <input
+              class="campo-linea"
+              type="text"
+              placeholder="Ejemplo: laura.gomez"
+              [(ngModel)]="nuevoUsuario.nombreUsuario">
+          </div>
+
+          <div class="campo">
+            <label class="campo-etiqueta">Contraseña</label>
+            <input
+              class="campo-linea"
+              type="password"
+              placeholder="Escribe una contraseña"
+              [(ngModel)]="nuevoUsuario.contrasena">
+          </div>
+
+          <div class="campo">
+            <label class="campo-etiqueta">Rol</label>
+            <select class="campo-linea" [(ngModel)]="nuevoUsuario.rol">
+              <option value="">Escoge un rol</option>
+              <option *ngFor="let rol of roles" [value]="rol">{{ rol }}</option>
+            </select>
+          </div>
+        </div>
+
+        <button type="button" class="boton-admin" (click)="crearUsuario()">
+          Crear usuario <i class="bi bi-plus-lg"></i>
+        </button>
+      </div>
+
+      <h3 class="admin-subtitulo">Usuarios registrados</h3>
+
+      <p class="seccion-texto" *ngIf="usuarios.length === 0">Todavía no hay usuarios creados.</p>
+
+      <div class="lista animate__animated animate__fadeInUp" *ngIf="usuarios.length > 0">
+        <div class="fila-registro" *ngFor="let usuario of usuarios">
+          <span class="fila-numero">{{ usuario.id }}</span>
+
+          <!-- Fila normal -->
+          <ng-container *ngIf="usuarioEditandoId !== usuario.id">
+            <div class="fila-datos">
+              <p class="fila-principal">{{ usuario.nombreUsuario }}</p>
+            </div>
+
+            <span class="insignia" [class.insignia-admin]="usuario.rol === 'Administrador'">
+              {{ usuario.rol }}
+            </span>
+
+            <div class="fila-acciones">
+              <button type="button" class="accion-texto" (click)="empezarEdicionUsuario(usuario)">
+                <i class="bi bi-pencil"></i> Editar
+              </button>
+              <button type="button" class="accion-texto accion-peligro" (click)="eliminarUsuario(usuario)">Eliminar</button>
+            </div>
+          </ng-container>
+
+          <!-- Fila en modo edición -->
+          <ng-container *ngIf="usuarioEditandoId === usuario.id">
+            <div class="fila-datos">
+              <div class="campo-fila">
+                <div class="campo">
+                  <label class="campo-etiqueta">Nombre de usuario</label>
+                  <input
+                    class="campo-linea campo-editar"
+                    type="text"
+                    [(ngModel)]="usuarioEditado.nombreUsuario">
+                </div>
+
+                <div class="campo">
+                  <label class="campo-etiqueta">Rol</label>
+                  <select class="campo-linea" [(ngModel)]="usuarioEditado.rol">
+                    <option *ngFor="let rol of roles" [value]="rol">{{ rol }}</option>
+                  </select>
+                </div>
+
+                <div class="campo">
+                  <label class="campo-etiqueta">Nueva contraseña (opcional)</label>
+                  <input
+                    class="campo-linea campo-editar"
+                    type="password"
+                    placeholder="Déjala vacía para no cambiarla"
+                    [(ngModel)]="usuarioEditado.contrasena">
+                </div>
+              </div>
+            </div>
+
+            <div class="fila-acciones">
+              <button type="button" class="accion-texto" (click)="guardarEdicionUsuario()">Guardar</button>
+              <button type="button" class="accion-texto" (click)="cancelarEdicionUsuario()">Cancelar</button>
+            </div>
+          </ng-container>
+        </div>
+      </div>
     </section>
 
-    <section *ngIf="seccionActual === 'cambios'" class="animate__animated animate__fadeIn">
-      <h2 class="seccion-titulo">Registro de cambios</h2>
-      <p class="seccion-texto">Aquí va el registro de cambios.</p>
+    <!-- ========== REGISTRO DE CAMBIOS ========== -->
+    <section *ngIf="seccionActual === 'cambios'">
+      <h2 class="seccion-titulo animate__animated animate__fadeInUp">Registro de cambios</h2>
+      <p class="seccion-texto animate__animated animate__fadeInUp">Aquí ves quién cambió qué y cuándo. Esta sección es solo para consultar.</p>
+
+      <p class="seccion-texto" *ngIf="registroCambios.length === 0">Todavía no hay cambios registrados.</p>
+
+      <div class="lista animate__animated animate__fadeInUp" *ngIf="registroCambios.length > 0">
+        <div class="fila-registro" *ngFor="let cambio of registroCambios">
+          <span class="fila-numero">{{ cambio.id }}</span>
+
+          <div class="fila-datos">
+            <p class="fila-principal">{{ cambio.campoModificado }}</p>
+            <p class="fila-secundario">
+              <span class="cambio-anterior">{{ cambio.valorAnterior || '—' }}</span>
+              <i class="bi bi-arrow-right cambio-flecha"></i>
+              <span class="cambio-nuevo">{{ cambio.valorNuevo || '—' }}</span>
+            </p>
+            <p class="fila-secundario">
+              {{ nombreDeUsuario(cambio.idUsuario) }} · Comparendo {{ cambio.idComparendo }}
+            </p>
+          </div>
+
+          <span class="fecha-cambio">{{ formatearFechaHora(cambio.fecha) }}</span>
+        </div>
+      </div>
     </section>
 
   </main>

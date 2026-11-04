@@ -55,9 +55,9 @@
         <div
           class="barra-relleno"
           [style.transform]="mostrarTroncales ? 'scaleX(' + (t.porcentaje / 100) + ')' : 'scaleX(0)'"
-          [class.alto]="t.porcentaje >= 60"
-          [class.medio]="t.porcentaje >= 30 && t.porcentaje < 60"
-          [class.bajo]="t.porcentaje < 30"
+          [class.alto]="t.porcentaje >= 40"
+          [class.medio]="t.porcentaje >= 20 && t.porcentaje < 40"
+          [class.bajo]="t.porcentaje < 20"
         ></div>
       </div>
       <span class="troncal-valor">{{ t.porcentaje }}%</span>

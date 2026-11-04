@@ -36,6 +36,8 @@ export class Admin implements OnInit {
   modalidades: any[] = [];
   tarifas: any[] = [];
   guardas: any[] = [];
+  usuarios: any[] = [];
+  registroCambios: any[] = [];
 
   // ---------- Troncales ----------
 
@@ -124,6 +126,27 @@ export class Admin implements OnInit {
     idSupervisor: null as number | null
   };
 
+  // ---------- Usuarios ----------
+
+  // OJO: confirma con Esteban que estos sean los textos que acepta el back
+  // ("Administrador" tiene que ir exactamente así)
+  roles: string[] = ['Administrador', 'Guarda', 'Analista'];
+
+  // Formulario de crear usuario
+  nuevoUsuario = {
+    rol: '',
+    nombreUsuario: '',
+    contrasena: ''
+  };
+
+  // Para editar: id del usuario que se está editando (null = ninguno) y sus nuevos datos
+  usuarioEditandoId: number | null = null;
+  usuarioEditado = {
+    rol: '',
+    nombreUsuario: '',
+    contrasena: ''
+  };
+
   constructor(
     private router: Router,
     private http: HttpClient,
@@ -142,6 +165,8 @@ export class Admin implements OnInit {
     this.cargarModalidades();
     this.cargarTarifas();
     this.cargarGuardas();
+    this.cargarUsuarios();
+    this.cargarRegistroCambios();
   }
 
   // ---------- Ayudas ----------
@@ -188,6 +213,7 @@ export class Admin implements OnInit {
     this.modalidadEditandoId = null;
     this.tarifaEditandoId = null;
     this.guardaEditandoId = null;
+    this.usuarioEditandoId = null;
 
   }
 
@@ -799,6 +825,143 @@ export class Admin implements OnInit {
       next: () => {
         this.mostrarExito('Guarda eliminado.');
         this.cargarGuardas();
+      },
+      error: (err) => this.manejarError(err)
+    });
+  }
+
+  // ---------- Usuarios ----------
+
+  // Devuelve el nombre de usuario a partir de su id
+  nombreDeUsuario(id: number): string {
+    const usuario = this.usuarios.find(u => u.id === id);
+    return usuario ? usuario.nombreUsuario : 'Usuario ' + id;
+  }
+
+  cargarUsuarios(): void {
+    this.http.get<any[]>(this.urlBase + '/usuario/todos', { headers: this.encabezados() }).subscribe({
+      next: (lista) => {
+        this.usuarios = lista.sort((a, b) => a.id - b.id);
+        this.cambios.detectChanges();
+      },
+      error: (err) => this.manejarError(err)
+    });
+  }
+
+  crearUsuario(): void {
+    this.mensajeExito = '';
+    this.mensajeError = '';
+
+    if (!this.nuevoUsuario.nombreUsuario.trim() || !this.nuevoUsuario.contrasena.trim() || !this.nuevoUsuario.rol) {
+      this.mensajeError = 'Falta escribir el nombre de usuario, la contraseña o escoger el rol.';
+      return;
+    }
+
+    const parametros = new HttpParams()
+        .set('rol', this.nuevoUsuario.rol)
+        .set('nombreUsuario', this.nuevoUsuario.nombreUsuario.trim())
+        .set('contrasena', this.nuevoUsuario.contrasena);
+
+    this.http.post(this.urlBase + '/usuario/crear', null, {
+      headers: this.encabezados(),
+      params: parametros,
+      responseType: 'text'
+    }).subscribe({
+      next: () => {
+        this.nuevoUsuario = { rol: '', nombreUsuario: '', contrasena: '' };
+        this.mostrarExito('Usuario creado.');
+        this.cargarUsuarios();
+      },
+      error: (err) => this.manejarError(err)
+    });
+  }
+
+  // Al darle "Editar", la fila cambia a campos con los datos actuales
+  empezarEdicionUsuario(usuario: any): void {
+    this.mensajeExito = '';
+    this.mensajeError = '';
+    this.usuarioEditandoId = usuario.id;
+    this.usuarioEditado = {
+      rol: usuario.rol,
+      nombreUsuario: usuario.nombreUsuario,
+      contrasena: ''
+    };
+  }
+
+  cancelarEdicionUsuario(): void {
+    this.usuarioEditandoId = null;
+  }
+
+  guardarEdicionUsuario(): void {
+    this.mensajeExito = '';
+    this.mensajeError = '';
+
+    if (!this.usuarioEditado.nombreUsuario.trim() || !this.usuarioEditado.rol) {
+      this.mensajeError = 'Falta el nombre de usuario o el rol.';
+      return;
+    }
+
+    let parametros = new HttpParams()
+        .set('rol', this.usuarioEditado.rol)
+        .set('nombreUsuario', this.usuarioEditado.nombreUsuario.trim());
+
+    // La contraseña solo se manda si escribió una nueva
+    if (this.usuarioEditado.contrasena.trim()) {
+      parametros = parametros.set('contrasena', this.usuarioEditado.contrasena);
+    }
+
+    this.http.put(this.urlBase + '/usuario/actualizar/' + this.usuarioEditandoId, null, {
+      headers: this.encabezados(),
+      params: parametros,
+      responseType: 'text'
+    }).subscribe({
+      next: () => {
+        this.usuarioEditandoId = null;
+        this.mostrarExito('Usuario actualizado.');
+        this.cargarUsuarios();
+      },
+      error: (err) => this.manejarError(err)
+    });
+  }
+
+  eliminarUsuario(usuario: any): void {
+    this.mensajeExito = '';
+    this.mensajeError = '';
+
+    if (!confirm('¿Seguro que quieres eliminar al usuario "' + usuario.nombreUsuario + '"?')) {
+      return;
+    }
+
+    this.http.delete(this.urlBase + '/usuario/eliminar/' + usuario.id, {
+      headers: this.encabezados(),
+      responseType: 'text'
+    }).subscribe({
+      next: () => {
+        this.mostrarExito('Usuario eliminado.');
+        this.cargarUsuarios();
+      },
+      error: (err) => this.manejarError(err)
+    });
+  }
+
+  // ---------- Registro de cambios ----------
+
+  // Convierte una fecha con hora (aaaa-mm-ddThh:mm) en dd/mm/aaaa hh:mm
+  formatearFechaHora(fecha: string): string {
+    if (!fecha) {
+      return '';
+    }
+    const hora = fecha.length >= 16 ? fecha.substring(11, 16) : '';
+    return (this.formatearFecha(fecha) + ' ' + hora).trim();
+  }
+
+  cargarRegistroCambios(): void {
+    // OJO: confirma en el Swagger que esta sea la ruta
+    this.http.get<any[]>(this.urlBase + '/registrocambios/todos', { headers: this.encabezados() }).subscribe({
+      next: (lista) => {
+        // Del más nuevo al más viejo
+        this.registroCambios = lista.sort((a, b) => b.id - a.id);
+        this.cambios.detectChanges();
       },
       error: (err) => this.manejarError(err)
     });
