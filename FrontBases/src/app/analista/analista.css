@@ -1,0 +1,417 @@
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Work+Sans:wght@400;500;600&display=swap');
+
+.analista-pagina {
+  display: flex;
+  min-height: 100vh;
+  background-color: #080d10;
+  color: #eaf6f5;
+  font-family: 'Work Sans', Arial, sans-serif;
+}
+
+/* ---------- Menú ---------- */
+.analista-menu {
+  display: flex;
+  flex-direction: column;
+  width: 260px;
+  padding: 36px 20px 32px 20px;
+  background-color: #0c1317;
+  border-right: 1px solid #1b2a30;
+  animation-duration: 0.5s;
+}
+
+.analista-menu-etiqueta {
+  margin: 0 0 6px 8px;
+  font-size: 12px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: #19d3c5;
+}
+
+.analista-menu-marca {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin: 0 0 40px 8px;
+}
+
+.analista-menu-icono {
+  font-size: 44px;
+  line-height: 1;
+  color: #19d3c5;
+  text-shadow: 0 0 18px rgba(25, 211, 197, 0.45);
+}
+
+.analista-menu-titulo {
+  margin: 0;
+  font-family: 'Bebas Neue', Impact, sans-serif;
+  font-size: 54px;
+  line-height: 0.95;
+  letter-spacing: 1px;
+}
+
+.analista-menu-lista {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.analista-enlace {
+  display: block;
+  padding: 12px 16px;
+  border: 1px solid transparent;
+  border-radius: 10px;
+  background: none;
+  color: #86a0a6;
+  font-size: 16px;
+  font-family: inherit;
+  text-align: left;
+  cursor: pointer;
+  transition: color 150ms ease-out, background-color 150ms ease-out, border-color 150ms ease-out, box-shadow 150ms ease-out;
+}
+
+.analista-enlace:active {
+  transform: scale(0.97);
+}
+
+.analista-enlace-activo {
+  color: #19d3c5;
+  font-weight: 600;
+  background-color: rgba(25, 211, 197, 0.08);
+  border-color: #19d3c5;
+  box-shadow: 0 0 18px rgba(25, 211, 197, 0.3);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .analista-enlace:hover {
+    color: #eaf6f5;
+    background-color: #131e23;
+  }
+
+  .analista-enlace-activo:hover {
+    color: #19d3c5;
+    background-color: rgba(25, 211, 197, 0.08);
+  }
+}
+
+.analista-salir {
+  margin-top: auto;
+  padding: 12px 16px;
+  border: none;
+  background: none;
+  color: #19d3c5;
+  font-size: 15px;
+  font-family: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.analista-salir:active {
+  transform: scale(0.97);
+}
+
+/* ---------- Contenido ---------- */
+.analista-contenido {
+  flex: 1;
+  min-width: 0;
+  max-width: 1000px;
+  padding: 48px 56px;
+}
+
+.seccion-titulo {
+  margin: 0 0 8px 0;
+  font-family: 'Bebas Neue', Impact, sans-serif;
+  font-size: 64px;
+  letter-spacing: 1px;
+}
+
+.seccion-texto {
+  margin: 0 0 28px 0;
+  color: #86a0a6;
+  font-size: 17px;
+}
+
+.texto-vacio {
+  margin-top: 28px;
+}
+
+.boton-analista {
+  display: inline-block;
+  padding: 12px 28px;
+  border: none;
+  border-radius: 8px;
+  background-color: #19d3c5;
+  color: #04201e;
+  font-family: 'Bebas Neue', Impact, sans-serif;
+  font-size: 22px;
+  letter-spacing: 1.5px;
+  cursor: pointer;
+  box-shadow: 0 0 18px rgba(25, 211, 197, 0.3);
+  transition: transform 150ms ease-out;
+}
+
+.boton-analista:active {
+  transform: scale(0.97);
+}
+
+/* ---------- Mensaje de error ---------- */
+.mensaje-error {
+  margin: 0 0 24px 0;
+  padding-left: 12px;
+  border-left: 4px solid #ff8a5c;
+  color: #ff8a5c;
+  font-size: 17px;
+}
+
+/* ---------- Troncal más afectada ---------- */
+.destacada {
+  margin: 36px 0 32px 0;
+  padding: 24px 28px;
+  background-color: #0f171b;
+  border: 1px solid #1f2d33;
+  border-left: 6px solid #19d3c5;
+  border-radius: 12px;
+  animation-duration: 0.5s;
+  animation-delay: 100ms;
+}
+
+.destacada-etiqueta {
+  font-size: 12px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: #19d3c5;
+}
+
+.destacada-nombre {
+  margin: 6px 0 4px 0;
+  font-family: 'Bebas Neue', Impact, sans-serif;
+  font-size: 84px;
+  line-height: 1;
+  letter-spacing: 1px;
+  color: #19d3c5;
+  text-shadow: 0 0 24px rgba(25, 211, 197, 0.4);
+  overflow-wrap: anywhere;
+}
+
+.destacada-detalle {
+  margin: 0;
+  color: #86a0a6;
+  font-size: 17px;
+}
+
+/* ---------- Ranking de troncales ---------- */
+.ranking {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.fila-ranking {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  padding: 18px 24px;
+  background-color: #0f171b;
+  border: 1px solid #1f2d33;
+  border-radius: 12px;
+  animation-duration: 0.5s;
+  transition: transform 150ms ease-out, border-color 150ms ease-out, box-shadow 150ms ease-out;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .fila-ranking:hover {
+    transform: translateY(-2px);
+    border-color: #19d3c5;
+    box-shadow: 0 6px 22px rgba(25, 211, 197, 0.18);
+  }
+
+  .fila-ranking:hover .ranking-puesto {
+    color: #19d3c5;
+  }
+}
+
+.ranking-puesto {
+  flex-shrink: 0;
+  min-width: 48px;
+  font-family: 'Bebas Neue', Impact, sans-serif;
+  font-size: 60px;
+  line-height: 1;
+  color: #2a3d44;
+  transition: color 150ms ease-out;
+}
+
+.ranking-centro {
+  flex: 1;
+  min-width: 0;
+}
+
+.ranking-textos {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+
+.ranking-nombre {
+  font-size: 19px;
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+
+.ranking-personas {
+  flex-shrink: 0;
+  color: #86a0a6;
+  font-size: 14px;
+}
+
+.ranking-barra {
+  height: 12px;
+  border-radius: 999px;
+  background-color: #1a262b;
+  overflow: hidden;
+}
+
+.ranking-relleno {
+  width: 100%;
+  height: 100%;
+  border-radius: 999px;
+  transform-origin: left;
+  transition: transform 700ms cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.nivel-alto {
+  background-color: #ff5d5d;
+}
+
+.nivel-medio {
+  background-color: #ffa94d;
+}
+
+.nivel-bajo {
+  background-color: #19d3c5;
+}
+
+.ranking-valor {
+  flex-shrink: 0;
+  min-width: 90px;
+  text-align: right;
+  font-family: 'Bebas Neue', Impact, sans-serif;
+  font-size: 48px;
+  line-height: 1;
+}
+
+/* ---------- Lista de colados ---------- */
+.lista {
+  background-color: #0f171b;
+  border: 1px solid #1f2d33;
+  border-radius: 12px;
+  overflow: hidden;
+  animation-duration: 0.5s;
+  animation-delay: 100ms;
+}
+
+.fila-registro {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 16px 24px;
+  border-bottom: 1px solid #1f2d33;
+  transition: background-color 150ms ease-out;
+}
+
+.fila-registro:last-child {
+  border-bottom: none;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .fila-registro:hover {
+    background-color: #131e23;
+  }
+}
+
+.fila-numero {
+  min-width: 36px;
+  font-family: 'Bebas Neue', Impact, sans-serif;
+  font-size: 30px;
+  color: #4a6169;
+}
+
+.fila-datos {
+  flex: 1;
+  min-width: 0;
+}
+
+.fila-principal {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+
+.fila-secundario {
+  margin: 4px 0 0 0;
+  color: #86a0a6;
+  font-size: 15px;
+  overflow-wrap: anywhere;
+}
+
+.insignia {
+  flex-shrink: 0;
+  padding: 4px 14px;
+  border-radius: 999px;
+  background-color: rgba(25, 211, 197, 0.15);
+  color: #19d3c5;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+/* ---------- Si la persona prefiere menos movimiento ---------- */
+@media (prefers-reduced-motion: reduce) {
+  .ranking-relleno {
+    transition: none;
+  }
+}
+
+/* ---------- Pantallas pequeñas ---------- */
+@media (max-width: 768px) {
+  .analista-pagina {
+    flex-direction: column;
+  }
+  .analista-menu {
+    width: auto;
+    padding: 28px 16px;
+    border-right: none;
+    border-bottom: 1px solid #1b2a30;
+  }
+  .analista-menu-marca {
+    margin-bottom: 24px;
+  }
+  .analista-salir {
+    margin-top: 16px;
+  }
+  .analista-contenido {
+    padding: 32px 20px;
+  }
+  .seccion-titulo {
+    font-size: 48px;
+  }
+  .destacada-nombre {
+    font-size: 56px;
+  }
+  .fila-ranking {
+    gap: 14px;
+    padding: 14px 16px;
+  }
+  .ranking-puesto {
+    min-width: 32px;
+    font-size: 40px;
+  }
+  .ranking-valor {
+    min-width: 60px;
+    font-size: 34px;
+  }
+  .fila-registro {
+    flex-wrap: wrap;
+    padding: 16px;
+  }
+}
