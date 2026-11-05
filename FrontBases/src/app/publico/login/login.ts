@@ -12,14 +12,12 @@ export class Login {
   usuario = '';
   contrasena = '';
   error = '';
-
-  // Para los roles que todavía no tienen panel
   rolIniciado = '';
 
   constructor(
-    private router: Router,
-    private authService: AuthService,
-    private cambios: ChangeDetectorRef
+      private router: Router,
+      private authService: AuthService,
+      private cambios: ChangeDetectorRef
   ) {}
 
   ingresar(): void {
@@ -38,7 +36,6 @@ export class Login {
     this.authService.login(this.usuario.trim(), this.contrasena).subscribe({
       next: (token) => {
         const contenido = this.authService.leerContenidoToken(token);
-        console.log('Contenido del token:', contenido); // BORRAR después de probar
 
         if (!contenido || !contenido.rol) {
           this.error = 'No se pudo leer la respuesta del servidor';
@@ -50,22 +47,20 @@ export class Login {
         this.authService.guardarRol(contenido.rol);
         this.authService.guardarIdUsuario(contenido.idUsuario);
 
-        // Se compara en minúsculas para que no importe cómo escribe el rol el back
         const rol = String(contenido.rol).toLowerCase();
 
         if (rol === 'guarda') {
           this.router.navigate(['/guarda']);
         } else if (rol === 'administrador') {
           this.router.navigate(['/admin']);
+        } else if (rol === 'analista') {
+          this.router.navigate(['/analista']);
         } else {
-          // El panel de Analista todavía no existe
           this.rolIniciado = contenido.rol;
           this.cambios.detectChanges();
         }
       },
       error: (err) => {
-        console.log('Error del login:', err); // BORRAR después de probar
-
         if (err.status === 0) {
           this.error = 'No se pudo conectar con el servidor. Revisa que el back esté prendido.';
         } else if (typeof err.error === 'string' && err.error !== '') {

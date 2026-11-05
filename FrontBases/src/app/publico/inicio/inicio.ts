@@ -6,6 +6,12 @@ interface Troncal {
   porcentaje: number;
 }
 
+interface Resumen {
+  coladosHoy: number;
+  perdidaEstimada: number;
+  estacionCritica: string;
+}
+
 @Component({
   selector: 'app-inicio',
   standalone: false,
@@ -16,10 +22,9 @@ export class Inicio implements OnInit {
   nombreSistema = 'Sistema de Monitoreo de Colados';
 
   indicadores = [
-    { titulo: 'Colados hoy', valor: '128', detalle: '+5% vs ayer' },
-    { titulo: 'Nivel de evasión', valor: '18%', detalle: '-2% vs ayer' },
-    { titulo: 'Pérdida estimada', valor: '$ 1.250.000', detalle: 'acumulado de hoy' },
-    { titulo: 'Estación crítica', valor: 'Estación de ejemplo', detalle: 'más colados hoy' },
+    { titulo: 'Colados hoy', valor: '—', detalle: 'personas registradas hoy' },
+    { titulo: 'Pérdida estimada', valor: '—', detalle: 'personas por la tarifa de cada día' },
+    { titulo: 'Estación con más colados', valor: '—', detalle: 'en todos los registros' },
   ];
 
   troncales: Troncal[] = [];
@@ -44,6 +49,7 @@ export class Inicio implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    this.cargarResumen();
     this.cargarTroncales();
     this.cargarTotal();
 
@@ -58,6 +64,20 @@ export class Inicio implements OnInit {
     setTimeout(() => {
       this.mostrarIndicadores = true;
     }, 1200);
+  }
+
+  cargarResumen(): void {
+    this.http.get<Resumen>('http://localhost:8080/estadistica/resumen').subscribe({
+      next: (datos) => {
+        this.indicadores[0].valor = String(datos.coladosHoy);
+        this.indicadores[1].valor = '$ ' + datos.perdidaEstimada.toLocaleString('es-CO');
+        this.indicadores[2].valor = datos.estacionCritica;
+        this.cambios.detectChanges();
+      },
+      error: () => {
+        this.cambios.detectChanges();
+      }
+    });
   }
 
   cargarTroncales(): void {

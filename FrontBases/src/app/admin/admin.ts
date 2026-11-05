@@ -957,7 +957,7 @@ export class Admin implements OnInit {
 
   cargarRegistroCambios(): void {
     // OJO: confirma en el Swagger que esta sea la ruta
-    this.http.get<any[]>(this.urlBase + '/registrocambios/todos', { headers: this.encabezados() }).subscribe({
+    this.http.get<any[]>(this.urlBase + '/registroCambios/todos', { headers: this.encabezados() }).subscribe({
       next: (lista) => {
         // Del más nuevo al más viejo
         this.registroCambios = lista.sort((a, b) => b.id - a.id);

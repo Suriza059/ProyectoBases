@@ -1,8 +1,19 @@
 <header class="encabezado" [class.encabezado-solido]="encabezadoSolido">
+  <a class="marca" href="#inicio">Monitoreo de colados</a>
+
+  <nav class="menu">
+    <a class="menu-enlace" href="#colados">Colados</a>
+    <a class="menu-enlace" href="#troncales">Troncales</a>
+    <a class="menu-enlace" href="#estaciones">Estaciones</a>
+    <a class="menu-enlace" href="#mapa">Mapa</a>
+    <a class="menu-enlace" href="#horas">Horas pico</a>
+    <a class="menu-enlace" href="#roles">Roles</a>
+  </nav>
+
   <button class="btn-login" routerLink="/login">Iniciar sesión</button>
 </header>
 
-<section class="hero">
+<section class="hero" id="inicio">
   <h1
     class="hero-titulo"
     [class.oculto]="!mostrarTitulo"
@@ -18,7 +29,7 @@
     [class.animate__animated]="mostrarSubtitulo"
     [class.animate__fadeIn]="mostrarSubtitulo"
   >
-    ¿Qué está pasando hoy? Consulta el estado de la evasión en el sistema.
+    Registro y análisis de la evasión de pago en las estaciones de TransMilenio.
   </p>
 
   <div
@@ -36,122 +47,135 @@
 </section>
 
 <main class="contenido">
+  <div class="linea-ruta"></div>
 
-  <div class="fila">
-    <section
-      class="seccion bloque-angosto"
-      [class.oculto]="!mostrarTotal"
-      [class.animate__animated]="mostrarTotal"
-      [class.animate__fadeInUp]="mostrarTotal"
-      [class.animate__faster]="mostrarTotal"
-    >
-      <h2 class="seccion-titulo">Colados registrados</h2>
-
-      <div class="total-colados relieve">
-        <span class="total-numero">{{ totalColados }}</span>
-        <span class="total-texto">colados registrados por los guardas en el sistema</span>
-      </div>
-    </section>
-
-    <section
-      class="seccion bloque-ancho"
-      [class.oculto]="!mostrarTroncales"
-      [class.animate__animated]="mostrarTroncales"
-      [class.animate__fadeInUp]="mostrarTroncales"
-      [class.animate__faster]="mostrarTroncales"
-    >
-      <h2 class="seccion-titulo">Troncales más afectadas</h2>
-
-      <div class="fila-troncal relieve" *ngFor="let t of troncales">
-        <span class="troncal-nombre">{{ t.nombre }}</span>
-        <div class="barra">
-          <div
-            class="barra-relleno"
-            [style.transform]="mostrarTroncales ? 'scaleX(' + (t.porcentaje / 100) + ')' : 'scaleX(0)'"
-            [class.alto]="t.porcentaje >= 40"
-            [class.medio]="t.porcentaje >= 20 && t.porcentaje < 40"
-            [class.bajo]="t.porcentaje < 20"
-          ></div>
+  <div class="parada">
+    <span class="punto"></span>
+    <div class="fila">
+      <section
+        id="colados"
+        class="seccion bloque-angosto"
+        [class.oculto]="!mostrarTotal"
+        [class.animate__animated]="mostrarTotal"
+        [class.animate__fadeInUp]="mostrarTotal"
+        [class.animate__faster]="mostrarTotal"
+      >
+        <h2 class="seccion-titulo">Colados registrados</h2>
+        <div class="total-colados relieve">
+          <span class="total-numero">{{ totalColados }}</span>
+          <span class="total-texto">personas registradas por los guardas en las estaciones</span>
         </div>
-        <span class="troncal-valor">{{ t.porcentaje }}%</span>
-      </div>
+      </section>
 
-      <p class="sin-datos" *ngIf="troncales.length === 0">
-        Todavía no hay datos de troncales.
-      </p>
-    </section>
-  </div>
+      <section
+        id="troncales"
+        class="seccion bloque-ancho"
+        [class.oculto]="!mostrarTroncales"
+        [class.animate__animated]="mostrarTroncales"
+        [class.animate__fadeInUp]="mostrarTroncales"
+        [class.animate__faster]="mostrarTroncales"
+      >
+        <h2 class="seccion-titulo">Troncales más afectadas</h2>
 
-  <section
-    class="seccion"
-    [class.oculto]="!mostrarTroncalesEstaciones"
-    [class.animate__animated]="mostrarTroncalesEstaciones"
-    [class.animate__fadeInUp]="mostrarTroncalesEstaciones"
-    [class.animate__faster]="mostrarTroncalesEstaciones"
-  >
-    <h2 class="seccion-titulo">Troncales y estaciones</h2>
-    <div class="espacio-reservado relieve">Aquí irán las troncales con sus estaciones</div>
-  </section>
+        <div class="fila-troncal relieve" *ngFor="let t of troncales">
+          <span class="troncal-nombre">{{ t.nombre }}</span>
+          <div class="barra">
+            <div
+              class="barra-relleno"
+              [style.transform]="mostrarTroncales ? 'scaleX(' + (t.porcentaje / 100) + ')' : 'scaleX(0)'"
+              [class.alto]="t.porcentaje >= 40"
+              [class.medio]="t.porcentaje >= 20 && t.porcentaje < 40"
+              [class.bajo]="t.porcentaje < 20"
+            ></div>
+          </div>
+          <span class="troncal-valor">{{ t.porcentaje }}%</span>
+        </div>
 
-  <div class="fila">
-    <section
-      class="seccion bloque-ancho"
-      [class.oculto]="!mostrarMapa"
-      [class.animate__animated]="mostrarMapa"
-      [class.animate__fadeInUp]="mostrarMapa"
-      [class.animate__faster]="mostrarMapa"
-    >
-      <h2 class="seccion-titulo">Mapa</h2>
-      <div class="espacio-reservado relieve">Aquí irá el mapa de estaciones</div>
-    </section>
-
-    <section
-      class="seccion bloque-angosto"
-      [class.oculto]="!mostrarHoras"
-      [class.animate__animated]="mostrarHoras"
-      [class.animate__fadeInUp]="mostrarHoras"
-      [class.animate__faster]="mostrarHoras"
-    >
-      <h2 class="seccion-titulo">Horas pico</h2>
-      <div class="espacio-reservado">Aquí irá la gráfica de horas pico</div>
-    </section>
-  </div>
-
-  <section
-    class="seccion"
-    [class.oculto]="!mostrarRoles"
-    [class.animate__animated]="mostrarRoles"
-    [class.animate__fadeInUp]="mostrarRoles"
-    [class.animate__faster]="mostrarRoles"
-  >
-    <h2 class="seccion-titulo">¿Quién usa el sistema?</h2>
-
-    <div class="roles">
-      <div class="rol relieve">
-        <h3 class="rol-nombre">Guarda</h3>
-        <p class="rol-descripcion">
-          Está en las estaciones y registra cada colado que ve.
+        <p class="sin-datos" *ngIf="troncales.length === 0">
+          Todavía no hay datos de troncales.
         </p>
-      </div>
-
-      <div class="rol relieve">
-        <h3 class="rol-nombre">Analista</h3>
-        <p class="rol-descripcion">
-          Revisa los colados registrados y consulta qué troncales están más afectadas.
-        </p>
-      </div>
-
-      <div class="rol relieve">
-        <h3 class="rol-nombre">Administrador</h3>
-        <p class="rol-descripcion">
-          Gestiona troncales, estaciones, tarifas, guardas y usuarios del sistema.
-        </p>
-      </div>
+      </section>
     </div>
-  </section>
+  </div>
 
+  <div class="parada">
+    <span class="punto"></span>
+    <section
+      id="estaciones"
+      class="seccion"
+      [class.oculto]="!mostrarTroncalesEstaciones"
+      [class.animate__animated]="mostrarTroncalesEstaciones"
+      [class.animate__fadeInUp]="mostrarTroncalesEstaciones"
+      [class.animate__faster]="mostrarTroncalesEstaciones"
+    >
+      <h2 class="seccion-titulo">Troncales y estaciones</h2>
+      <p class="espacio-reservado">Aquí irán las troncales con sus estaciones</p>
+    </section>
+  </div>
+
+  <div class="parada">
+    <span class="punto"></span>
+    <div class="fila">
+      <section
+        id="mapa"
+        class="seccion bloque-ancho"
+        [class.oculto]="!mostrarMapa"
+        [class.animate__animated]="mostrarMapa"
+        [class.animate__fadeInUp]="mostrarMapa"
+        [class.animate__faster]="mostrarMapa"
+      >
+        <h2 class="seccion-titulo">Mapa</h2>
+        <div class="mapa-lamina relieve">
+          <div class="mapa-imagen"></div>
+        </div>
+      </section>
+
+      <section
+        id="horas"
+        class="seccion bloque-angosto"
+        [class.oculto]="!mostrarHoras"
+        [class.animate__animated]="mostrarHoras"
+        [class.animate__fadeInUp]="mostrarHoras"
+        [class.animate__faster]="mostrarHoras"
+      >
+        <h2 class="seccion-titulo">Horas pico</h2>
+        <p class="espacio-reservado">Aquí irá la gráfica de horas pico</p>
+      </section>
+    </div>
+  </div>
+
+  <div class="parada">
+    <span class="punto"></span>
+    <section
+      id="roles"
+      class="seccion"
+      [class.oculto]="!mostrarRoles"
+      [class.animate__animated]="mostrarRoles"
+      [class.animate__fadeInUp]="mostrarRoles"
+      [class.animate__faster]="mostrarRoles"
+    >
+      <h2 class="seccion-titulo">¿Quién usa el sistema?</h2>
+
+      <div class="roles">
+        <div class="rol relieve">
+          <h3 class="rol-nombre">Guarda</h3>
+          <p class="rol-descripcion">Está en las estaciones y registra cada colado que ve.</p>
+        </div>
+
+        <div class="rol relieve">
+          <h3 class="rol-nombre">Analista</h3>
+          <p class="rol-descripcion">Revisa los colados registrados y consulta qué troncales están más afectadas.</p>
+        </div>
+
+        <div class="rol relieve">
+          <h3 class="rol-nombre">Administrador</h3>
+          <p class="rol-descripcion">Gestiona troncales, estaciones, tarifas, guardas y usuarios del sistema.</p>
+        </div>
+      </div>
+    </section>
+  </div>
 </main>
 
 <footer class="pie">
-  <p>Proyecto Evasión de pago en Transmilenio.</p>
+  <p>Proyecto Evasión de pago en TransMilenio.</p>
 </footer>
