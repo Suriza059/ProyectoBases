@@ -26,6 +26,7 @@ import co.edu.unbosque.TransMilenio.service.AnalistaService;
 import co.edu.unbosque.TransMilenio.service.AuthService;
 import co.edu.unbosque.TransMilenio.service.ComparendoService;
 import co.edu.unbosque.TransMilenio.service.EstacionService;
+import co.edu.unbosque.TransMilenio.service.EstadisticaService;
 import co.edu.unbosque.TransMilenio.service.EventoInfractorService;
 import co.edu.unbosque.TransMilenio.service.EventoService;
 import co.edu.unbosque.TransMilenio.service.GuardaService;
@@ -408,6 +409,20 @@ public class AppConfig {
 	}
 
 	/**
+	 * Registra el servicio de estadisticas de la pagina de inicio, con los repositories que necesita.
+	 *
+	 * @param eventoRepository el repositorio del evento
+	 * @param estacionRepository el repositorio de la estacion
+	 * @param troncalRepository el repositorio de la troncal
+	 * @param tarifaRepository el repositorio de la tarifa
+	 * @return el EstadisticaService
+	 */
+	@Bean
+	public EstadisticaService estadisticaService(EventoRepository eventoRepository, EstacionRepository estacionRepository, TroncalRepository troncalRepository, TarifaRepository tarifaRepository) {
+		return new EstadisticaService(eventoRepository, estacionRepository, troncalRepository, tarifaRepository);
+	}
+
+	/**
 	 * Registra la utilidad que crea y valida los tokens JWT.
 	 *
 	 * @return el JwtUtil
@@ -421,12 +436,13 @@ public class AppConfig {
 	 * Registra el servicio de inicio de sesion.
 	 *
 	 * @param usuarioRepository el repositorio de usuarios
+	 * @param usuarioGuardaRepository el repositorio de la activacion de guarda (para meter el idGuarda en el token)
 	 * @param jwtUtil la utilidad de tokens
 	 * @return el AuthService
 	 */
 	@Bean
-	public AuthService authService(UsuarioRepository usuarioRepository, JwtUtil jwtUtil) {
-		return new AuthService(usuarioRepository, jwtUtil);
+	public AuthService authService(UsuarioRepository usuarioRepository, UsuarioGuardaRepository usuarioGuardaRepository, JwtUtil jwtUtil) {
+		return new AuthService(usuarioRepository, usuarioGuardaRepository, jwtUtil);
 	}
 
 	/**

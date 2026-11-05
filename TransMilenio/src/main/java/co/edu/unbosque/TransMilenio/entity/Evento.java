@@ -1,6 +1,7 @@
 package co.edu.unbosque.TransMilenio.entity;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.Objects;
 
 /**
@@ -17,6 +18,10 @@ public class Evento {
 	 * La fecha en que ocurrio el evento.
 	 */
 	private LocalDate fecha;
+	/**
+	 * La hora del dia en que ocurrio el evento (opcional). Se usa para calcular las horas pico.
+	 */
+	private LocalTime hora;
 	/**
 	 * La cantidad de personas involucradas en el evento.
 	 */
@@ -45,7 +50,7 @@ public class Evento {
 	}
 
 	/**
-	 * Crea un evento con todos los datos, excepto el id.
+	 * Crea un evento con todos los datos, excepto el id y la hora (la hora se asigna con setHora).
 	 *
 	 * @param fecha la fecha en que ocurrio el evento
 	 * @param numeroPersonas la cantidad de personas involucradas en el evento
@@ -99,6 +104,24 @@ public class Evento {
 	 */
 	public void setFecha(LocalDate fecha) {
 		this.fecha = fecha;
+	}
+
+	/**
+	 * Obtiene la hora del dia en que ocurrio el evento.
+	 *
+	 * @return la hora del dia en que ocurrio el evento, o null si no se registro
+	 */
+	public LocalTime getHora() {
+		return hora;
+	}
+
+	/**
+	 * Asigna la hora del dia en que ocurrio el evento.
+	 *
+	 * @param hora la hora del dia en que ocurrio el evento (puede ser null)
+	 */
+	public void setHora(LocalTime hora) {
+		this.hora = hora;
 	}
 
 	/**
@@ -202,7 +225,7 @@ public class Evento {
 	 */
 	@Override
 	public String toString() {
-		return "Evento [id=" + id + ", fecha=" + fecha + ", numeroPersonas=" + numeroPersonas + ", idEstacion=" + idEstacion + ", idTarifa=" + idTarifa + ", idModalidad=" + idModalidad + ", idGuarda=" + idGuarda + "]";
+		return "Evento [id=" + id + ", fecha=" + fecha + ", hora=" + hora + ", numeroPersonas=" + numeroPersonas + ", idEstacion=" + idEstacion + ", idTarifa=" + idTarifa + ", idModalidad=" + idModalidad + ", idGuarda=" + idGuarda + "]";
 	}
 
 	/**
@@ -212,7 +235,7 @@ public class Evento {
 	 */
 	@Override
 	public int hashCode() {
-		return Objects.hash(fecha, id, idEstacion, idGuarda, idModalidad, idTarifa, numeroPersonas);
+		return Objects.hash(fecha, hora, id, idEstacion, idGuarda, idModalidad, idTarifa, numeroPersonas);
 	}
 
 	/**
@@ -230,7 +253,7 @@ public class Evento {
 		if (getClass() != obj.getClass())
 			return false;
 		Evento other = (Evento) obj;
-		return Objects.equals(fecha, other.fecha) && Objects.equals(id, other.id) && Objects.equals(idEstacion, other.idEstacion) && Objects.equals(idGuarda, other.idGuarda) && Objects.equals(idModalidad, other.idModalidad) && Objects.equals(idTarifa, other.idTarifa) && Objects.equals(numeroPersonas, other.numeroPersonas);
+		return Objects.equals(fecha, other.fecha) && Objects.equals(hora, other.hora) && Objects.equals(id, other.id) && Objects.equals(idEstacion, other.idEstacion) && Objects.equals(idGuarda, other.idGuarda) && Objects.equals(idModalidad, other.idModalidad) && Objects.equals(idTarifa, other.idTarifa) && Objects.equals(numeroPersonas, other.numeroPersonas);
 	}
 
 }

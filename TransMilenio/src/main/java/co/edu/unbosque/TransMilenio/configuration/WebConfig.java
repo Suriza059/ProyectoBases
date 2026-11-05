@@ -9,7 +9,8 @@ import co.edu.unbosque.TransMilenio.security.JwtUtil;
 
 /**
  * Configuracion web. Registra el JwtInterceptor para que revise todas las rutas, excepto el login
- * (/auth/**), Swagger y /error.
+ * (/auth/**), las estadisticas de la pagina de inicio (/estadistica/**, publicas y sin token), Swagger y
+ * /error.
  */
 @Configuration
 public class WebConfig implements WebMvcConfigurer {
@@ -29,7 +30,8 @@ public class WebConfig implements WebMvcConfigurer {
 	}
 
 	/**
-	 * Registra el JwtInterceptor en todas las rutas, salvo las publicas (/auth/**, Swagger y /error).
+	 * Registra el JwtInterceptor en todas las rutas, salvo las publicas (/auth/**, /estadistica/**,
+	 * Swagger y /error). /estadistica/** es publica porque la pagina de inicio no envia token.
 	 *
 	 * @param registry el registro de interceptores de Spring
 	 */
@@ -38,6 +40,6 @@ public class WebConfig implements WebMvcConfigurer {
 		registry.addInterceptor(new JwtInterceptor(jwtUtil))
 				.addPathPatterns("/**")
 				.excludePathPatterns("/auth/**", "/swagger-ui/**", "/swagger-ui.html", "/v3/api-docs",
-						"/v3/api-docs/**", "/error");
+						"/v3/api-docs/**", "/error", "/estadistica/**");
 	}
 }

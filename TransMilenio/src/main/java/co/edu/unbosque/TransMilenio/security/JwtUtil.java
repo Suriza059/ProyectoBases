@@ -32,19 +32,23 @@ public class JwtUtil {
 	private Key clave = Keys.hmacShaKeyFor(SECRETO.getBytes(StandardCharsets.UTF_8));
 
 	/**
-	 * Crea un token firmado con el nombre de usuario, el rol y el id, que vence a las 2 horas.
+	 * Crea un token firmado con el nombre de usuario, el rol, el id y (si tiene) el id del guarda, que
+	 * vence a las 2 horas.
 	 *
 	 * @param idUsuario el identificador del usuario
 	 * @param nombreUsuario el nombre de usuario (va como sujeto del token)
 	 * @param rol el rol del usuario
+	 * @param idGuarda el identificador del guarda activado para el usuario (llave foranea). Es null si el
+	 *     usuario no es Guarda o no tiene guarda activado; en ese caso el dato no se agrega al token
 	 * @return el token JWT
 	 */
-	public String generarToken(Long idUsuario, String nombreUsuario, String rol) {
+	public String generarToken(Long idUsuario, String nombreUsuario, String rol, Long idGuarda) {
 		Date ahora = new Date();
 		return Jwts.builder()
 				.setSubject(nombreUsuario)
 				.claim("rol", rol)
 				.claim("idUsuario", idUsuario)
+				.claim("idGuarda", idGuarda)
 				.setIssuedAt(ahora)
 				.setExpiration(new Date(ahora.getTime() + DURACION))
 				.signWith(clave, SignatureAlgorithm.HS256)

@@ -1,6 +1,7 @@
 package co.edu.unbosque.TransMilenio.controller;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 
 import org.springframework.format.annotation.DateTimeFormat;
@@ -43,6 +44,8 @@ public class EventoController {
 	 * POST /evento/crear. Crea un evento nuevo.
 	 *
 	 * @param fecha la fecha en que ocurrio el evento
+	 * @param hora la hora del dia en que ocurrio el evento, formato HH:mm:ss (opcional, se usa para las
+	 *     horas pico)
 	 * @param numeroPersonas la cantidad de personas involucradas en el evento
 	 * @param idEstacion el identificador de la estacion donde ocurrio el evento (llave foranea)
 	 * @param idTarifa el identificador de la tarifa vigente cuando ocurrio el evento, dato historico (llave
@@ -54,6 +57,7 @@ public class EventoController {
 	@PostMapping("/crear")
 	public ResponseEntity<String> crear(
 			@RequestParam(name = "fecha", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fecha,
+			@RequestParam(name = "hora", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.TIME) LocalTime hora,
 			@RequestParam(name = "numeroPersonas", required = false) Integer numeroPersonas,
 			@RequestParam(name = "idEstacion", required = false) Long idEstacion,
 			@RequestParam(name = "idTarifa", required = false) Long idTarifa,
@@ -61,6 +65,7 @@ public class EventoController {
 			@RequestParam(name = "idGuarda", required = false) Long idGuarda) {
 		EventoDTO dto = new EventoDTO();
 		dto.setFecha(fecha);
+		dto.setHora(hora);
 		dto.setNumeroPersonas(numeroPersonas);
 		dto.setIdEstacion(idEstacion);
 		dto.setIdTarifa(idTarifa);
@@ -89,6 +94,8 @@ public class EventoController {
 	 *
 	 * @param id el identificador del registro a actualizar
 	 * @param fecha la fecha en que ocurrio el evento
+	 * @param hora la hora del dia en que ocurrio el evento, formato HH:mm:ss (opcional, se usa para las
+	 *     horas pico)
 	 * @param numeroPersonas la cantidad de personas involucradas en el evento
 	 * @param idEstacion el identificador de la estacion donde ocurrio el evento (llave foranea)
 	 * @param idTarifa el identificador de la tarifa vigente cuando ocurrio el evento, dato historico (llave
@@ -101,6 +108,7 @@ public class EventoController {
 	public ResponseEntity<String> actualizar(
 			@PathVariable Long id,
 			@RequestParam(name = "fecha", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fecha,
+			@RequestParam(name = "hora", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.TIME) LocalTime hora,
 			@RequestParam(name = "numeroPersonas", required = false) Integer numeroPersonas,
 			@RequestParam(name = "idEstacion", required = false) Long idEstacion,
 			@RequestParam(name = "idTarifa", required = false) Long idTarifa,
@@ -108,6 +116,7 @@ public class EventoController {
 			@RequestParam(name = "idGuarda", required = false) Long idGuarda) {
 		EventoDTO dto = new EventoDTO();
 		dto.setFecha(fecha);
+		dto.setHora(hora);
 		dto.setNumeroPersonas(numeroPersonas);
 		dto.setIdEstacion(idEstacion);
 		dto.setIdTarifa(idTarifa);

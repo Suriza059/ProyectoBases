@@ -106,6 +106,7 @@ public class EventoService implements CRUDOPERATION<EventoDTO> {
 		Evento entity = new Evento();
 		entity.setId(dto.getId());
 		entity.setFecha(dto.getFecha());
+		entity.setHora(dto.getHora());
 		entity.setNumeroPersonas(dto.getNumeroPersonas());
 		entity.setIdEstacion(dto.getIdEstacion());
 		entity.setIdTarifa(dto.getIdTarifa());
@@ -124,6 +125,7 @@ public class EventoService implements CRUDOPERATION<EventoDTO> {
 		EventoDTO dto = new EventoDTO();
 		dto.setId(entity.getId());
 		dto.setFecha(entity.getFecha());
+		dto.setHora(entity.getHora());
 		dto.setNumeroPersonas(entity.getNumeroPersonas());
 		dto.setIdEstacion(entity.getIdEstacion());
 		dto.setIdTarifa(entity.getIdTarifa());
