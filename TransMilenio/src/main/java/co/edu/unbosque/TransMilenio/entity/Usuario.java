@@ -99,7 +99,7 @@ public class Usuario {
 		this.nombreUsuario = nombreUsuario;
 	}
 
-	/**
+	/*
 	 * Obtiene la contrasena del usuario (se guarda cifrada).
 	 *
 	 * @return la contrasena del usuario (se guarda cifrada)
