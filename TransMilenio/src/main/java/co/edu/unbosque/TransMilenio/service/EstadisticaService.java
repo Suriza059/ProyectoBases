@@ -198,4 +198,22 @@ public class EstadisticaService {
 		}
 		return filas;
 	}
+	
+	public List<Map<String, Object>> troncalesConEstaciones() {
+		List<Map<String, Object>> filas = new ArrayList<>();
+		for (Troncal troncal : troncalRepository.listar()) {
+			List<String> nombres = new ArrayList<>();
+			for (Estacion estacion : estacionRepository.listar()) {
+				if (estacion.getIdTroncal().equals(troncal.getId()) && "Si".equals(estacion.getActiva())) {
+					nombres.add(estacion.getNombre());
+				}
+			}
+			Map<String, Object> fila = new LinkedHashMap<>();
+			fila.put("nombre", troncal.getNombre());
+			fila.put("estaciones", nombres);
+			filas.add(fila);
+		}
+		return filas;
+	}
+		
 }
