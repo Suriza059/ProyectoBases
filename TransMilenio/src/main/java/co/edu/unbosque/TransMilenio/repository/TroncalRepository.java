@@ -1,106 +1,60 @@
 package co.edu.unbosque.TransMilenio.repository;
 
-import java.util.ArrayList;
 import java.util.List;
+
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 
 import co.edu.unbosque.TransMilenio.entity.Troncal;
 
-/**
- * Repositorio de la troncal. Guarda los registros en una lista en memoria (los datos se pierden al
- * reiniciar la aplicacion). Aqui es donde se conecta la base de datos: solo hay que cambiar el cuerpo de
- * sus metodos, el resto del back no cambia.
- *
- * <p>Los ids se asignan con un contador (siguienteId), empezando en 1.
- */
 public class TroncalRepository {
 
-	/**
-	 * Lista en memoria donde se guardan los registros.
-	 */
-	private ArrayList<Troncal> lista = new ArrayList<>();
-	/**
-	 * Siguiente id que se asignara a un registro nuevo.
-	 */
-	private long siguienteId = 1;
+	private JdbcTemplate jdbc;
 
-	/**
-	 * Guarda el registro. Si no tiene id, le asigna uno nuevo y lo agrega; si ya tiene id, reemplaza el
-	 * registro existente.
-	 *
-	 * @param troncal la troncal a guardar
-	 * @return el registro guardado
-	 */
+	private RowMapper<Troncal> convertir = (fila, numero) -> {
+		Troncal troncal = new Troncal();
+		troncal.setId(fila.getLong("ID_TRONCAL"));
+		troncal.setNombre(fila.getString("NOMBRE"));
+		return troncal;
+	};
+
+	public TroncalRepository(JdbcTemplate jdbc) {
+		this.jdbc = jdbc;
+	}
+
 	public Troncal guardar(Troncal troncal) {
 		if (troncal.getId() == null) {
-			troncal.setId(siguienteId);
-			siguienteId++;
-			lista.add(troncal);
-			return troncal;
+			jdbc.update("INSERT INTO TRONCAL (ID_TRONCAL, NOMBRE) VALUES (SEQ_TRONCAL.NEXTVAL, ?)",
+					troncal.getNombre());
+		} else {
+			jdbc.update("UPDATE TRONCAL SET NOMBRE = ? WHERE ID_TRONCAL = ?",
+					troncal.getNombre(), troncal.getId());
 		}
-		for (int i = 0; i < lista.size(); i++) {
-			if (lista.get(i).getId().equals(troncal.getId())) {
-				lista.set(i, troncal);
-				return troncal;
-			}
-		}
-		lista.add(troncal);
 		return troncal;
 	}
 
-	/**
-	 * Busca una troncal por su identificador.
-	 *
-	 * @param id el identificador a buscar
-	 * @return el registro encontrado, o null si no existe
-	 */
 	public Troncal buscarPorId(Long id) {
-		for (Troncal troncal : lista) {
-			if (troncal.getId().equals(id)) {
-				return troncal;
-			}
+		List<Troncal> lista = jdbc.query("SELECT * FROM TRONCAL WHERE ID_TRONCAL = ?", convertir, id);
+		if (lista.isEmpty()) {
+			return null;
 		}
-		return null;
+		return lista.get(0);
 	}
 
-	/**
-	 * Obtiene todos los registros.
-	 *
-	 * @return una copia de la lista de registros
-	 */
 	public List<Troncal> listar() {
-		return new ArrayList<>(lista);
+		return jdbc.query("SELECT * FROM TRONCAL ORDER BY ID_TRONCAL", convertir);
 	}
 
-	/**
-	 * Elimina una troncal por su identificador.
-	 *
-	 * @param id el identificador del registro a eliminar
-	 * @return true si se elimino, false si no existia
-	 */
 	public boolean eliminar(Long id) {
-		Troncal troncal = buscarPorId(id);
-		if (troncal == null)
-			return false;
-		lista.remove(troncal);
-		return true;
+		return jdbc.update("DELETE FROM TRONCAL WHERE ID_TRONCAL = ?", id) > 0;
 	}
 
-	/**
-	 * Indica si existe un registro con ese identificador.
-	 *
-	 * @param id el identificador a comprobar
-	 * @return true si existe, false si no
-	 */
 	public boolean existe(Long id) {
 		return buscarPorId(id) != null;
 	}
 
-	/**
-	 * Cuenta los registros guardados.
-	 *
-	 * @return la cantidad de registros
-	 */
 	public long contar() {
-		return lista.size();
+		Long total = jdbc.queryForObject("SELECT COUNT(*) FROM TRONCAL", Long.class);
+		return total;
 	}
 }

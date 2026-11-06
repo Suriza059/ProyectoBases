@@ -1,106 +1,63 @@
 package co.edu.unbosque.TransMilenio.repository;
 
-import java.util.ArrayList;
 import java.util.List;
+
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 
 import co.edu.unbosque.TransMilenio.entity.Pago;
 
-/**
- * Repositorio del pago. Guarda los registros en una lista en memoria (los datos se pierden al reiniciar la
- * aplicacion). Aqui es donde se conecta la base de datos: solo hay que cambiar el cuerpo de sus metodos, el
- * resto del back no cambia.
- *
- * <p>Los ids se asignan con un contador (siguienteId), empezando en 1.
- */
 public class PagoRepository {
 
-	/**
-	 * Lista en memoria donde se guardan los registros.
-	 */
-	private ArrayList<Pago> lista = new ArrayList<>();
-	/**
-	 * Siguiente id que se asignara a un registro nuevo.
-	 */
-	private long siguienteId = 1;
+	private JdbcTemplate jdbc;
 
-	/**
-	 * Guarda el registro. Si no tiene id, le asigna uno nuevo y lo agrega; si ya tiene id, reemplaza el
-	 * registro existente.
-	 *
-	 * @param pago el pago a guardar
-	 * @return el registro guardado
-	 */
+	private RowMapper<Pago> convertir = (fila, numero) -> {
+		Pago pago = new Pago();
+		pago.setId(fila.getLong("ID_PAGO"));
+		pago.setValor(fila.getLong("VALOR"));
+		pago.setNumeroRecibo(fila.getString("NUMERO_RECIBO"));
+		pago.setFecha(fila.getDate("FECHA").toLocalDate());
+		pago.setIdComparendo(fila.getLong("ID_COMPARENDO"));
+		return pago;
+	};
+
+	public PagoRepository(JdbcTemplate jdbc) {
+		this.jdbc = jdbc;
+	}
+
 	public Pago guardar(Pago pago) {
 		if (pago.getId() == null) {
-			pago.setId(siguienteId);
-			siguienteId++;
-			lista.add(pago);
-			return pago;
+			jdbc.update("INSERT INTO PAGO (ID_PAGO, VALOR, NUMERO_RECIBO, FECHA, ID_COMPARENDO) VALUES (SEQ_PAGO.NEXTVAL, ?, ?, ?, ?)",
+					pago.getValor(), pago.getNumeroRecibo(), pago.getFecha(), pago.getIdComparendo());
+		} else {
+			jdbc.update("UPDATE PAGO SET VALOR = ?, NUMERO_RECIBO = ?, FECHA = ?, ID_COMPARENDO = ? WHERE ID_PAGO = ?",
+					pago.getValor(), pago.getNumeroRecibo(), pago.getFecha(), pago.getIdComparendo(), pago.getId());
 		}
-		for (int i = 0; i < lista.size(); i++) {
-			if (lista.get(i).getId().equals(pago.getId())) {
-				lista.set(i, pago);
-				return pago;
-			}
-		}
-		lista.add(pago);
 		return pago;
 	}
 
-	/**
-	 * Busca un pago por su identificador.
-	 *
-	 * @param id el identificador a buscar
-	 * @return el registro encontrado, o null si no existe
-	 */
 	public Pago buscarPorId(Long id) {
-		for (Pago pago : lista) {
-			if (pago.getId().equals(id)) {
-				return pago;
-			}
+		List<Pago> lista = jdbc.query("SELECT * FROM PAGO WHERE ID_PAGO = ?", convertir, id);
+		if (lista.isEmpty()) {
+			return null;
 		}
-		return null;
+		return lista.get(0);
 	}
 
-	/**
-	 * Obtiene todos los registros.
-	 *
-	 * @return una copia de la lista de registros
-	 */
 	public List<Pago> listar() {
-		return new ArrayList<>(lista);
+		return jdbc.query("SELECT * FROM PAGO ORDER BY ID_PAGO", convertir);
 	}
 
-	/**
-	 * Elimina un pago por su identificador.
-	 *
-	 * @param id el identificador del registro a eliminar
-	 * @return true si se elimino, false si no existia
-	 */
 	public boolean eliminar(Long id) {
-		Pago pago = buscarPorId(id);
-		if (pago == null)
-			return false;
-		lista.remove(pago);
-		return true;
+		return jdbc.update("DELETE FROM PAGO WHERE ID_PAGO = ?", id) > 0;
 	}
 
-	/**
-	 * Indica si existe un registro con ese identificador.
-	 *
-	 * @param id el identificador a comprobar
-	 * @return true si existe, false si no
-	 */
 	public boolean existe(Long id) {
 		return buscarPorId(id) != null;
 	}
 
-	/**
-	 * Cuenta los registros guardados.
-	 *
-	 * @return la cantidad de registros
-	 */
 	public long contar() {
-		return lista.size();
+		Long total = jdbc.queryForObject("SELECT COUNT(*) FROM PAGO", Long.class);
+		return total;
 	}
 }

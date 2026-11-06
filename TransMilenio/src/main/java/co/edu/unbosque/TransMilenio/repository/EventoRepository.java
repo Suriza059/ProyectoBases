@@ -1,106 +1,78 @@
 package co.edu.unbosque.TransMilenio.repository;
 
-import java.util.ArrayList;
+import java.time.LocalTime;
 import java.util.List;
+
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 
 import co.edu.unbosque.TransMilenio.entity.Evento;
 
-/**
- * Repositorio del evento. Guarda los registros en una lista en memoria (los datos se pierden al reiniciar
- * la aplicacion). Aqui es donde se conecta la base de datos: solo hay que cambiar el cuerpo de sus metodos,
- * el resto del back no cambia.
- *
- * <p>Los ids se asignan con un contador (siguienteId), empezando en 1.
- */
 public class EventoRepository {
 
-	/**
-	 * Lista en memoria donde se guardan los registros.
-	 */
-	private ArrayList<Evento> lista = new ArrayList<>();
-	/**
-	 * Siguiente id que se asignara a un registro nuevo.
-	 */
-	private long siguienteId = 1;
+	private JdbcTemplate jdbc;
 
-	/**
-	 * Guarda el registro. Si no tiene id, le asigna uno nuevo y lo agrega; si ya tiene id, reemplaza el
-	 * registro existente.
-	 *
-	 * @param evento el evento a guardar
-	 * @return el registro guardado
-	 */
+	private RowMapper<Evento> convertir = (fila, numero) -> {
+		Evento evento = new Evento();
+		evento.setId(fila.getLong("ID_EVENTO"));
+		evento.setFecha(fila.getDate("FECHA").toLocalDate());
+		String hora = fila.getString("HORA");
+		if (hora == null) {
+			evento.setHora(null);
+		} else {
+			evento.setHora(LocalTime.parse(hora));
+		}
+		evento.setNumeroPersonas(fila.getInt("NUMERO_PERSONAS"));
+		evento.setIdEstacion(fila.getLong("ID_ESTACION"));
+		evento.setIdTarifa(fila.getLong("ID_TARIFA"));
+		evento.setIdModalidad(fila.getLong("ID_MODALIDAD"));
+		evento.setIdGuarda(fila.getLong("ID_GUARDA"));
+		return evento;
+	};
+
+	public EventoRepository(JdbcTemplate jdbc) {
+		this.jdbc = jdbc;
+	}
+
 	public Evento guardar(Evento evento) {
+		String hora = null;
+		if (evento.getHora() != null) {
+			hora = evento.getHora().toString();
+		}
 		if (evento.getId() == null) {
-			evento.setId(siguienteId);
-			siguienteId++;
-			lista.add(evento);
-			return evento;
+			jdbc.update("INSERT INTO EVENTO (ID_EVENTO, FECHA, HORA, NUMERO_PERSONAS, ID_ESTACION, ID_TARIFA, ID_MODALIDAD, ID_GUARDA) VALUES (SEQ_EVENTO.NEXTVAL, ?, ?, ?, ?, ?, ?, ?)",
+					evento.getFecha(), hora, evento.getNumeroPersonas(), evento.getIdEstacion(),
+					evento.getIdTarifa(), evento.getIdModalidad(), evento.getIdGuarda());
+		} else {
+			jdbc.update("UPDATE EVENTO SET FECHA = ?, HORA = ?, NUMERO_PERSONAS = ?, ID_ESTACION = ?, ID_TARIFA = ?, ID_MODALIDAD = ?, ID_GUARDA = ? WHERE ID_EVENTO = ?",
+					evento.getFecha(), hora, evento.getNumeroPersonas(), evento.getIdEstacion(),
+					evento.getIdTarifa(), evento.getIdModalidad(), evento.getIdGuarda(), evento.getId());
 		}
-		for (int i = 0; i < lista.size(); i++) {
-			if (lista.get(i).getId().equals(evento.getId())) {
-				lista.set(i, evento);
-				return evento;
-			}
-		}
-		lista.add(evento);
 		return evento;
 	}
 
-	/**
-	 * Busca un evento por su identificador.
-	 *
-	 * @param id el identificador a buscar
-	 * @return el registro encontrado, o null si no existe
-	 */
 	public Evento buscarPorId(Long id) {
-		for (Evento evento : lista) {
-			if (evento.getId().equals(id)) {
-				return evento;
-			}
+		List<Evento> lista = jdbc.query("SELECT * FROM EVENTO WHERE ID_EVENTO = ?", convertir, id);
+		if (lista.isEmpty()) {
+			return null;
 		}
-		return null;
+		return lista.get(0);
 	}
 
-	/**
-	 * Obtiene todos los registros.
-	 *
-	 * @return una copia de la lista de registros
-	 */
 	public List<Evento> listar() {
-		return new ArrayList<>(lista);
+		return jdbc.query("SELECT * FROM EVENTO ORDER BY ID_EVENTO", convertir);
 	}
 
-	/**
-	 * Elimina un evento por su identificador.
-	 *
-	 * @param id el identificador del registro a eliminar
-	 * @return true si se elimino, false si no existia
-	 */
 	public boolean eliminar(Long id) {
-		Evento evento = buscarPorId(id);
-		if (evento == null)
-			return false;
-		lista.remove(evento);
-		return true;
+		return jdbc.update("DELETE FROM EVENTO WHERE ID_EVENTO = ?", id) > 0;
 	}
 
-	/**
-	 * Indica si existe un registro con ese identificador.
-	 *
-	 * @param id el identificador a comprobar
-	 * @return true si existe, false si no
-	 */
 	public boolean existe(Long id) {
 		return buscarPorId(id) != null;
 	}
 
-	/**
-	 * Cuenta los registros guardados.
-	 *
-	 * @return la cantidad de registros
-	 */
 	public long contar() {
-		return lista.size();
+		Long total = jdbc.queryForObject("SELECT COUNT(*) FROM EVENTO", Long.class);
+		return total;
 	}
 }

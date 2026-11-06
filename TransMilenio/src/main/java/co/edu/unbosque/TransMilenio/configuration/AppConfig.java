@@ -2,6 +2,7 @@ package co.edu.unbosque.TransMilenio.configuration;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.jdbc.core.JdbcTemplate;
 
 import co.edu.unbosque.TransMilenio.repository.AdministradorRepository;
 import co.edu.unbosque.TransMilenio.repository.AgresionRepository;
@@ -43,327 +44,149 @@ import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.security.SecurityRequirement;
 import io.swagger.v3.oas.models.security.SecurityScheme;
 
-/**
- * Configuracion de Spring que crea y conecta los objetos del back. Como las clases repository y service no
- * llevan anotaciones, aqui se registra cada una como bean y se le pasan por constructor los repositories
- * que necesita. Tambien registra el JwtUtil, el AuthService y el boton Authorize de Swagger.
- */
 @Configuration
 public class AppConfig {
 
-	/**
-	 * Registra el repositorio de la troncal.
-	 *
-	 * @return el TroncalRepository
-	 */
 	@Bean
-	public TroncalRepository troncalRepository() {
-		return new TroncalRepository();
+	public TroncalRepository troncalRepository(JdbcTemplate jdbcTemplate) {
+		return new TroncalRepository(jdbcTemplate);
 	}
 
-	/**
-	 * Registra el repositorio de la estacion.
-	 *
-	 * @return el EstacionRepository
-	 */
 	@Bean
-	public EstacionRepository estacionRepository() {
-		return new EstacionRepository();
+	public EstacionRepository estacionRepository(JdbcTemplate jdbcTemplate) {
+		return new EstacionRepository(jdbcTemplate);
 	}
 
-	/**
-	 * Registra el repositorio del guarda.
-	 *
-	 * @return el GuardaRepository
-	 */
 	@Bean
-	public GuardaRepository guardaRepository() {
-		return new GuardaRepository();
+	public GuardaRepository guardaRepository(JdbcTemplate jdbcTemplate) {
+		return new GuardaRepository(jdbcTemplate);
 	}
 
-	/**
-	 * Registra el repositorio de la tarifa.
-	 *
-	 * @return el TarifaRepository
-	 */
 	@Bean
-	public TarifaRepository tarifaRepository() {
-		return new TarifaRepository();
+	public TarifaRepository tarifaRepository(JdbcTemplate jdbcTemplate) {
+		return new TarifaRepository(jdbcTemplate);
 	}
 
-	/**
-	 * Registra el repositorio de la modalidad.
-	 *
-	 * @return el ModalidadRepository
-	 */
 	@Bean
-	public ModalidadRepository modalidadRepository() {
-		return new ModalidadRepository();
+	public ModalidadRepository modalidadRepository(JdbcTemplate jdbcTemplate) {
+		return new ModalidadRepository(jdbcTemplate);
 	}
 
-	/**
-	 * Registra el repositorio del evento.
-	 *
-	 * @return el EventoRepository
-	 */
 	@Bean
-	public EventoRepository eventoRepository() {
-		return new EventoRepository();
+	public EventoRepository eventoRepository(JdbcTemplate jdbcTemplate) {
+		return new EventoRepository(jdbcTemplate);
 	}
 
-	/**
-	 * Registra el repositorio de la agresion.
-	 *
-	 * @return el AgresionRepository
-	 */
 	@Bean
-	public AgresionRepository agresionRepository() {
-		return new AgresionRepository();
+	public AgresionRepository agresionRepository(JdbcTemplate jdbcTemplate) {
+		return new AgresionRepository(jdbcTemplate);
 	}
 
-	/**
-	 * Registra el repositorio del infractor.
-	 *
-	 * @return el InfractorRepository
-	 */
 	@Bean
-	public InfractorRepository infractorRepository() {
-		return new InfractorRepository();
+	public InfractorRepository infractorRepository(JdbcTemplate jdbcTemplate) {
+		return new InfractorRepository(jdbcTemplate);
 	}
 
-	/**
-	 * Registra el repositorio de la relacion evento-infractor.
-	 *
-	 * @return el EventoInfractorRepository
-	 */
 	@Bean
-	public EventoInfractorRepository eventoInfractorRepository() {
-		return new EventoInfractorRepository();
+	public EventoInfractorRepository eventoInfractorRepository(JdbcTemplate jdbcTemplate) {
+		return new EventoInfractorRepository(jdbcTemplate);
 	}
 
-	/**
-	 * Registra el repositorio del comparendo.
-	 *
-	 * @return el ComparendoRepository
-	 */
 	@Bean
-	public ComparendoRepository comparendoRepository() {
-		return new ComparendoRepository();
+	public ComparendoRepository comparendoRepository(JdbcTemplate jdbcTemplate) {
+		return new ComparendoRepository(jdbcTemplate);
 	}
 
-	/**
-	 * Registra el repositorio del pago.
-	 *
-	 * @return el PagoRepository
-	 */
 	@Bean
-	public PagoRepository pagoRepository() {
-		return new PagoRepository();
+	public PagoRepository pagoRepository(JdbcTemplate jdbcTemplate) {
+		return new PagoRepository(jdbcTemplate);
 	}
 
-	/**
-	 * Registra el repositorio del registro de cambios.
-	 *
-	 * @return el RegistroCambiosRepository
-	 */
 	@Bean
-	public RegistroCambiosRepository registroCambiosRepository() {
-		return new RegistroCambiosRepository();
+	public RegistroCambiosRepository registroCambiosRepository(JdbcTemplate jdbcTemplate) {
+		return new RegistroCambiosRepository(jdbcTemplate);
 	}
 
-	/**
-	 * Registra el repositorio del usuario.
-	 *
-	 * @return el UsuarioRepository
-	 */
 	@Bean
-	public UsuarioRepository usuarioRepository() {
-		return new UsuarioRepository();
+	public UsuarioRepository usuarioRepository(JdbcTemplate jdbcTemplate) {
+		return new UsuarioRepository(jdbcTemplate);
 	}
 
-	/**
-	 * Registra el repositorio de la activacion de guarda.
-	 *
-	 * @return el UsuarioGuardaRepository
-	 */
 	@Bean
-	public UsuarioGuardaRepository usuarioGuardaRepository() {
-		return new UsuarioGuardaRepository();
+	public UsuarioGuardaRepository usuarioGuardaRepository(JdbcTemplate jdbcTemplate) {
+		return new UsuarioGuardaRepository(jdbcTemplate);
 	}
 
-	/**
-	 * Registra el repositorio del administrador.
-	 *
-	 * @return el AdministradorRepository
-	 */
 	@Bean
-	public AdministradorRepository administradorRepository() {
-		return new AdministradorRepository();
+	public AdministradorRepository administradorRepository(JdbcTemplate jdbcTemplate) {
+		return new AdministradorRepository(jdbcTemplate);
 	}
 
-	/**
-	 * Registra el repositorio del analista.
-	 *
-	 * @return el AnalistaRepository
-	 */
 	@Bean
-	public AnalistaRepository analistaRepository() {
-		return new AnalistaRepository();
+	public AnalistaRepository analistaRepository(JdbcTemplate jdbcTemplate) {
+		return new AnalistaRepository(jdbcTemplate);
 	}
 
-	/**
-	 * Registra el servicio de la troncal, con los repositories que necesita.
-	 *
-	 * @param troncalRepository el repositorio de la troncal
-	 * @return el TroncalService
-	 */
 	@Bean
 	public TroncalService troncalService(TroncalRepository troncalRepository) {
 		return new TroncalService(troncalRepository);
 	}
 
-	/**
-	 * Registra el servicio de la estacion, con los repositories que necesita.
-	 *
-	 * @param estacionRepository el repositorio de la estacion
-	 * @param troncalRepository el repositorio de la troncal
-	 * @return el EstacionService
-	 */
 	@Bean
 	public EstacionService estacionService(EstacionRepository estacionRepository, TroncalRepository troncalRepository) {
 		return new EstacionService(estacionRepository, troncalRepository);
 	}
 
-	/**
-	 * Registra el servicio del guarda, con los repositories que necesita.
-	 *
-	 * @param guardaRepository el repositorio del guarda
-	 * @param estacionRepository el repositorio de la estacion
-	 * @return el GuardaService
-	 */
 	@Bean
 	public GuardaService guardaService(GuardaRepository guardaRepository, EstacionRepository estacionRepository) {
 		return new GuardaService(guardaRepository, estacionRepository);
 	}
 
-	/**
-	 * Registra el servicio de la tarifa, con los repositories que necesita.
-	 *
-	 * @param tarifaRepository el repositorio de la tarifa
-	 * @return el TarifaService
-	 */
 	@Bean
 	public TarifaService tarifaService(TarifaRepository tarifaRepository) {
 		return new TarifaService(tarifaRepository);
 	}
 
-	/**
-	 * Registra el servicio de la modalidad, con los repositories que necesita.
-	 *
-	 * @param modalidadRepository el repositorio de la modalidad
-	 * @return el ModalidadService
-	 */
 	@Bean
 	public ModalidadService modalidadService(ModalidadRepository modalidadRepository) {
 		return new ModalidadService(modalidadRepository);
 	}
 
-	/**
-	 * Registra el servicio del evento, con los repositories que necesita.
-	 *
-	 * @param eventoRepository el repositorio del evento
-	 * @param estacionRepository el repositorio de la estacion
-	 * @param tarifaRepository el repositorio de la tarifa
-	 * @param modalidadRepository el repositorio de la modalidad
-	 * @param guardaRepository el repositorio del guarda
-	 * @return el EventoService
-	 */
 	@Bean
 	public EventoService eventoService(EventoRepository eventoRepository, EstacionRepository estacionRepository, TarifaRepository tarifaRepository, ModalidadRepository modalidadRepository, GuardaRepository guardaRepository) {
 		return new EventoService(eventoRepository, estacionRepository, tarifaRepository, modalidadRepository, guardaRepository);
 	}
 
-	/**
-	 * Registra el servicio de la agresion, con los repositories que necesita.
-	 *
-	 * @param agresionRepository el repositorio de la agresion
-	 * @param eventoRepository el repositorio del evento
-	 * @param guardaRepository el repositorio del guarda
-	 * @return el AgresionService
-	 */
 	@Bean
 	public AgresionService agresionService(AgresionRepository agresionRepository, EventoRepository eventoRepository, GuardaRepository guardaRepository) {
 		return new AgresionService(agresionRepository, eventoRepository, guardaRepository);
 	}
 
-	/**
-	 * Registra el servicio del infractor, con los repositories que necesita.
-	 *
-	 * @param infractorRepository el repositorio del infractor
-	 * @return el InfractorService
-	 */
 	@Bean
 	public InfractorService infractorService(InfractorRepository infractorRepository) {
 		return new InfractorService(infractorRepository);
 	}
 
-	/**
-	 * Registra el servicio de la relacion evento-infractor, con los repositories que necesita.
-	 *
-	 * @param eventoInfractorRepository el repositorio de la relacion evento-infractor
-	 * @param eventoRepository el repositorio del evento
-	 * @param infractorRepository el repositorio del infractor
-	 * @return el EventoInfractorService
-	 */
 	@Bean
 	public EventoInfractorService eventoInfractorService(EventoInfractorRepository eventoInfractorRepository, EventoRepository eventoRepository, InfractorRepository infractorRepository) {
 		return new EventoInfractorService(eventoInfractorRepository, eventoRepository, infractorRepository);
 	}
 
-	/**
-	 * Registra el servicio del comparendo, con los repositories que necesita.
-	 *
-	 * @param comparendoRepository el repositorio del comparendo
-	 * @param eventoInfractorRepository el repositorio de la relacion evento-infractor
-	 * @return el ComparendoService
-	 */
 	@Bean
 	public ComparendoService comparendoService(ComparendoRepository comparendoRepository, EventoInfractorRepository eventoInfractorRepository) {
 		return new ComparendoService(comparendoRepository, eventoInfractorRepository);
 	}
 
-	/**
-	 * Registra el servicio del pago, con los repositories que necesita.
-	 *
-	 * @param pagoRepository el repositorio del pago
-	 * @param comparendoRepository el repositorio del comparendo
-	 * @return el PagoService
-	 */
 	@Bean
 	public PagoService pagoService(PagoRepository pagoRepository, ComparendoRepository comparendoRepository) {
 		return new PagoService(pagoRepository, comparendoRepository);
 	}
 
-	/**
-	 * Registra el servicio del registro de cambios, con los repositories que necesita.
-	 *
-	 * @param registroCambiosRepository el repositorio del registro de cambios
-	 * @param usuarioRepository el repositorio del usuario
-	 * @param comparendoRepository el repositorio del comparendo
-	 * @return el RegistroCambiosService
-	 */
 	@Bean
 	public RegistroCambiosService registroCambiosService(RegistroCambiosRepository registroCambiosRepository, UsuarioRepository usuarioRepository, ComparendoRepository comparendoRepository) {
 		return new RegistroCambiosService(registroCambiosRepository, usuarioRepository, comparendoRepository);
 	}
 
-	/**
-	 * Registra el servicio del usuario, con los repositories que necesita. Ademas crea el administrador
-	 * inicial.
-	 *
-	 * @param usuarioRepository el repositorio del usuario
-	 * @return el UsuarioService
-	 */
 	@Bean
 	public UsuarioService usuarioService(UsuarioRepository usuarioRepository) {
 		UsuarioService servicio = new UsuarioService(usuarioRepository);
@@ -371,86 +194,36 @@ public class AppConfig {
 		return servicio;
 	}
 
-	/**
-	 * Registra el servicio de la activacion de guarda, con los repositories que necesita.
-	 *
-	 * @param usuarioGuardaRepository el repositorio de la activacion de guarda
-	 * @param usuarioRepository el repositorio del usuario
-	 * @param guardaRepository el repositorio del guarda
-	 * @return el UsuarioGuardaService
-	 */
 	@Bean
 	public UsuarioGuardaService usuarioGuardaService(UsuarioGuardaRepository usuarioGuardaRepository, UsuarioRepository usuarioRepository, GuardaRepository guardaRepository) {
 		return new UsuarioGuardaService(usuarioGuardaRepository, usuarioRepository, guardaRepository);
 	}
 
-	/**
-	 * Registra el servicio del administrador, con los repositories que necesita.
-	 *
-	 * @param administradorRepository el repositorio del administrador
-	 * @param usuarioRepository el repositorio del usuario
-	 * @return el AdministradorService
-	 */
 	@Bean
 	public AdministradorService administradorService(AdministradorRepository administradorRepository, UsuarioRepository usuarioRepository) {
 		return new AdministradorService(administradorRepository, usuarioRepository);
 	}
 
-	/**
-	 * Registra el servicio del analista, con los repositories que necesita.
-	 *
-	 * @param analistaRepository el repositorio del analista
-	 * @param usuarioRepository el repositorio del usuario
-	 * @return el AnalistaService
-	 */
 	@Bean
 	public AnalistaService analistaService(AnalistaRepository analistaRepository, UsuarioRepository usuarioRepository) {
 		return new AnalistaService(analistaRepository, usuarioRepository);
 	}
 
-	/**
-	 * Registra el servicio de estadisticas de la pagina de inicio, con los repositories que necesita.
-	 *
-	 * @param eventoRepository el repositorio del evento
-	 * @param estacionRepository el repositorio de la estacion
-	 * @param troncalRepository el repositorio de la troncal
-	 * @param tarifaRepository el repositorio de la tarifa
-	 * @return el EstadisticaService
-	 */
 	@Bean
 	public EstadisticaService estadisticaService(EventoRepository eventoRepository, EstacionRepository estacionRepository, TroncalRepository troncalRepository, TarifaRepository tarifaRepository) {
 		return new EstadisticaService(eventoRepository, estacionRepository, troncalRepository, tarifaRepository);
 	}
 
-	/**
-	 * Registra la utilidad que crea y valida los tokens JWT.
-	 *
-	 * @return el JwtUtil
-	 */
 	@Bean
 	public JwtUtil jwtUtil() {
 		return new JwtUtil();
 	}
 
-	/**
-	 * Registra el servicio de inicio de sesion.
-	 *
-	 * @param usuarioRepository el repositorio de usuarios
-	 * @param usuarioGuardaRepository el repositorio de la activacion de guarda (para meter el idGuarda en el token)
-	 * @param jwtUtil la utilidad de tokens
-	 * @return el AuthService
-	 */
 	@Bean
 	public AuthService authService(UsuarioRepository usuarioRepository, UsuarioGuardaRepository usuarioGuardaRepository, JwtUtil jwtUtil) {
 		return new AuthService(usuarioRepository, usuarioGuardaRepository, jwtUtil);
 	}
 
-	/**
-	 * Agrega a Swagger el boton Authorize para pegar el token JWT (esquema Bearer) y que se envie en cada
-	 * peticion.
-	 *
-	 * @return la configuracion de OpenAPI
-	 */
 	@Bean
 	public OpenAPI openAPI() {
 		return new OpenAPI()

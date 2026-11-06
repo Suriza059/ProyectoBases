@@ -1,106 +1,65 @@
 package co.edu.unbosque.TransMilenio.repository;
 
-import java.util.ArrayList;
 import java.util.List;
+
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 
 import co.edu.unbosque.TransMilenio.entity.Comparendo;
 
-/**
- * Repositorio del comparendo. Guarda los registros en una lista en memoria (los datos se pierden al
- * reiniciar la aplicacion). Aqui es donde se conecta la base de datos: solo hay que cambiar el cuerpo de
- * sus metodos, el resto del back no cambia.
- *
- * <p>Los ids se asignan con un contador (siguienteId), empezando en 1.
- */
 public class ComparendoRepository {
 
-	/**
-	 * Lista en memoria donde se guardan los registros.
-	 */
-	private ArrayList<Comparendo> lista = new ArrayList<>();
-	/**
-	 * Siguiente id que se asignara a un registro nuevo.
-	 */
-	private long siguienteId = 1;
+	private JdbcTemplate jdbc;
 
-	/**
-	 * Guarda el registro. Si no tiene id, le asigna uno nuevo y lo agrega; si ya tiene id, reemplaza el
-	 * registro existente.
-	 *
-	 * @param comparendo el comparendo a guardar
-	 * @return el registro guardado
-	 */
+	private RowMapper<Comparendo> convertir = (fila, numero) -> {
+		Comparendo comparendo = new Comparendo();
+		comparendo.setId(fila.getLong("ID_COMPARENDO"));
+		comparendo.setFecha(fila.getDate("FECHA").toLocalDate());
+		comparendo.setValor(fila.getLong("VALOR"));
+		comparendo.setEstado(fila.getString("ESTADO"));
+		comparendo.setIdEventoInfractor(fila.getLong("ID_EVENTO_INFRACTOR"));
+		return comparendo;
+	};
+
+	public ComparendoRepository(JdbcTemplate jdbc) {
+		this.jdbc = jdbc;
+	}
+
 	public Comparendo guardar(Comparendo comparendo) {
 		if (comparendo.getId() == null) {
-			comparendo.setId(siguienteId);
-			siguienteId++;
-			lista.add(comparendo);
-			return comparendo;
+			jdbc.update("INSERT INTO COMPARENDO (ID_COMPARENDO, FECHA, VALOR, ESTADO, ID_EVENTO_INFRACTOR) VALUES (SEQ_COMPARENDO.NEXTVAL, ?, ?, ?, ?)",
+					comparendo.getFecha(), comparendo.getValor(), comparendo.getEstado(),
+					comparendo.getIdEventoInfractor());
+		} else {
+			jdbc.update("UPDATE COMPARENDO SET FECHA = ?, VALOR = ?, ESTADO = ?, ID_EVENTO_INFRACTOR = ? WHERE ID_COMPARENDO = ?",
+					comparendo.getFecha(), comparendo.getValor(), comparendo.getEstado(),
+					comparendo.getIdEventoInfractor(), comparendo.getId());
 		}
-		for (int i = 0; i < lista.size(); i++) {
-			if (lista.get(i).getId().equals(comparendo.getId())) {
-				lista.set(i, comparendo);
-				return comparendo;
-			}
-		}
-		lista.add(comparendo);
 		return comparendo;
 	}
 
-	/**
-	 * Busca un comparendo por su identificador.
-	 *
-	 * @param id el identificador a buscar
-	 * @return el registro encontrado, o null si no existe
-	 */
 	public Comparendo buscarPorId(Long id) {
-		for (Comparendo comparendo : lista) {
-			if (comparendo.getId().equals(id)) {
-				return comparendo;
-			}
+		List<Comparendo> lista = jdbc.query("SELECT * FROM COMPARENDO WHERE ID_COMPARENDO = ?", convertir, id);
+		if (lista.isEmpty()) {
+			return null;
 		}
-		return null;
+		return lista.get(0);
 	}
 
-	/**
-	 * Obtiene todos los registros.
-	 *
-	 * @return una copia de la lista de registros
-	 */
 	public List<Comparendo> listar() {
-		return new ArrayList<>(lista);
+		return jdbc.query("SELECT * FROM COMPARENDO ORDER BY ID_COMPARENDO", convertir);
 	}
 
-	/**
-	 * Elimina un comparendo por su identificador.
-	 *
-	 * @param id el identificador del registro a eliminar
-	 * @return true si se elimino, false si no existia
-	 */
 	public boolean eliminar(Long id) {
-		Comparendo comparendo = buscarPorId(id);
-		if (comparendo == null)
-			return false;
-		lista.remove(comparendo);
-		return true;
+		return jdbc.update("DELETE FROM COMPARENDO WHERE ID_COMPARENDO = ?", id) > 0;
 	}
 
-	/**
-	 * Indica si existe un registro con ese identificador.
-	 *
-	 * @param id el identificador a comprobar
-	 * @return true si existe, false si no
-	 */
 	public boolean existe(Long id) {
 		return buscarPorId(id) != null;
 	}
 
-	/**
-	 * Cuenta los registros guardados.
-	 *
-	 * @return la cantidad de registros
-	 */
 	public long contar() {
-		return lista.size();
+		Long total = jdbc.queryForObject("SELECT COUNT(*) FROM COMPARENDO", Long.class);
+		return total;
 	}
 }

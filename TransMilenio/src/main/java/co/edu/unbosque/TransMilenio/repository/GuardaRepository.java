@@ -1,106 +1,72 @@
 package co.edu.unbosque.TransMilenio.repository;
 
-import java.util.ArrayList;
 import java.util.List;
+
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 
 import co.edu.unbosque.TransMilenio.entity.Guarda;
 
-/**
- * Repositorio del guarda. Guarda los registros en una lista en memoria (los datos se pierden al reiniciar
- * la aplicacion). Aqui es donde se conecta la base de datos: solo hay que cambiar el cuerpo de sus metodos,
- * el resto del back no cambia.
- *
- * <p>Los ids se asignan con un contador (siguienteId), empezando en 1.
- */
 public class GuardaRepository {
 
-	/**
-	 * Lista en memoria donde se guardan los registros.
-	 */
-	private ArrayList<Guarda> lista = new ArrayList<>();
-	/**
-	 * Siguiente id que se asignara a un registro nuevo.
-	 */
-	private long siguienteId = 1;
+	private JdbcTemplate jdbc;
 
-	/**
-	 * Guarda el registro. Si no tiene id, le asigna uno nuevo y lo agrega; si ya tiene id, reemplaza el
-	 * registro existente.
-	 *
-	 * @param guarda el guarda a guardar
-	 * @return el registro guardado
-	 */
+	private RowMapper<Guarda> convertir = (fila, numero) -> {
+		Guarda guarda = new Guarda();
+		guarda.setId(fila.getLong("ID_GUARDA"));
+		guarda.setTurno(fila.getString("TURNO"));
+		guarda.setNombre(fila.getString("NOMBRE"));
+		guarda.setApellido(fila.getString("APELLIDO"));
+		guarda.setActivo(fila.getString("ACTIVO"));
+		guarda.setCargo(fila.getString("CARGO"));
+		guarda.setIdEstacion(fila.getLong("ID_ESTACION"));
+		if (fila.getObject("ID_SUPERVISOR") == null) {
+			guarda.setIdSupervisor(null);
+		} else {
+			guarda.setIdSupervisor(fila.getLong("ID_SUPERVISOR"));
+		}
+		return guarda;
+	};
+
+	public GuardaRepository(JdbcTemplate jdbc) {
+		this.jdbc = jdbc;
+	}
+
 	public Guarda guardar(Guarda guarda) {
 		if (guarda.getId() == null) {
-			guarda.setId(siguienteId);
-			siguienteId++;
-			lista.add(guarda);
-			return guarda;
+			jdbc.update("INSERT INTO GUARDA (ID_GUARDA, TURNO, NOMBRE, APELLIDO, ACTIVO, CARGO, ID_ESTACION, ID_SUPERVISOR) VALUES (SEQ_GUARDA.NEXTVAL, ?, ?, ?, ?, ?, ?, ?)",
+					guarda.getTurno(), guarda.getNombre(), guarda.getApellido(), guarda.getActivo(),
+					guarda.getCargo(), guarda.getIdEstacion(), guarda.getIdSupervisor());
+		} else {
+			jdbc.update("UPDATE GUARDA SET TURNO = ?, NOMBRE = ?, APELLIDO = ?, ACTIVO = ?, CARGO = ?, ID_ESTACION = ?, ID_SUPERVISOR = ? WHERE ID_GUARDA = ?",
+					guarda.getTurno(), guarda.getNombre(), guarda.getApellido(), guarda.getActivo(),
+					guarda.getCargo(), guarda.getIdEstacion(), guarda.getIdSupervisor(), guarda.getId());
 		}
-		for (int i = 0; i < lista.size(); i++) {
-			if (lista.get(i).getId().equals(guarda.getId())) {
-				lista.set(i, guarda);
-				return guarda;
-			}
-		}
-		lista.add(guarda);
 		return guarda;
 	}
 
-	/**
-	 * Busca un guarda por su identificador.
-	 *
-	 * @param id el identificador a buscar
-	 * @return el registro encontrado, o null si no existe
-	 */
 	public Guarda buscarPorId(Long id) {
-		for (Guarda guarda : lista) {
-			if (guarda.getId().equals(id)) {
-				return guarda;
-			}
+		List<Guarda> lista = jdbc.query("SELECT * FROM GUARDA WHERE ID_GUARDA = ?", convertir, id);
+		if (lista.isEmpty()) {
+			return null;
 		}
-		return null;
+		return lista.get(0);
 	}
 
-	/**
-	 * Obtiene todos los registros.
-	 *
-	 * @return una copia de la lista de registros
-	 */
 	public List<Guarda> listar() {
-		return new ArrayList<>(lista);
+		return jdbc.query("SELECT * FROM GUARDA ORDER BY ID_GUARDA", convertir);
 	}
 
-	/**
-	 * Elimina un guarda por su identificador.
-	 *
-	 * @param id el identificador del registro a eliminar
-	 * @return true si se elimino, false si no existia
-	 */
 	public boolean eliminar(Long id) {
-		Guarda guarda = buscarPorId(id);
-		if (guarda == null)
-			return false;
-		lista.remove(guarda);
-		return true;
+		return jdbc.update("DELETE FROM GUARDA WHERE ID_GUARDA = ?", id) > 0;
 	}
 
-	/**
-	 * Indica si existe un registro con ese identificador.
-	 *
-	 * @param id el identificador a comprobar
-	 * @return true si existe, false si no
-	 */
 	public boolean existe(Long id) {
 		return buscarPorId(id) != null;
 	}
 
-	/**
-	 * Cuenta los registros guardados.
-	 *
-	 * @return la cantidad de registros
-	 */
 	public long contar() {
-		return lista.size();
+		Long total = jdbc.queryForObject("SELECT COUNT(*) FROM GUARDA", Long.class);
+		return total;
 	}
 }

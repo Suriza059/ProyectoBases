@@ -1,106 +1,60 @@
 package co.edu.unbosque.TransMilenio.repository;
 
-import java.util.ArrayList;
 import java.util.List;
+
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 
 import co.edu.unbosque.TransMilenio.entity.Modalidad;
 
-/**
- * Repositorio de la modalidad. Guarda los registros en una lista en memoria (los datos se pierden al
- * reiniciar la aplicacion). Aqui es donde se conecta la base de datos: solo hay que cambiar el cuerpo de
- * sus metodos, el resto del back no cambia.
- *
- * <p>Los ids se asignan con un contador (siguienteId), empezando en 1.
- */
 public class ModalidadRepository {
 
-	/**
-	 * Lista en memoria donde se guardan los registros.
-	 */
-	private ArrayList<Modalidad> lista = new ArrayList<>();
-	/**
-	 * Siguiente id que se asignara a un registro nuevo.
-	 */
-	private long siguienteId = 1;
+	private JdbcTemplate jdbc;
 
-	/**
-	 * Guarda el registro. Si no tiene id, le asigna uno nuevo y lo agrega; si ya tiene id, reemplaza el
-	 * registro existente.
-	 *
-	 * @param modalidad la modalidad a guardar
-	 * @return el registro guardado
-	 */
+	private RowMapper<Modalidad> convertir = (fila, numero) -> {
+		Modalidad modalidad = new Modalidad();
+		modalidad.setId(fila.getLong("ID_MODALIDAD"));
+		modalidad.setNombre(fila.getString("NOMBRE"));
+		return modalidad;
+	};
+
+	public ModalidadRepository(JdbcTemplate jdbc) {
+		this.jdbc = jdbc;
+	}
+
 	public Modalidad guardar(Modalidad modalidad) {
 		if (modalidad.getId() == null) {
-			modalidad.setId(siguienteId);
-			siguienteId++;
-			lista.add(modalidad);
-			return modalidad;
+			jdbc.update("INSERT INTO MODALIDAD (ID_MODALIDAD, NOMBRE) VALUES (SEQ_MODALIDAD.NEXTVAL, ?)",
+					modalidad.getNombre());
+		} else {
+			jdbc.update("UPDATE MODALIDAD SET NOMBRE = ? WHERE ID_MODALIDAD = ?",
+					modalidad.getNombre(), modalidad.getId());
 		}
-		for (int i = 0; i < lista.size(); i++) {
-			if (lista.get(i).getId().equals(modalidad.getId())) {
-				lista.set(i, modalidad);
-				return modalidad;
-			}
-		}
-		lista.add(modalidad);
 		return modalidad;
 	}
 
-	/**
-	 * Busca una modalidad por su identificador.
-	 *
-	 * @param id el identificador a buscar
-	 * @return el registro encontrado, o null si no existe
-	 */
 	public Modalidad buscarPorId(Long id) {
-		for (Modalidad modalidad : lista) {
-			if (modalidad.getId().equals(id)) {
-				return modalidad;
-			}
+		List<Modalidad> lista = jdbc.query("SELECT * FROM MODALIDAD WHERE ID_MODALIDAD = ?", convertir, id);
+		if (lista.isEmpty()) {
+			return null;
 		}
-		return null;
+		return lista.get(0);
 	}
 
-	/**
-	 * Obtiene todos los registros.
-	 *
-	 * @return una copia de la lista de registros
-	 */
 	public List<Modalidad> listar() {
-		return new ArrayList<>(lista);
+		return jdbc.query("SELECT * FROM MODALIDAD ORDER BY ID_MODALIDAD", convertir);
 	}
 
-	/**
-	 * Elimina una modalidad por su identificador.
-	 *
-	 * @param id el identificador del registro a eliminar
-	 * @return true si se elimino, false si no existia
-	 */
 	public boolean eliminar(Long id) {
-		Modalidad modalidad = buscarPorId(id);
-		if (modalidad == null)
-			return false;
-		lista.remove(modalidad);
-		return true;
+		return jdbc.update("DELETE FROM MODALIDAD WHERE ID_MODALIDAD = ?", id) > 0;
 	}
 
-	/**
-	 * Indica si existe un registro con ese identificador.
-	 *
-	 * @param id el identificador a comprobar
-	 * @return true si existe, false si no
-	 */
 	public boolean existe(Long id) {
 		return buscarPorId(id) != null;
 	}
 
-	/**
-	 * Cuenta los registros guardados.
-	 *
-	 * @return la cantidad de registros
-	 */
 	public long contar() {
-		return lista.size();
+		Long total = jdbc.queryForObject("SELECT COUNT(*) FROM MODALIDAD", Long.class);
+		return total;
 	}
 }

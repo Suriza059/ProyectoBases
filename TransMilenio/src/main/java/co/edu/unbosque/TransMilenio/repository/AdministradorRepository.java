@@ -1,96 +1,61 @@
 package co.edu.unbosque.TransMilenio.repository;
 
-import java.util.ArrayList;
 import java.util.List;
+
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 
 import co.edu.unbosque.TransMilenio.entity.Administrador;
 
-/**
- * Repositorio del administrador. Guarda los registros en una lista en memoria (los datos se pierden al
- * reiniciar la aplicacion). Aqui es donde se conecta la base de datos: solo hay que cambiar el cuerpo de
- * sus metodos, el resto del back no cambia.
- *
- * <p>Esta entidad no genera su propio id: la llave es el id del usuario, que lo envia quien crea el
- * registro.
- */
 public class AdministradorRepository {
 
-	/**
-	 * Lista en memoria donde se guardan los registros.
-	 */
-	private ArrayList<Administrador> lista = new ArrayList<>();
+	private JdbcTemplate jdbc;
 
-	/**
-	 * Guarda el registro. Si ya existe uno con el mismo id de usuario lo reemplaza; si no, lo agrega.
-	 *
-	 * @param administrador el administrador a guardar
-	 * @return el registro guardado
-	 */
+	private RowMapper<Administrador> convertir = (fila, numero) -> {
+		Administrador administrador = new Administrador();
+		administrador.setIdUsuario(fila.getLong("ID_USUARIO"));
+		administrador.setAreaGestion(fila.getString("AREA_GESTION"));
+		administrador.setFechaGestion(fila.getDate("FECHA_GESTION").toLocalDate());
+		return administrador;
+	};
+
+	public AdministradorRepository(JdbcTemplate jdbc) {
+		this.jdbc = jdbc;
+	}
+
 	public Administrador guardar(Administrador administrador) {
-		for (int i = 0; i < lista.size(); i++) {
-			if (lista.get(i).getIdUsuario().equals(administrador.getIdUsuario())) {
-				lista.set(i, administrador);
-				return administrador;
-			}
+		if (existe(administrador.getIdUsuario())) {
+			jdbc.update("UPDATE ADMINISTRADOR SET AREA_GESTION = ?, FECHA_GESTION = ? WHERE ID_USUARIO = ?",
+					administrador.getAreaGestion(), administrador.getFechaGestion(), administrador.getIdUsuario());
+		} else {
+			jdbc.update("INSERT INTO ADMINISTRADOR (ID_USUARIO, AREA_GESTION, FECHA_GESTION) VALUES (?, ?, ?)",
+					administrador.getIdUsuario(), administrador.getAreaGestion(), administrador.getFechaGestion());
 		}
-		lista.add(administrador);
 		return administrador;
 	}
 
-	/**
-	 * Busca un administrador por su identificador (el id del usuario).
-	 *
-	 * @param id el identificador a buscar
-	 * @return el registro encontrado, o null si no existe
-	 */
 	public Administrador buscarPorId(Long id) {
-		for (Administrador administrador : lista) {
-			if (administrador.getIdUsuario().equals(id)) {
-				return administrador;
-			}
+		List<Administrador> lista = jdbc.query("SELECT * FROM ADMINISTRADOR WHERE ID_USUARIO = ?", convertir, id);
+		if (lista.isEmpty()) {
+			return null;
 		}
-		return null;
+		return lista.get(0);
 	}
 
-	/**
-	 * Obtiene todos los registros.
-	 *
-	 * @return una copia de la lista de registros
-	 */
 	public List<Administrador> listar() {
-		return new ArrayList<>(lista);
+		return jdbc.query("SELECT * FROM ADMINISTRADOR ORDER BY ID_USUARIO", convertir);
 	}
 
-	/**
-	 * Elimina un administrador por su identificador.
-	 *
-	 * @param id el identificador del registro a eliminar
-	 * @return true si se elimino, false si no existia
-	 */
 	public boolean eliminar(Long id) {
-		Administrador administrador = buscarPorId(id);
-		if (administrador == null)
-			return false;
-		lista.remove(administrador);
-		return true;
+		return jdbc.update("DELETE FROM ADMINISTRADOR WHERE ID_USUARIO = ?", id) > 0;
 	}
 
-	/**
-	 * Indica si existe un registro con ese identificador.
-	 *
-	 * @param id el identificador a comprobar
-	 * @return true si existe, false si no
-	 */
 	public boolean existe(Long id) {
 		return buscarPorId(id) != null;
 	}
 
-	/**
-	 * Cuenta los registros guardados.
-	 *
-	 * @return la cantidad de registros
-	 */
 	public long contar() {
-		return lista.size();
+		Long total = jdbc.queryForObject("SELECT COUNT(*) FROM ADMINISTRADOR", Long.class);
+		return total;
 	}
 }
