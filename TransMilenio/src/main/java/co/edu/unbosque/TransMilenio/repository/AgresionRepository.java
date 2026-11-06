@@ -14,7 +14,7 @@ public class AgresionRepository {
 	private RowMapper<Agresion> convertir = (fila, numero) -> {
 		Agresion agresion = new Agresion();
 		agresion.setId(fila.getLong("ID_AGRESION"));
-		agresion.setFecha(fila.getDate("FECHA").toLocalDate());
+		agresion.setFecha(fila.getTimestamp("FECHA").toLocalDateTime());
 		agresion.setGravedad(fila.getString("GRAVEDAD"));
 		agresion.setDescripcion(fila.getString("DESCRIPCION"));
 		agresion.setIdEvento(fila.getLong("ID_EVENTO"));
