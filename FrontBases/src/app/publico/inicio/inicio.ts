@@ -29,7 +29,7 @@ interface Hora {
   styleUrl: './inicio.css',
 })
 export class Inicio implements OnInit {
-  nombreSistema = 'Sistema de Monitoreo de Colados';
+  nombreSistema = 'SIREC';
 
   indicadores = [
     { titulo: 'Colados hoy', valor: '—', detalle: 'personas registradas hoy' },
