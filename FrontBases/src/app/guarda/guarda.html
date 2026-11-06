@@ -182,6 +182,10 @@
           <label class="campo-etiqueta">Fecha</label>
           <input class="campo-linea" type="date" [max]="fechaHoy" [(ngModel)]="nuevaAgresion.fecha">
         </div>
+        <div class="campo">
+          <label class="campo-etiqueta">Hora</label>
+          <input class="campo-linea" type="time" [(ngModel)]="nuevaAgresion.hora">
+        </div>
       </div>
 
       <div class="campo">
@@ -194,7 +198,7 @@
       <div class="fila-registro" *ngFor="let agresion of agresiones">
         <span class="fila-numero">#{{ agresion.idEvento }}</span>
         <div class="fila-datos">
-          <p class="fila-principal">{{ agresion.gravedad | titlecase }} · {{ agresion.fecha }}</p>
+          <p class="fila-principal">{{ agresion.gravedad | titlecase }} · {{ formatearFechaHora(agresion.fecha) }}</p>
           <p class="fila-secundario">{{ agresion.descripcion }}</p>
         </div>
       </div>
