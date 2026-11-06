@@ -10,10 +10,8 @@ import { Router } from '@angular/router';
 })
 export class Admin implements OnInit {
 
-  // Dirección del back
   urlBase: string = 'http://localhost:8080';
 
-  // Sección que se está viendo
   seccionActual: string = 'troncales';
 
   secciones = [
@@ -23,14 +21,15 @@ export class Admin implements OnInit {
     { clave: 'tarifas', nombre: 'Tarifas' },
     { clave: 'guardas', nombre: 'Guardas' },
     { clave: 'usuarios', nombre: 'Usuarios' },
+    { clave: 'comparendos', nombre: 'Comparendos y pagos' },
     { clave: 'cambios', nombre: 'Registro de cambios' }
   ];
 
-  // Mensajes para el administrador
   mensajeExito: string = '';
   mensajeError: string = '';
 
-  // Listas que vienen del back
+  fechaHoy: string = '';
+
   troncales: any[] = [];
   estaciones: any[] = [];
   modalidades: any[] = [];
@@ -38,31 +37,27 @@ export class Admin implements OnInit {
   guardas: any[] = [];
   usuarios: any[] = [];
   registroCambios: any[] = [];
+  eventos: any[] = [];
+  infractores: any[] = [];
+  parejas: any[] = [];
+  comparendos: any[] = [];
+  pagos: any[] = [];
 
-  // ---------- Troncales ----------
-
-  // Formulario de crear troncal
   nuevaTroncal = {
     nombre: ''
   };
 
-  // Para editar: id de la troncal que se está editando (null = ninguna) y su nuevo nombre
   troncalEditandoId: number | null = null;
   nombreEditado: string = '';
 
-  // ---------- Estaciones ----------
-
-  // Valores de "activa" (el back escribe "Si" o "No")
   opcionesActiva: string[] = ['Si', 'No'];
 
-  // Formulario de crear estación
   nuevaEstacion = {
     nombre: '',
     activa: 'Si',
     idTroncal: null as number | null
   };
 
-  // Para editar: id de la estación que se está editando (null = ninguna) y sus nuevos datos
   estacionEditandoId: number | null = null;
   estacionEditada = {
     nombre: '',
@@ -70,40 +65,29 @@ export class Admin implements OnInit {
     idTroncal: null as number | null
   };
 
-  // ---------- Modalidades ----------
-
-  // Formulario de crear modalidad
   nuevaModalidad = {
     nombre: ''
   };
 
-  // Para editar: id de la modalidad que se está editando (null = ninguna) y su nuevo nombre
   modalidadEditandoId: number | null = null;
   nombreModalidadEditado: string = '';
-  // ---------- Tarifas ----------
 
-  // Formulario de crear tarifa
   nuevaTarifa = {
     fechaInicio: '',
     fechaFin: '',
     valor: null as number | null
   };
 
-  // Para editar: id de la tarifa que se está editando (null = ninguna) y sus nuevos datos
   tarifaEditandoId: number | null = null;
   tarifaEditada = {
     fechaInicio: '',
     fechaFin: '',
     valor: null as number | null
   };
-  // ---------- Guardas ----------
 
-  // Opciones de las listas desplegables.
-  // OJO: confirma con Esteban que estos sean los valores que acepta el back
   turnos: string[] = ['Mañana', 'Tarde', 'Noche'];
   cargos: string[] = ['Guarda', 'Supervisor'];
 
-  // Formulario de crear guarda (el supervisor es opcional)
   nuevaGuarda = {
     nombre: '',
     apellido: '',
@@ -114,7 +98,6 @@ export class Admin implements OnInit {
     idSupervisor: null as number | null
   };
 
-  // Para editar: id del guarda que se está editando (null = ninguno) y sus nuevos datos
   guardaEditandoId: number | null = null;
   guardaEditada = {
     nombre: '',
@@ -126,25 +109,31 @@ export class Admin implements OnInit {
     idSupervisor: null as number | null
   };
 
-  // ---------- Usuarios ----------
-
-  // OJO: confirma con Esteban que estos sean los textos que acepta el back
-  // ("Administrador" tiene que ir exactamente así)
   roles: string[] = ['Administrador', 'Guarda', 'Analista'];
 
-  // Formulario de crear usuario
   nuevoUsuario = {
     rol: '',
     nombreUsuario: '',
     contrasena: ''
   };
 
-  // Para editar: id del usuario que se está editando (null = ninguno) y sus nuevos datos
   usuarioEditandoId: number | null = null;
   usuarioEditado = {
     rol: '',
     nombreUsuario: '',
     contrasena: ''
+  };
+
+  nuevoComparendo = {
+    idPareja: null as number | null,
+    fecha: '',
+    valor: null as number | null
+  };
+
+  comparendoPagandoId: number | null = null;
+  nuevoPago = {
+    numeroRecibo: '',
+    fecha: ''
   };
 
   constructor(
@@ -154,11 +143,12 @@ export class Admin implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    // Si no hay token guardado, no se puede estar aquí
     if (!localStorage.getItem('token')) {
       this.router.navigate(['/login']);
       return;
     }
+
+    this.fechaHoy = this.obtenerFechaHoy();
 
     this.cargarTroncales();
     this.cargarEstaciones();
@@ -167,14 +157,24 @@ export class Admin implements OnInit {
     this.cargarGuardas();
     this.cargarUsuarios();
     this.cargarRegistroCambios();
+    this.cargarEventos();
+    this.cargarInfractores();
+    this.cargarParejas();
+    this.cargarComparendos();
+    this.cargarPagos();
   }
 
-  // ---------- Ayudas ----------
-
-  // Encabezado con el token para cada llamada al back
   private encabezados(): HttpHeaders {
     const token = localStorage.getItem('token');
     return new HttpHeaders({ Authorization: 'Bearer ' + token });
+  }
+
+  obtenerFechaHoy(): string {
+    const hoy = new Date();
+    const anio = hoy.getFullYear();
+    const mes = String(hoy.getMonth() + 1).padStart(2, '0');
+    const dia = String(hoy.getDate()).padStart(2, '0');
+    return anio + '-' + mes + '-' + dia;
   }
 
   mostrarExito(texto: string): void {
@@ -187,7 +187,6 @@ export class Admin implements OnInit {
   }
 
   manejarError(err: any): void {
-    // 401: el token venció o no sirve, hay que iniciar sesión otra vez
     if (err.status === 401) {
       localStorage.clear();
       this.router.navigate(['/login']);
@@ -214,26 +213,21 @@ export class Admin implements OnInit {
     this.tarifaEditandoId = null;
     this.guardaEditandoId = null;
     this.usuarioEditandoId = null;
-
+    this.comparendoPagandoId = null;
   }
 
-  // Devuelve el nombre de la troncal a partir de su id
   nombreTroncal(id: number): string {
     const troncal = this.troncales.find(t => t.id === id);
     return troncal ? troncal.nombre : 'Troncal ' + id;
   }
 
-  // Dice si una estación está activa (el back escribe "Si" o "si")
   estaActiva(estacion: any): boolean {
     return String(estacion.activa).toLowerCase() === 'si';
   }
 
-  // ---------- Troncales ----------
-
   cargarTroncales(): void {
     this.http.get<any[]>(this.urlBase + '/troncal/todos', { headers: this.encabezados() }).subscribe({
       next: (lista) => {
-        // Se ordenan por id para que no cambien de lugar al editar
         this.troncales = lista.sort((a, b) => a.id - b.id);
         this.cambios.detectChanges();
       },
@@ -267,7 +261,6 @@ export class Admin implements OnInit {
     });
   }
 
-  // Al darle "Editar", la fila cambia a un campo con el nombre actual
   empezarEdicion(troncal: any): void {
     this.mensajeExito = '';
     this.mensajeError = '';
@@ -311,7 +304,6 @@ export class Admin implements OnInit {
     this.mensajeExito = '';
     this.mensajeError = '';
 
-    // Pregunta antes de borrar, por si le dio clic sin querer
     if (!confirm('¿Seguro que quieres eliminar la troncal "' + troncal.nombre + '"?')) {
       return;
     }
@@ -327,8 +319,6 @@ export class Admin implements OnInit {
       error: (err) => this.manejarError(err)
     });
   }
-
-  // ---------- Estaciones ----------
 
   cargarEstaciones(): void {
     this.http.get<any[]>(this.urlBase + '/estacion/todos', { headers: this.encabezados() }).subscribe({
@@ -368,7 +358,6 @@ export class Admin implements OnInit {
     });
   }
 
-  // Al darle "Editar", la fila cambia a campos con los datos actuales
   empezarEdicionEstacion(estacion: any): void {
     this.mensajeExito = '';
     this.mensajeError = '';
@@ -432,8 +421,6 @@ export class Admin implements OnInit {
     });
   }
 
-  // ---------- Modalidades ----------
-
   cargarModalidades(): void {
     this.http.get<any[]>(this.urlBase + '/modalidad/todos', { headers: this.encabezados() }).subscribe({
       next: (lista) => {
@@ -470,7 +457,6 @@ export class Admin implements OnInit {
     });
   }
 
-  // Al darle "Editar", la fila cambia a un campo con el nombre actual
   empezarEdicionModalidad(modalidad: any): void {
     this.mensajeExito = '';
     this.mensajeError = '';
@@ -530,7 +516,6 @@ export class Admin implements OnInit {
     });
   }
 
-  // Convierte una fecha aaaa-mm-dd en dd/mm/aaaa para mostrarla
   formatearFecha(fecha: string): string {
     if (!fecha) {
       return '';
@@ -541,7 +526,6 @@ export class Admin implements OnInit {
     }
     return partes[2] + '/' + partes[1] + '/' + partes[0];
   }
-  // ---------- Tarifas ----------
 
   cargarTarifas(): void {
     this.http.get<any[]>(this.urlBase + '/tarifa/todos', { headers: this.encabezados() }).subscribe({
@@ -553,15 +537,14 @@ export class Admin implements OnInit {
     });
   }
 
-  // Revisa si las fechas se cruzan con otra tarifa que ya existe.
-  // idIgnorar sirve al editar, para no comparar la tarifa consigo misma.
   hayCruceDeFechas(inicio: string, fin: string, idIgnorar: number | null): boolean {
+    const finNuevo = fin ? fin : '9999-12-31';
     for (const tarifa of this.tarifas) {
       if (tarifa.id === idIgnorar) {
         continue;
       }
-      // Dos rangos se cruzan si cada uno empieza antes de que el otro termine
-      if (inicio <= tarifa.fechaFin && fin >= tarifa.fechaInicio) {
+      const finTarifa = tarifa.fechaFin ? tarifa.fechaFin : '9999-12-31';
+      if (inicio <= finTarifa && finNuevo >= tarifa.fechaInicio) {
         return true;
       }
     }
@@ -572,11 +555,11 @@ export class Admin implements OnInit {
     this.mensajeExito = '';
     this.mensajeError = '';
 
-    if (!this.nuevaTarifa.fechaInicio || !this.nuevaTarifa.fechaFin || this.nuevaTarifa.valor === null) {
-      this.mensajeError = 'Falta llenar la fecha de inicio, la fecha final o el valor.';
+    if (!this.nuevaTarifa.fechaInicio || this.nuevaTarifa.valor === null) {
+      this.mensajeError = 'Falta llenar la fecha de inicio o el valor.';
       return;
     }
-    if (this.nuevaTarifa.fechaFin < this.nuevaTarifa.fechaInicio) {
+    if (this.nuevaTarifa.fechaFin && this.nuevaTarifa.fechaFin < this.nuevaTarifa.fechaInicio) {
       this.mensajeError = 'La fecha final no puede ser anterior a la fecha de inicio.';
       return;
     }
@@ -585,14 +568,17 @@ export class Admin implements OnInit {
       return;
     }
     if (this.hayCruceDeFechas(this.nuevaTarifa.fechaInicio, this.nuevaTarifa.fechaFin, null)) {
-      this.mensajeError = 'Esas fechas se cruzan con otra tarifa que ya existe.';
+      this.mensajeError = 'Esas fechas se cruzan con otra tarifa. Si hay una tarifa vigente sin fecha final, primero ponle fecha final.';
       return;
     }
 
-    const parametros = new HttpParams()
+    let parametros = new HttpParams()
       .set('fechaInicio', this.nuevaTarifa.fechaInicio)
-      .set('fechaFin', this.nuevaTarifa.fechaFin)
       .set('valor', String(this.nuevaTarifa.valor));
+
+    if (this.nuevaTarifa.fechaFin) {
+      parametros = parametros.set('fechaFin', this.nuevaTarifa.fechaFin);
+    }
 
     this.http.post(this.urlBase + '/tarifa/crear', null, {
       headers: this.encabezados(),
@@ -608,14 +594,13 @@ export class Admin implements OnInit {
     });
   }
 
-  // Al darle "Editar", la fila cambia a campos con los datos actuales
   empezarEdicionTarifa(tarifa: any): void {
     this.mensajeExito = '';
     this.mensajeError = '';
     this.tarifaEditandoId = tarifa.id;
     this.tarifaEditada = {
       fechaInicio: tarifa.fechaInicio,
-      fechaFin: tarifa.fechaFin,
+      fechaFin: tarifa.fechaFin ? tarifa.fechaFin : '',
       valor: tarifa.valor
     };
   }
@@ -628,11 +613,11 @@ export class Admin implements OnInit {
     this.mensajeExito = '';
     this.mensajeError = '';
 
-    if (!this.tarifaEditada.fechaInicio || !this.tarifaEditada.fechaFin || this.tarifaEditada.valor === null) {
-      this.mensajeError = 'Falta llenar la fecha de inicio, la fecha final o el valor.';
+    if (!this.tarifaEditada.fechaInicio || this.tarifaEditada.valor === null) {
+      this.mensajeError = 'Falta llenar la fecha de inicio o el valor.';
       return;
     }
-    if (this.tarifaEditada.fechaFin < this.tarifaEditada.fechaInicio) {
+    if (this.tarifaEditada.fechaFin && this.tarifaEditada.fechaFin < this.tarifaEditada.fechaInicio) {
       this.mensajeError = 'La fecha final no puede ser anterior a la fecha de inicio.';
       return;
     }
@@ -645,10 +630,13 @@ export class Admin implements OnInit {
       return;
     }
 
-    const parametros = new HttpParams()
+    let parametros = new HttpParams()
       .set('fechaInicio', this.tarifaEditada.fechaInicio)
-      .set('fechaFin', this.tarifaEditada.fechaFin)
       .set('valor', String(this.tarifaEditada.valor));
+
+    if (this.tarifaEditada.fechaFin) {
+      parametros = parametros.set('fechaFin', this.tarifaEditada.fechaFin);
+    }
 
     this.http.put(this.urlBase + '/tarifa/actualizar/' + this.tarifaEditandoId, null, {
       headers: this.encabezados(),
@@ -684,23 +672,22 @@ export class Admin implements OnInit {
     });
   }
 
-  // ---------- Guardas ----------
-
-  // Devuelve el nombre de la estación a partir de su id
   nombreEstacion(id: number): string {
     const estacion = this.estaciones.find(e => e.id === id);
     return estacion ? estacion.nombre : 'Estación ' + id;
   }
 
-  // Devuelve nombre y apellido del guarda a partir de su id
   nombreGuarda(id: number): string {
     const guarda = this.guardas.find(g => g.id === id);
     return guarda ? guarda.nombre + ' ' + guarda.apellido : 'Guarda ' + id;
   }
 
-  // Dice si un guarda está activo (el back escribe "Si" o "si")
   guardaEstaActivo(guarda: any): boolean {
     return String(guarda.activo).toLowerCase() === 'si';
+  }
+
+  supervisores(idIgnorar: number | null): any[] {
+    return this.guardas.filter(g => g.cargo === 'Supervisor' && g.id !== idIgnorar);
   }
 
   cargarGuardas(): void {
@@ -731,7 +718,6 @@ export class Admin implements OnInit {
       .set('cargo', this.nuevaGuarda.cargo)
       .set('idEstacion', String(this.nuevaGuarda.idEstacion));
 
-    // El supervisor es opcional: solo se manda si se escogió uno
     if (this.nuevaGuarda.idSupervisor !== null) {
       parametros = parametros.set('idSupervisor', String(this.nuevaGuarda.idSupervisor));
     }
@@ -750,7 +736,6 @@ export class Admin implements OnInit {
     });
   }
 
-  // Al darle "Editar", la fila cambia a campos con los datos actuales
   empezarEdicionGuarda(guarda: any): void {
     this.mensajeExito = '';
     this.mensajeError = '';
@@ -830,12 +815,17 @@ export class Admin implements OnInit {
     });
   }
 
-  // ---------- Usuarios ----------
-
-  // Devuelve el nombre de usuario a partir de su id
   nombreDeUsuario(id: number): string {
     const usuario = this.usuarios.find(u => u.id === id);
     return usuario ? usuario.nombreUsuario : 'Usuario ' + id;
+  }
+
+  nombreUsuarioValido(nombre: string): boolean {
+    return /^[a-zA-Z][a-zA-Z0-9._]{3,19}$/.test(nombre);
+  }
+
+  contrasenaValida(contrasena: string): boolean {
+    return /^\S{6,30}$/.test(contrasena);
   }
 
   cargarUsuarios(): void {
@@ -852,15 +842,23 @@ export class Admin implements OnInit {
     this.mensajeExito = '';
     this.mensajeError = '';
 
-    if (!this.nuevoUsuario.nombreUsuario.trim() || !this.nuevoUsuario.contrasena.trim() || !this.nuevoUsuario.rol) {
+    if (this.nuevoUsuario.nombreUsuario === '' || this.nuevoUsuario.contrasena === '' || !this.nuevoUsuario.rol) {
       this.mensajeError = 'Falta escribir el nombre de usuario, la contraseña o escoger el rol.';
+      return;
+    }
+    if (!this.nombreUsuarioValido(this.nuevoUsuario.nombreUsuario)) {
+      this.mensajeError = 'El nombre de usuario debe tener entre 4 y 20 caracteres, empezar con una letra y usar solo letras, números, punto o guion bajo, sin espacios.';
+      return;
+    }
+    if (!this.contrasenaValida(this.nuevoUsuario.contrasena)) {
+      this.mensajeError = 'La contraseña debe tener entre 6 y 30 caracteres y no puede tener espacios.';
       return;
     }
 
     const parametros = new HttpParams()
-        .set('rol', this.nuevoUsuario.rol)
-        .set('nombreUsuario', this.nuevoUsuario.nombreUsuario.trim())
-        .set('contrasena', this.nuevoUsuario.contrasena);
+      .set('rol', this.nuevoUsuario.rol)
+      .set('nombreUsuario', this.nuevoUsuario.nombreUsuario)
+      .set('contrasena', this.nuevoUsuario.contrasena);
 
     this.http.post(this.urlBase + '/usuario/crear', null, {
       headers: this.encabezados(),
@@ -876,7 +874,6 @@ export class Admin implements OnInit {
     });
   }
 
-  // Al darle "Editar", la fila cambia a campos con los datos actuales
   empezarEdicionUsuario(usuario: any): void {
     this.mensajeExito = '';
     this.mensajeError = '';
@@ -896,17 +893,24 @@ export class Admin implements OnInit {
     this.mensajeExito = '';
     this.mensajeError = '';
 
-    if (!this.usuarioEditado.nombreUsuario.trim() || !this.usuarioEditado.rol) {
+    if (this.usuarioEditado.nombreUsuario === '' || !this.usuarioEditado.rol) {
       this.mensajeError = 'Falta el nombre de usuario o el rol.';
+      return;
+    }
+    if (!this.nombreUsuarioValido(this.usuarioEditado.nombreUsuario)) {
+      this.mensajeError = 'El nombre de usuario debe tener entre 4 y 20 caracteres, empezar con una letra y usar solo letras, números, punto o guion bajo, sin espacios.';
+      return;
+    }
+    if (this.usuarioEditado.contrasena !== '' && !this.contrasenaValida(this.usuarioEditado.contrasena)) {
+      this.mensajeError = 'La contraseña debe tener entre 6 y 30 caracteres y no puede tener espacios.';
       return;
     }
 
     let parametros = new HttpParams()
-        .set('rol', this.usuarioEditado.rol)
-        .set('nombreUsuario', this.usuarioEditado.nombreUsuario.trim());
+      .set('rol', this.usuarioEditado.rol)
+      .set('nombreUsuario', this.usuarioEditado.nombreUsuario);
 
-    // La contraseña solo se manda si escribió una nueva
-    if (this.usuarioEditado.contrasena.trim()) {
+    if (this.usuarioEditado.contrasena !== '') {
       parametros = parametros.set('contrasena', this.usuarioEditado.contrasena);
     }
 
@@ -944,9 +948,252 @@ export class Admin implements OnInit {
     });
   }
 
-  // ---------- Registro de cambios ----------
+  cargarEventos(): void {
+    this.http.get<any[]>(this.urlBase + '/evento/todos', { headers: this.encabezados() }).subscribe({
+      next: (lista) => {
+        this.eventos = lista;
+        this.cambios.detectChanges();
+      },
+      error: (err) => this.manejarError(err)
+    });
+  }
 
-  // Convierte una fecha con hora (aaaa-mm-ddThh:mm) en dd/mm/aaaa hh:mm
+  cargarInfractores(): void {
+    this.http.get<any[]>(this.urlBase + '/infractor/todos', { headers: this.encabezados() }).subscribe({
+      next: (lista) => {
+        this.infractores = lista;
+        this.cambios.detectChanges();
+      },
+      error: (err) => this.manejarError(err)
+    });
+  }
+
+  cargarParejas(): void {
+    this.http.get<any[]>(this.urlBase + '/eventoInfractor/todos', { headers: this.encabezados() }).subscribe({
+      next: (lista) => {
+        this.parejas = lista.sort((a, b) => b.id - a.id);
+        this.cambios.detectChanges();
+      },
+      error: (err) => this.manejarError(err)
+    });
+  }
+
+  cargarComparendos(): void {
+    this.http.get<any[]>(this.urlBase + '/comparendo/todos', { headers: this.encabezados() }).subscribe({
+      next: (lista) => {
+        this.comparendos = lista.sort((a, b) => b.id - a.id);
+        this.cambios.detectChanges();
+      },
+      error: (err) => this.manejarError(err)
+    });
+  }
+
+  cargarPagos(): void {
+    this.http.get<any[]>(this.urlBase + '/pago/todos', { headers: this.encabezados() }).subscribe({
+      next: (lista) => {
+        this.pagos = lista;
+        this.cambios.detectChanges();
+      },
+      error: (err) => this.manejarError(err)
+    });
+  }
+
+  textoPareja(idPareja: number): string {
+    const pareja = this.parejas.find(p => p.id === idPareja);
+    if (!pareja) {
+      return 'Registro ' + idPareja;
+    }
+    const evento = this.eventos.find(e => e.id === pareja.idEvento);
+    const infractor = this.infractores.find(i => i.id === pareja.idInfractor);
+    let texto = '';
+    if (infractor) {
+      texto = infractor.nombre + ' ' + infractor.apellido + ' (' + infractor.tipoDocumento + ' ' + infractor.numeroDocumento + ')';
+    } else {
+      texto = 'Infractor ' + pareja.idInfractor;
+    }
+    if (evento) {
+      texto = texto + ' · Colado #' + evento.id + ' en ' + this.nombreEstacion(evento.idEstacion) + ' el ' + this.formatearFecha(evento.fecha);
+    }
+    return texto;
+  }
+
+  parejasSinComparendo(): any[] {
+    return this.parejas.filter(p => !this.comparendos.find(c => c.idEventoInfractor === p.id));
+  }
+
+  pagoDeComparendo(idComparendo: number): any {
+    return this.pagos.find(p => p.idComparendo === idComparendo);
+  }
+
+  crearComparendo(): void {
+    this.mensajeExito = '';
+    this.mensajeError = '';
+
+    if (this.nuevoComparendo.idPareja === null || !this.nuevoComparendo.fecha || this.nuevoComparendo.valor === null) {
+      this.mensajeError = 'Falta escoger el infractor, la fecha o el valor.';
+      return;
+    }
+    if (!Number.isInteger(this.nuevoComparendo.valor) || this.nuevoComparendo.valor < 1) {
+      this.mensajeError = 'El valor debe ser un número entero mayor que cero.';
+      return;
+    }
+    if (this.nuevoComparendo.fecha > this.fechaHoy) {
+      this.mensajeError = 'La fecha no puede ser posterior a hoy.';
+      return;
+    }
+
+    const pareja = this.parejas.find(p => p.id === this.nuevoComparendo.idPareja);
+    const evento = pareja ? this.eventos.find(e => e.id === pareja.idEvento) : null;
+    if (evento && this.nuevoComparendo.fecha < evento.fecha.substring(0, 10)) {
+      this.mensajeError = 'El comparendo no puede ser de antes del colado.';
+      return;
+    }
+
+    const parametros = new HttpParams()
+      .set('fecha', this.nuevoComparendo.fecha)
+      .set('valor', String(this.nuevoComparendo.valor))
+      .set('estado', 'Pendiente')
+      .set('idEventoInfractor', String(this.nuevoComparendo.idPareja));
+
+    this.http.post(this.urlBase + '/comparendo/crear', null, {
+      headers: this.encabezados(),
+      params: parametros,
+      responseType: 'text'
+    }).subscribe({
+      next: () => {
+        this.nuevoComparendo = { idPareja: null, fecha: '', valor: null };
+        this.mostrarExito('Comparendo creado en estado Pendiente.');
+        this.cargarComparendos();
+      },
+      error: (err) => this.manejarError(err)
+    });
+  }
+
+  empezarPago(comparendo: any): void {
+    this.mensajeExito = '';
+    this.mensajeError = '';
+    this.comparendoPagandoId = comparendo.id;
+    this.nuevoPago = { numeroRecibo: '', fecha: '' };
+  }
+
+  cancelarPago(): void {
+    this.comparendoPagandoId = null;
+  }
+
+  registrarPago(comparendo: any): void {
+    this.mensajeExito = '';
+    this.mensajeError = '';
+
+    const recibo = this.nuevoPago.numeroRecibo.trim();
+
+    if (!recibo || !this.nuevoPago.fecha) {
+      this.mensajeError = 'Falta escribir el número de recibo o la fecha del pago.';
+      return;
+    }
+    if (!/^[A-Za-z0-9-]{3,20}$/.test(recibo)) {
+      this.mensajeError = 'El número de recibo solo puede tener letras, números o guiones (de 3 a 20), sin espacios.';
+      return;
+    }
+    if (this.pagos.find(p => p.numeroRecibo === recibo)) {
+      this.mensajeError = 'Ya existe un pago con ese número de recibo.';
+      return;
+    }
+    if (this.nuevoPago.fecha < comparendo.fecha.substring(0, 10)) {
+      this.mensajeError = 'El pago no puede ser de antes del comparendo.';
+      return;
+    }
+    if (this.nuevoPago.fecha > this.fechaHoy) {
+      this.mensajeError = 'La fecha del pago no puede ser posterior a hoy.';
+      return;
+    }
+    if (comparendo.estado !== 'Pendiente' || this.pagoDeComparendo(comparendo.id)) {
+      this.mensajeError = 'Solo se puede pagar un comparendo pendiente y sin pago.';
+      return;
+    }
+
+    const parametros = new HttpParams()
+      .set('valor', String(comparendo.valor))
+      .set('numeroRecibo', recibo)
+      .set('fecha', this.nuevoPago.fecha)
+      .set('idComparendo', String(comparendo.id));
+
+    this.http.post(this.urlBase + '/pago/crear', null, {
+      headers: this.encabezados(),
+      params: parametros,
+      responseType: 'text'
+    }).subscribe({
+      next: () => {
+        this.comparendoPagandoId = null;
+        this.cambiarEstadoComparendo(comparendo, 'Pagado', 'Pago registrado. El comparendo quedó Pagado.');
+        this.cargarPagos();
+      },
+      error: (err) => this.manejarError(err)
+    });
+  }
+
+  anularComparendo(comparendo: any): void {
+    this.mensajeExito = '';
+    this.mensajeError = '';
+
+    if (comparendo.estado !== 'Pendiente') {
+      this.mensajeError = 'Solo se puede anular un comparendo pendiente.';
+      return;
+    }
+    if (!confirm('¿Seguro que quieres anular el comparendo ' + comparendo.id + '? Después no se puede cambiar.')) {
+      return;
+    }
+
+    this.cambiarEstadoComparendo(comparendo, 'Anulado', 'Comparendo anulado.');
+  }
+
+  cambiarEstadoComparendo(comparendo: any, estadoNuevo: string, texto: string): void {
+    const parametros = new HttpParams()
+      .set('fecha', comparendo.fecha.substring(0, 10))
+      .set('valor', String(comparendo.valor))
+      .set('estado', estadoNuevo)
+      .set('idEventoInfractor', String(comparendo.idEventoInfractor));
+
+    this.http.put(this.urlBase + '/comparendo/actualizar/' + comparendo.id, null, {
+      headers: this.encabezados(),
+      params: parametros,
+      responseType: 'text'
+    }).subscribe({
+      next: () => {
+        this.guardarCambio(comparendo.id, 'estado', comparendo.estado, estadoNuevo);
+        this.mostrarExito(texto);
+        this.cargarComparendos();
+      },
+      error: (err) => this.manejarError(err)
+    });
+  }
+
+  guardarCambio(idComparendo: number, campo: string, anterior: string, nuevo: string): void {
+    const idUsuario = localStorage.getItem('idUsuario');
+    if (!idUsuario) {
+      return;
+    }
+
+    const ahora = new Date();
+    const hora = String(ahora.getHours()).padStart(2, '0') + ':' + String(ahora.getMinutes()).padStart(2, '0') + ':' + String(ahora.getSeconds()).padStart(2, '0');
+
+    const parametros = new HttpParams()
+      .set('fecha', this.obtenerFechaHoy() + 'T' + hora)
+      .set('campoModificado', campo)
+      .set('valorAnterior', anterior)
+      .set('valorNuevo', nuevo)
+      .set('idUsuario', idUsuario)
+      .set('idComparendo', String(idComparendo));
+
+    this.http.post(this.urlBase + '/registroCambios/crear', null, {
+      headers: this.encabezados(),
+      params: parametros,
+      responseType: 'text'
+    }).subscribe({
+      next: () => this.cargarRegistroCambios(),
+      error: (err) => this.manejarError(err)
+    });
+  }
+
   formatearFechaHora(fecha: string): string {
     if (!fecha) {
       return '';
@@ -956,10 +1203,8 @@ export class Admin implements OnInit {
   }
 
   cargarRegistroCambios(): void {
-    // OJO: confirma en el Swagger que esta sea la ruta
     this.http.get<any[]>(this.urlBase + '/registroCambios/todos', { headers: this.encabezados() }).subscribe({
       next: (lista) => {
-        // Del más nuevo al más viejo
         this.registroCambios = lista.sort((a, b) => b.id - a.id);
         this.cambios.detectChanges();
       },
