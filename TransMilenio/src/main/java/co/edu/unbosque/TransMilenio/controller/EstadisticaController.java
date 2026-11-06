@@ -74,4 +74,9 @@ public class EstadisticaController {
 	public ResponseEntity<List<Map<String, Object>>> horas() {
 		return new ResponseEntity<>(estadisticaService.porHora(), HttpStatus.OK);
 	}
+	
+	@GetMapping("/troncales-estaciones")
+	public ResponseEntity<List<Map<String, Object>>> troncalesEstaciones() {
+		return new ResponseEntity<>(estadisticaService.troncalesConEstaciones(), HttpStatus.OK);
+	}
 }

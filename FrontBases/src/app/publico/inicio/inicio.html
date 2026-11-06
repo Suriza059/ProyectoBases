@@ -1,5 +1,5 @@
 <header class="encabezado" [class.encabezado-solido]="encabezadoSolido">
-  <a class="marca" href="#inicio">Monitoreo de colados</a>
+  <a class="marca" href="#inicio">SIREC</a>
 
   <nav class="menu">
     <a class="menu-enlace" href="#colados">Colados</a>
@@ -109,7 +109,16 @@
       [class.animate__faster]="mostrarTroncalesEstaciones"
     >
       <h2 class="seccion-titulo">Troncales y estaciones</h2>
-      <p class="espacio-reservado">Aquí irán las troncales con sus estaciones</p>
+
+      <div class="lista-troncales" *ngIf="troncalesEstaciones.length > 0">
+        <div class="troncal-estaciones relieve" *ngFor="let t of troncalesEstaciones">
+          <h3 class="troncal-titulo">{{ t.nombre }}</h3>
+          <p class="troncal-lista" *ngIf="t.estaciones.length > 0">{{ t.estaciones.join(' · ') }}</p>
+          <p class="troncal-lista sin-datos" *ngIf="t.estaciones.length === 0">Sin estaciones activas</p>
+        </div>
+      </div>
+
+      <p class="sin-datos" *ngIf="troncalesEstaciones.length === 0">Todavía no hay troncales registradas.</p>
     </section>
   </div>
 
@@ -139,7 +148,30 @@
         [class.animate__faster]="mostrarHoras"
       >
         <h2 class="seccion-titulo">Horas pico</h2>
-        <p class="espacio-reservado">Aquí irá la gráfica de horas pico</p>
+
+        <ng-container *ngIf="maximoHora > 0">
+          <div class="grafica-horas relieve">
+            <div class="columna-hora" *ngFor="let h of horas" [title]="textoHora(h.hora) + ': ' + h.colados + ' colados'">
+              <div
+                class="barra-hora"
+                [class.barra-pico]="h.hora === horaPico"
+                [style.transform]="mostrarHoras ? 'scaleY(' + alturaBarra(h.colados) + ')' : 'scaleY(0)'"
+              ></div>
+            </div>
+          </div>
+
+          <div class="etiquetas-horas">
+            <span>12 a. m.</span>
+            <span>6 a. m.</span>
+            <span>12 p. m.</span>
+            <span>6 p. m.</span>
+            <span>11 p. m.</span>
+          </div>
+
+          <p class="hora-pico" *ngIf="horaPico !== null">Hora pico <strong>{{ textoHora(horaPico) }}</strong></p>
+        </ng-container>
+
+        <p class="sin-datos" *ngIf="maximoHora === 0">Todavía no hay colados con hora registrada.</p>
       </section>
     </div>
   </div>

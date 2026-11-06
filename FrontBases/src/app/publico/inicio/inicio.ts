@@ -12,6 +12,16 @@ interface Resumen {
   estacionCritica: string;
 }
 
+interface TroncalEstaciones {
+  nombre: string;
+  estaciones: string[];
+}
+
+interface Hora {
+  hora: number;
+  colados: number;
+}
+
 @Component({
   selector: 'app-inicio',
   standalone: false,
@@ -28,6 +38,12 @@ export class Inicio implements OnInit {
   ];
 
   troncales: Troncal[] = [];
+
+  troncalesEstaciones: TroncalEstaciones[] = [];
+
+  horas: Hora[] = [];
+  maximoHora = 0;
+  horaPico: number | null = null;
 
   totalColados = 0;
 
@@ -52,6 +68,8 @@ export class Inicio implements OnInit {
     this.cargarResumen();
     this.cargarTroncales();
     this.cargarTotal();
+    this.cargarTroncalesEstaciones();
+    this.cargarHoras();
 
     setTimeout(() => {
       this.mostrarTitulo = true;
@@ -104,6 +122,62 @@ export class Inicio implements OnInit {
         this.cambios.detectChanges();
       }
     });
+  }
+
+  cargarTroncalesEstaciones(): void {
+    this.http.get<TroncalEstaciones[]>('http://localhost:8080/estadistica/troncales-estaciones').subscribe({
+      next: (lista) => {
+        this.troncalesEstaciones = lista;
+        this.cambios.detectChanges();
+      },
+      error: () => {
+        this.troncalesEstaciones = [];
+        this.cambios.detectChanges();
+      }
+    });
+  }
+
+  cargarHoras(): void {
+    this.http.get<Hora[]>('http://localhost:8080/estadistica/horas').subscribe({
+      next: (lista) => {
+        this.horas = lista;
+        this.maximoHora = 0;
+        this.horaPico = null;
+        for (const h of lista) {
+          if (h.colados > this.maximoHora) {
+            this.maximoHora = h.colados;
+            this.horaPico = h.hora;
+          }
+        }
+        this.cambios.detectChanges();
+      },
+      error: () => {
+        this.horas = [];
+        this.maximoHora = 0;
+        this.horaPico = null;
+        this.cambios.detectChanges();
+      }
+    });
+  }
+
+  alturaBarra(colados: number): number {
+    if (this.maximoHora === 0) {
+      return 0;
+    }
+    return colados / this.maximoHora;
+  }
+
+  textoHora(hora: number): string {
+    if (hora === 0) {
+      return '12:00 a. m.';
+    }
+    if (hora < 12) {
+      return hora + ':00 a. m.';
+    }
+    if (hora === 12) {
+      return '12:00 p. m.';
+    }
+    return (hora - 12) + ':00 p. m.';
   }
 
   @HostListener('window:scroll')
