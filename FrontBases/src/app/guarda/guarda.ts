@@ -49,6 +49,7 @@ export class Guarda implements OnInit {
     idEvento: null as number | null,
     gravedad: '',
     fecha: '',
+    hora: '',
     descripcion: ''
   };
 
@@ -101,6 +102,20 @@ export class Guarda implements OnInit {
     const mes = String(hoy.getMonth() + 1).padStart(2, '0');
     const dia = String(hoy.getDate()).padStart(2, '0');
     return anio + '-' + mes + '-' + dia;
+  }
+
+  obtenerHoraAhora(): string {
+    const ahora = new Date();
+    return String(ahora.getHours()).padStart(2, '0') + ':' + String(ahora.getMinutes()).padStart(2, '0');
+  }
+
+  formatearFechaHora(fecha: string): string {
+    if (!fecha) {
+      return '';
+    }
+    const partes = fecha.substring(0, 10).split('-');
+    const hora = fecha.length >= 16 ? fecha.substring(11, 16) : '';
+    return (partes[2] + '/' + partes[1] + '/' + partes[0] + ' ' + hora).trim();
   }
 
   private encabezados(): HttpHeaders {
@@ -324,23 +339,30 @@ export class Guarda implements OnInit {
     }
 
     if (this.nuevaAgresion.idEvento === null || !this.nuevaAgresion.gravedad ||
-      !this.nuevaAgresion.fecha || !this.nuevaAgresion.descripcion.trim()) {
-      this.mensajeError = 'Falta escoger el evento, la gravedad, la fecha o contar qué pasó.';
+      !this.nuevaAgresion.fecha || !this.nuevaAgresion.hora || !this.nuevaAgresion.descripcion.trim()) {
+      this.mensajeError = 'Falta escoger el evento, la gravedad, la fecha, la hora o contar qué pasó.';
       return;
     }
-    if (this.nuevaAgresion.fecha > this.fechaHoy) {
-      this.mensajeError = 'La fecha no puede ser posterior a hoy.';
+
+    const momentoAgresion = this.nuevaAgresion.fecha + ' ' + this.nuevaAgresion.hora;
+
+    if (momentoAgresion > this.fechaHoy + ' ' + this.obtenerHoraAhora()) {
+      this.mensajeError = 'La fecha y la hora no pueden ser posteriores a este momento.';
       return;
     }
 
     const evento = this.registros.find(r => r.id === this.nuevaAgresion.idEvento);
-    if (evento && this.nuevaAgresion.fecha < evento.fecha) {
-      this.mensajeError = 'La agresión no puede ser anterior al colado.';
-      return;
+    if (evento) {
+      const horaEvento = evento.hora ? evento.hora.substring(0, 5) : '00:00';
+      const momentoEvento = evento.fecha.substring(0, 10) + ' ' + horaEvento;
+      if (momentoAgresion < momentoEvento) {
+        this.mensajeError = 'La agresión no puede ser anterior al colado.';
+        return;
+      }
     }
 
     const parametros = new HttpParams()
-      .set('fecha', this.nuevaAgresion.fecha)
+      .set('fecha', this.nuevaAgresion.fecha + 'T' + this.nuevaAgresion.hora)
       .set('gravedad', this.nuevaAgresion.gravedad)
       .set('descripcion', this.nuevaAgresion.descripcion.trim())
       .set('idEvento', String(this.nuevaAgresion.idEvento))
@@ -352,7 +374,7 @@ export class Guarda implements OnInit {
       responseType: 'text'
     }).subscribe({
       next: () => {
-        this.nuevaAgresion = { idEvento: null, gravedad: '', fecha: '', descripcion: '' };
+        this.nuevaAgresion = { idEvento: null, gravedad: '', fecha: '', hora: '', descripcion: '' };
         this.mostrarExito('Agresión registrada.');
         this.cargarAgresiones();
       },

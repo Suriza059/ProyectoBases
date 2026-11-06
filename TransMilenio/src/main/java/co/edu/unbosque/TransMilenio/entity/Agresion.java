@@ -1,6 +1,6 @@
 package co.edu.unbosque.TransMilenio.entity;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 /**
@@ -15,7 +15,7 @@ public class Agresion {
 	/**
 	 * La fecha de la agresion.
 	 */
-	private LocalDate fecha;
+	private LocalDateTime fecha;
 	/**
 	 * La gravedad de la agresion.
 	 */
@@ -48,7 +48,7 @@ public class Agresion {
 	 * @param idEvento el identificador del evento en el que ocurrio la agresion (llave foranea)
 	 * @param idGuarda el identificador del guarda involucrado en la agresion (llave foranea)
 	 */
-	public Agresion(LocalDate fecha, String gravedad, String descripcion, Long idEvento, Long idGuarda) {
+	public Agresion(LocalDateTime fecha, String gravedad, String descripcion, Long idEvento, Long idGuarda) {
 		super();
 		this.fecha = fecha;
 		this.gravedad = gravedad;
@@ -80,7 +80,7 @@ public class Agresion {
 	 *
 	 * @return la fecha de la agresion
 	 */
-	public LocalDate getFecha() {
+	public LocalDateTime getFecha() {
 		return fecha;
 	}
 
@@ -89,7 +89,7 @@ public class Agresion {
 	 *
 	 * @param fecha la fecha de la agresion
 	 */
-	public void setFecha(LocalDate fecha) {
+	public void setFecha(LocalDateTime fecha) {
 		this.fecha = fecha;
 	}
 
