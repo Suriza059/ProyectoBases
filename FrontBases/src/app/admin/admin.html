@@ -538,7 +538,17 @@
               <option *ngFor="let rol of roles" [value]="rol">{{ rol }}</option>
             </select>
           </div>
+
+          <div class="campo" *ngIf="nuevoUsuario.rol === 'Guarda'">
+            <label class="campo-etiqueta">¿Qué guarda es?</label>
+            <select class="campo-linea" [(ngModel)]="nuevoUsuario.idGuarda">
+              <option [ngValue]="null">Escoge el guarda</option>
+              <option *ngFor="let guarda of guardasSinUsuario()" [ngValue]="guarda.id">{{ guarda.nombre }} {{ guarda.apellido }}</option>
+            </select>
+          </div>
         </div>
+
+        <p class="seccion-texto" *ngIf="nuevoUsuario.rol === 'Guarda' && guardasSinUsuario().length === 0">Todos los guardas activos ya tienen cuenta. Primero crea el guarda en la sección Guardas.</p>
 
         <button type="button" class="boton-admin" (click)="crearUsuario()">
           Crear usuario <i class="bi bi-plus-lg"></i>
@@ -556,6 +566,8 @@
           <ng-container *ngIf="usuarioEditandoId !== usuario.id">
             <div class="fila-datos">
               <p class="fila-principal">{{ usuario.nombreUsuario }}</p>
+              <p class="fila-secundario" *ngIf="guardaDeUsuario(usuario.id)">Guarda: {{ guardaDeUsuario(usuario.id).nombre }} {{ guardaDeUsuario(usuario.id).apellido }}</p>
+              <p class="fila-secundario" *ngIf="usuario.rol === 'Guarda' && !guardaDeUsuario(usuario.id)">Sin guarda asociado</p>
             </div>
 
             <span class="insignia" [class.insignia-admin]="usuario.rol === 'Administrador'">
@@ -733,4 +745,15 @@
     </section>
 
   </main>
+
+  <div class="toast-confirmacion animate__animated animate__fadeInUp animate__faster" *ngIf="confirmacion.visible">
+    <p class="toast-texto">
+      <i class="bi bi-exclamation-triangle"></i>
+      {{ confirmacion.texto }}
+    </p>
+    <div class="toast-botones">
+      <button type="button" class="toast-boton toast-si" (click)="aceptarConfirmacion()">Sí</button>
+      <button type="button" class="toast-boton" (click)="cancelarConfirmacion()">Cancelar</button>
+    </div>
+  </div>
 </div>

@@ -8,7 +8,6 @@
   font-family: 'Work Sans', Arial, sans-serif;
 }
 
-/* ---------- Menú ---------- */
 .admin-menu {
   display: flex;
   flex-direction: column;
@@ -109,7 +108,6 @@
   transform: scale(0.97);
 }
 
-/* ---------- Contenido ---------- */
 .admin-contenido {
   flex: 1;
   min-width: 0;
@@ -137,7 +135,6 @@
   letter-spacing: 1px;
 }
 
-/* ---------- Paneles (formulario y lista) ---------- */
 .panel {
   padding: 24px;
   background-color: #15161a;
@@ -156,7 +153,6 @@
   animation-delay: 160ms;
 }
 
-/* ---------- Formularios ---------- */
 .campo {
   display: flex;
   flex-direction: column;
@@ -226,7 +222,6 @@
   transform: scale(0.97);
 }
 
-/* ---------- Mensajes ---------- */
 .mensaje-exito {
   margin: 0 0 24px 0;
   padding-left: 12px;
@@ -243,7 +238,6 @@
   font-size: 17px;
 }
 
-/* ---------- Filas de las listas ---------- */
 .fila-registro {
   display: flex;
   align-items: center;
@@ -289,7 +283,6 @@
   overflow-wrap: anywhere;
 }
 
-/* Etiqueta de estado: Activa / Inactiva */
 .insignia {
   flex-shrink: 0;
   padding: 4px 14px;
@@ -305,13 +298,11 @@
   color: #ff6b7d;
 }
 
-/* NUEVO: etiqueta roja para el rol Administrador */
 .insignia-admin {
   background-color: rgba(228, 17, 47, 0.18);
   color: #ff4d63;
 }
 
-/* Botones de texto de cada fila */
 .fila-acciones {
   display: flex;
   gap: 20px;
@@ -348,7 +339,6 @@
   }
 }
 
-/* ---------- NUEVO: Registro de cambios ---------- */
 .cambio-anterior {
   color: #9a9ba5;
   text-decoration: line-through;
@@ -370,7 +360,6 @@
   font-size: 14px;
 }
 
-/* ---------- Pantallas pequeñas ---------- */
 @media (max-width: 768px) {
   .admin-pagina {
     flex-direction: column;
@@ -403,4 +392,58 @@
     flex-wrap: wrap;
     padding: 16px;
   }
+}
+
+.toast-confirmacion {
+  position: fixed;
+  right: 24px;
+  bottom: 24px;
+  z-index: 50;
+  width: 340px;
+  max-width: calc(100% - 48px);
+  padding: 18px 20px;
+  border: 1px solid #e4112f;
+  border-radius: 12px;
+  background-color: #121317;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.6);
+}
+
+.toast-texto {
+  margin: 0 0 14px 0;
+  font-size: 15px;
+  line-height: 1.4;
+  color: #f2f2f5;
+}
+
+.toast-texto i {
+  margin-right: 6px;
+  color: #e4112f;
+}
+
+.toast-botones {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.toast-boton {
+  padding: 8px 18px;
+  border: 1px solid #3a3b42;
+  border-radius: 8px;
+  background-color: transparent;
+  color: #f2f2f5;
+  font-family: 'Work Sans', Arial, sans-serif;
+  font-size: 14px;
+  cursor: pointer;
+  transition: transform 150ms ease-out;
+}
+
+.toast-boton:active {
+  transform: scale(0.97);
+}
+
+.toast-si {
+  border-color: #e4112f;
+  background-color: #e4112f;
+  color: #ffffff;
 }

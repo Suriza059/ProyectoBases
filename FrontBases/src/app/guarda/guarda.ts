@@ -12,7 +12,9 @@ export class Guarda implements OnInit {
 
   urlBase: string = 'http://localhost:8080';
 
-  idGuarda: number = 1;
+  idGuarda: number | null = null;
+
+  sinGuarda: boolean = false;
 
   seccionActiva: string = 'registrar';
 
@@ -71,6 +73,13 @@ export class Guarda implements OnInit {
     }
 
     this.fechaHoy = this.obtenerFechaHoy();
+
+    const guardado = localStorage.getItem('idGuarda');
+    if (guardado) {
+      this.idGuarda = Number(guardado);
+    } else {
+      this.sinGuarda = true;
+    }
 
     this.cargarEstaciones();
     this.cargarModalidades();
@@ -255,6 +264,11 @@ export class Guarda implements OnInit {
     this.mensajeExito = '';
     this.mensajeError = '';
 
+    if (this.sinGuarda) {
+      this.mensajeError = 'Tu usuario no tiene un guarda asociado. Pídele al administrador que lo asocie.';
+      return;
+    }
+
     if (this.nuevoColado.idEstacion === null || this.nuevoColado.idModalidad === null ||
       !this.nuevoColado.fecha || !this.nuevoColado.hora) {
       this.mensajeError = 'Falta llenar la estación, la modalidad, la fecha o la hora.';
@@ -304,6 +318,11 @@ export class Guarda implements OnInit {
     this.mensajeExito = '';
     this.mensajeError = '';
 
+    if (this.sinGuarda) {
+      this.mensajeError = 'Tu usuario no tiene un guarda asociado. Pídele al administrador que lo asocie.';
+      return;
+    }
+
     if (this.nuevaAgresion.idEvento === null || !this.nuevaAgresion.gravedad ||
       !this.nuevaAgresion.fecha || !this.nuevaAgresion.descripcion.trim()) {
       this.mensajeError = 'Falta escoger el evento, la gravedad, la fecha o contar qué pasó.';
@@ -344,6 +363,11 @@ export class Guarda implements OnInit {
   registrarInfractor(): void {
     this.mensajeExito = '';
     this.mensajeError = '';
+
+    if (this.sinGuarda) {
+      this.mensajeError = 'Tu usuario no tiene un guarda asociado. Pídele al administrador que lo asocie.';
+      return;
+    }
 
     const tipo = this.nuevoInfractor.tipoDocumento;
     const numero = this.nuevoInfractor.numeroDocumento.trim();

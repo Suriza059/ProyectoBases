@@ -42,6 +42,13 @@ export class Admin implements OnInit {
   parejas: any[] = [];
   comparendos: any[] = [];
   pagos: any[] = [];
+  usuariosGuarda: any[] = [];
+
+  confirmacion = {
+    visible: false,
+    texto: '',
+    accion: null as (() => void) | null
+  };
 
   nuevaTroncal = {
     nombre: ''
@@ -114,7 +121,8 @@ export class Admin implements OnInit {
   nuevoUsuario = {
     rol: '',
     nombreUsuario: '',
-    contrasena: ''
+    contrasena: '',
+    idGuarda: null as number | null
   };
 
   usuarioEditandoId: number | null = null;
@@ -162,6 +170,24 @@ export class Admin implements OnInit {
     this.cargarParejas();
     this.cargarComparendos();
     this.cargarPagos();
+    this.cargarUsuariosGuarda();
+  }
+
+  preguntar(texto: string, accion: () => void): void {
+    this.confirmacion = { visible: true, texto: texto, accion: accion };
+    this.cambios.detectChanges();
+  }
+
+  aceptarConfirmacion(): void {
+    const accion = this.confirmacion.accion;
+    this.confirmacion = { visible: false, texto: '', accion: null };
+    if (accion) {
+      accion();
+    }
+  }
+
+  cancelarConfirmacion(): void {
+    this.confirmacion = { visible: false, texto: '', accion: null };
   }
 
   private encabezados(): HttpHeaders {
@@ -304,19 +330,17 @@ export class Admin implements OnInit {
     this.mensajeExito = '';
     this.mensajeError = '';
 
-    if (!confirm('¿Seguro que quieres eliminar la troncal "' + troncal.nombre + '"?')) {
-      return;
-    }
-
-    this.http.delete(this.urlBase + '/troncal/eliminar/' + troncal.id, {
-      headers: this.encabezados(),
-      responseType: 'text'
-    }).subscribe({
-      next: () => {
-        this.mostrarExito('Troncal eliminada.');
-        this.cargarTroncales();
-      },
-      error: (err) => this.manejarError(err)
+    this.preguntar('¿Seguro que quieres eliminar la troncal "' + troncal.nombre + '"?', () => {
+      this.http.delete(this.urlBase + '/troncal/eliminar/' + troncal.id, {
+        headers: this.encabezados(),
+        responseType: 'text'
+      }).subscribe({
+        next: () => {
+          this.mostrarExito('Troncal eliminada.');
+          this.cargarTroncales();
+        },
+        error: (err) => this.manejarError(err)
+      });
     });
   }
 
@@ -405,19 +429,17 @@ export class Admin implements OnInit {
     this.mensajeExito = '';
     this.mensajeError = '';
 
-    if (!confirm('¿Seguro que quieres eliminar la estación "' + estacion.nombre + '"?')) {
-      return;
-    }
-
-    this.http.delete(this.urlBase + '/estacion/eliminar/' + estacion.id, {
-      headers: this.encabezados(),
-      responseType: 'text'
-    }).subscribe({
-      next: () => {
-        this.mostrarExito('Estación eliminada.');
-        this.cargarEstaciones();
-      },
-      error: (err) => this.manejarError(err)
+    this.preguntar('¿Seguro que quieres eliminar la estación "' + estacion.nombre + '"?', () => {
+      this.http.delete(this.urlBase + '/estacion/eliminar/' + estacion.id, {
+        headers: this.encabezados(),
+        responseType: 'text'
+      }).subscribe({
+        next: () => {
+          this.mostrarExito('Estación eliminada.');
+          this.cargarEstaciones();
+        },
+        error: (err) => this.manejarError(err)
+      });
     });
   }
 
@@ -500,19 +522,17 @@ export class Admin implements OnInit {
     this.mensajeExito = '';
     this.mensajeError = '';
 
-    if (!confirm('¿Seguro que quieres eliminar la modalidad "' + modalidad.nombre + '"?')) {
-      return;
-    }
-
-    this.http.delete(this.urlBase + '/modalidad/eliminar/' + modalidad.id, {
-      headers: this.encabezados(),
-      responseType: 'text'
-    }).subscribe({
-      next: () => {
-        this.mostrarExito('Modalidad eliminada.');
-        this.cargarModalidades();
-      },
-      error: (err) => this.manejarError(err)
+    this.preguntar('¿Seguro que quieres eliminar la modalidad "' + modalidad.nombre + '"?', () => {
+      this.http.delete(this.urlBase + '/modalidad/eliminar/' + modalidad.id, {
+        headers: this.encabezados(),
+        responseType: 'text'
+      }).subscribe({
+        next: () => {
+          this.mostrarExito('Modalidad eliminada.');
+          this.cargarModalidades();
+        },
+        error: (err) => this.manejarError(err)
+      });
     });
   }
 
@@ -656,19 +676,17 @@ export class Admin implements OnInit {
     this.mensajeExito = '';
     this.mensajeError = '';
 
-    if (!confirm('¿Seguro que quieres eliminar esta tarifa?')) {
-      return;
-    }
-
-    this.http.delete(this.urlBase + '/tarifa/eliminar/' + tarifa.id, {
-      headers: this.encabezados(),
-      responseType: 'text'
-    }).subscribe({
-      next: () => {
-        this.mostrarExito('Tarifa eliminada.');
-        this.cargarTarifas();
-      },
-      error: (err) => this.manejarError(err)
+    this.preguntar('¿Seguro que quieres eliminar esta tarifa?', () => {
+      this.http.delete(this.urlBase + '/tarifa/eliminar/' + tarifa.id, {
+        headers: this.encabezados(),
+        responseType: 'text'
+      }).subscribe({
+        next: () => {
+          this.mostrarExito('Tarifa eliminada.');
+          this.cargarTarifas();
+        },
+        error: (err) => this.manejarError(err)
+      });
     });
   }
 
@@ -799,19 +817,17 @@ export class Admin implements OnInit {
     this.mensajeExito = '';
     this.mensajeError = '';
 
-    if (!confirm('¿Seguro que quieres eliminar al guarda "' + guarda.nombre + ' ' + guarda.apellido + '"?')) {
-      return;
-    }
-
-    this.http.delete(this.urlBase + '/guarda/eliminar/' + guarda.id, {
-      headers: this.encabezados(),
-      responseType: 'text'
-    }).subscribe({
-      next: () => {
-        this.mostrarExito('Guarda eliminado.');
-        this.cargarGuardas();
-      },
-      error: (err) => this.manejarError(err)
+    this.preguntar('¿Seguro que quieres eliminar al guarda "' + guarda.nombre + ' ' + guarda.apellido + '"?', () => {
+      this.http.delete(this.urlBase + '/guarda/eliminar/' + guarda.id, {
+        headers: this.encabezados(),
+        responseType: 'text'
+      }).subscribe({
+        next: () => {
+          this.mostrarExito('Guarda eliminado.');
+          this.cargarGuardas();
+        },
+        error: (err) => this.manejarError(err)
+      });
     });
   }
 
@@ -838,12 +854,68 @@ export class Admin implements OnInit {
     });
   }
 
+  cargarUsuariosGuarda(): void {
+    this.http.get<any[]>(this.urlBase + '/usuarioGuarda/todos', { headers: this.encabezados() }).subscribe({
+      next: (lista) => {
+        this.usuariosGuarda = lista;
+        this.cambios.detectChanges();
+      },
+      error: (err) => this.manejarError(err)
+    });
+  }
+
+  guardaDeUsuario(idUsuario: number): any {
+    const union = this.usuariosGuarda.find(u => u.idUsuario === idUsuario);
+    if (!union) {
+      return null;
+    }
+    return this.guardas.find(g => g.id === union.idGuarda);
+  }
+
+  guardasSinUsuario(): any[] {
+    return this.guardas.filter(g => this.guardaEstaActivo(g) && !this.usuariosGuarda.find(u => u.idGuarda === g.id));
+  }
+
+  asociarGuarda(nombreUsuario: string, idGuarda: number): void {
+    this.http.get<any[]>(this.urlBase + '/usuario/todos', { headers: this.encabezados() }).subscribe({
+      next: (lista) => {
+        this.usuarios = lista.sort((a, b) => a.id - b.id);
+        const usuario = lista.find(u => u.nombreUsuario === nombreUsuario);
+        if (!usuario) {
+          return;
+        }
+
+        const parametros = new HttpParams()
+          .set('idUsuario', String(usuario.id))
+          .set('fechaActivacion', this.obtenerFechaHoy())
+          .set('idGuarda', String(idGuarda));
+
+        this.http.post(this.urlBase + '/usuarioGuarda/crear', null, {
+          headers: this.encabezados(),
+          params: parametros,
+          responseType: 'text'
+        }).subscribe({
+          next: () => {
+            this.mostrarExito('Usuario creado y asociado a su guarda.');
+            this.cargarUsuariosGuarda();
+          },
+          error: (err) => this.manejarError(err)
+        });
+      },
+      error: (err) => this.manejarError(err)
+    });
+  }
+
   crearUsuario(): void {
     this.mensajeExito = '';
     this.mensajeError = '';
 
     if (this.nuevoUsuario.nombreUsuario === '' || this.nuevoUsuario.contrasena === '' || !this.nuevoUsuario.rol) {
       this.mensajeError = 'Falta escribir el nombre de usuario, la contraseña o escoger el rol.';
+      return;
+    }
+    if (this.nuevoUsuario.rol === 'Guarda' && this.nuevoUsuario.idGuarda === null) {
+      this.mensajeError = 'Escoge a qué guarda le pertenece esta cuenta.';
       return;
     }
     if (!this.nombreUsuarioValido(this.nuevoUsuario.nombreUsuario)) {
@@ -866,9 +938,16 @@ export class Admin implements OnInit {
       responseType: 'text'
     }).subscribe({
       next: () => {
-        this.nuevoUsuario = { rol: '', nombreUsuario: '', contrasena: '' };
-        this.mostrarExito('Usuario creado.');
-        this.cargarUsuarios();
+        const nombre = this.nuevoUsuario.nombreUsuario;
+        const idGuarda = this.nuevoUsuario.idGuarda;
+        const esGuarda = this.nuevoUsuario.rol === 'Guarda';
+        this.nuevoUsuario = { rol: '', nombreUsuario: '', contrasena: '', idGuarda: null };
+        if (esGuarda && idGuarda !== null) {
+          this.asociarGuarda(nombre, idGuarda);
+        } else {
+          this.mostrarExito('Usuario creado.');
+          this.cargarUsuarios();
+        }
       },
       error: (err) => this.manejarError(err)
     });
@@ -905,6 +984,10 @@ export class Admin implements OnInit {
       this.mensajeError = 'La contraseña debe tener entre 6 y 30 caracteres y no puede tener espacios.';
       return;
     }
+    if (this.usuarioEditandoId !== null && this.guardaDeUsuario(this.usuarioEditandoId) && this.usuarioEditado.rol !== 'Guarda') {
+      this.mensajeError = 'Esta cuenta está asociada a un guarda, por eso su rol debe seguir siendo Guarda.';
+      return;
+    }
 
     let parametros = new HttpParams()
       .set('rol', this.usuarioEditado.rol)
@@ -932,10 +1015,22 @@ export class Admin implements OnInit {
     this.mensajeExito = '';
     this.mensajeError = '';
 
-    if (!confirm('¿Seguro que quieres eliminar al usuario "' + usuario.nombreUsuario + '"?')) {
-      return;
-    }
+    this.preguntar('¿Seguro que quieres eliminar al usuario "' + usuario.nombreUsuario + '"?', () => {
+      if (this.guardaDeUsuario(usuario.id)) {
+        this.http.delete(this.urlBase + '/usuarioGuarda/eliminar/' + usuario.id, {
+          headers: this.encabezados(),
+          responseType: 'text'
+        }).subscribe({
+          next: () => this.borrarUsuario(usuario),
+          error: (err) => this.manejarError(err)
+        });
+      } else {
+        this.borrarUsuario(usuario);
+      }
+    });
+  }
 
+  borrarUsuario(usuario: any): void {
     this.http.delete(this.urlBase + '/usuario/eliminar/' + usuario.id, {
       headers: this.encabezados(),
       responseType: 'text'
@@ -943,6 +1038,7 @@ export class Admin implements OnInit {
       next: () => {
         this.mostrarExito('Usuario eliminado.');
         this.cargarUsuarios();
+        this.cargarUsuariosGuarda();
       },
       error: (err) => this.manejarError(err)
     });
@@ -1139,11 +1235,9 @@ export class Admin implements OnInit {
       this.mensajeError = 'Solo se puede anular un comparendo pendiente.';
       return;
     }
-    if (!confirm('¿Seguro que quieres anular el comparendo ' + comparendo.id + '? Después no se puede cambiar.')) {
-      return;
-    }
-
-    this.cambiarEstadoComparendo(comparendo, 'Anulado', 'Comparendo anulado.');
+    this.preguntar('¿Seguro que quieres anular el comparendo ' + comparendo.id + '? Después no se puede cambiar.', () => {
+      this.cambiarEstadoComparendo(comparendo, 'Anulado', 'Comparendo anulado.');
+    });
   }
 
   cambiarEstadoComparendo(comparendo: any, estadoNuevo: string, texto: string): void {

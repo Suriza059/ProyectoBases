@@ -32,6 +32,7 @@
         [class.animate__animated]="entradaLista"
         [class.animate__fadeInUp]="entradaLista">
 
+    <p class="mensaje-error" *ngIf="sinGuarda">Tu usuario no tiene un guarda asociado, por eso no puedes registrar nada. Pídele al administrador que asocie tu cuenta a tu guarda.</p>
     <p class="mensaje-exito" *ngIf="mensajeExito">{{ mensajeExito }}</p>
     <p class="mensaje-error" *ngIf="mensajeError">{{ mensajeError }}</p>
 

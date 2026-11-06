@@ -6,13 +6,10 @@ import { Observable } from 'rxjs';
   providedIn: 'root',
 })
 export class AuthService {
-  // Dirección del back (Spring Boot)
   private urlBase = 'http://localhost:8080';
 
   constructor(private http: HttpClient) {}
 
-  // Llama al login del back. Manda usuario y contraseña en la URL
-  // y recibe el token como texto
   login(usuario: string, contrasena: string): Observable<string> {
     const parametros = new HttpParams()
       .set('nombreUsuario', usuario)
@@ -24,8 +21,6 @@ export class AuthService {
     });
   }
 
-  // Traduce la parte del medio del token y devuelve su contenido
-  // (rol, idUsuario...). Si algo falla devuelve null
   leerContenidoToken(token: string): any {
     try {
       const parteMedio = token.split('.')[1];
@@ -48,6 +43,14 @@ export class AuthService {
     localStorage.setItem('idUsuario', String(id));
   }
 
+  guardarIdGuarda(id: number | null): void {
+    if (id) {
+      localStorage.setItem('idGuarda', String(id));
+    } else {
+      localStorage.removeItem('idGuarda');
+    }
+  }
+
   obtenerToken(): string | null {
     return localStorage.getItem('token');
   }
@@ -58,6 +61,10 @@ export class AuthService {
 
   obtenerIdUsuario(): string | null {
     return localStorage.getItem('idUsuario');
+  }
+
+  obtenerIdGuarda(): string | null {
+    return localStorage.getItem('idGuarda');
   }
 
   cerrarSesion(): void {
