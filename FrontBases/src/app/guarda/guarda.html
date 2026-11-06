@@ -1,6 +1,5 @@
 <div class="guarda-pagina">
 
-  <!-- Menú de la izquierda -->
   <aside class="guarda-menu">
     <p class="guarda-menu-etiqueta">Panel del guarda</p>
     <h1 class="guarda-menu-titulo">Turno<br>en curso</h1>
@@ -16,24 +15,27 @@
       2. Mis registros
     </button>
     <button class="guarda-enlace"
+            [class.guarda-enlace-activo]="seccionActiva === 'infractor'"
+            (click)="cambiarSeccion('infractor')">
+      3. Registrar infractor
+    </button>
+    <button class="guarda-enlace"
             [class.guarda-enlace-activo]="seccionActiva === 'agresion'"
             (click)="cambiarSeccion('agresion')">
-      3. Registrar agresión
+      4. Registrar agresión
     </button>
 
     <button class="guarda-salir" (click)="cerrarSesion()">Cerrar sesión</button>
   </aside>
 
-  <!-- Contenido de la derecha -->
   <main class="guarda-contenido"
         [class.animate__animated]="entradaLista"
         [class.animate__fadeInUp]="entradaLista">
 
-    <!-- Mensajes -->
+    <p class="mensaje-error" *ngIf="sinGuarda">Tu usuario no tiene un guarda asociado, por eso no puedes registrar nada. Pídele al administrador que asocie tu cuenta a tu guarda.</p>
     <p class="mensaje-exito" *ngIf="mensajeExito">{{ mensajeExito }}</p>
     <p class="mensaje-error" *ngIf="mensajeError">{{ mensajeError }}</p>
 
-    <!-- SECCIÓN 1: registrar colado -->
     <section *ngIf="seccionActiva === 'registrar'">
       <h2 class="seccion-titulo">Registrar un colado</h2>
       <p class="seccion-texto">Llena los datos del evento tal como lo viste en la estación.</p>
@@ -67,12 +69,15 @@
           <label class="campo-etiqueta">Fecha</label>
           <input class="campo-linea" type="date" [max]="fechaHoy" [(ngModel)]="nuevoColado.fecha">
         </div>
+        <div class="campo">
+          <label class="campo-etiqueta">Hora</label>
+          <input class="campo-linea" type="time" [(ngModel)]="nuevoColado.hora">
+        </div>
       </div>
 
       <button class="boton-guarda" (click)="registrarColado()">Guardar colado</button>
     </section>
 
-    <!-- SECCIÓN 2: mis registros -->
     <section *ngIf="seccionActiva === 'registros'">
       <h2 class="seccion-titulo">Mis registros</h2>
       <p class="seccion-texto">Estos son los colados que has registrado.</p>
@@ -83,13 +88,72 @@
         <span class="fila-numero">#{{ registro.id }}</span>
         <div class="fila-datos">
           <p class="fila-principal">{{ nombreEstacion(registro.idEstacion) | titlecase }}</p>
-          <p class="fila-secundario">{{ nombreModalidad(registro.idModalidad) | titlecase }} · {{ registro.fecha }}</p>
+          <p class="fila-secundario">
+            {{ nombreModalidad(registro.idModalidad) | titlecase }} · {{ registro.fecha }}
+            <span *ngIf="registro.hora"> · {{ registro.hora | slice:0:5 }}</span>
+            · {{ cantidadIdentificados(registro.id) }} identificados
+          </p>
         </div>
         <span class="fila-personas">{{ registro.numeroPersonas }} {{ registro.numeroPersonas === 1 ? 'persona' : 'personas' }}</span>
       </div>
     </section>
 
-    <!-- SECCIÓN 3: registrar agresión -->
+    <section *ngIf="seccionActiva === 'infractor'">
+      <h2 class="seccion-titulo">Registrar un infractor</h2>
+      <p class="seccion-texto">Si identificaste a una persona en un colado, escoge el colado y escribe sus datos.</p>
+
+      <p class="seccion-texto" *ngIf="registros.length === 0">Primero registra un colado para poder ligar al infractor a un evento.</p>
+
+      <div class="campo">
+        <label class="campo-etiqueta">Colado</label>
+        <select class="campo-linea" [(ngModel)]="nuevoInfractor.idEvento">
+          <option [ngValue]="null">Escoge un colado</option>
+          <option *ngFor="let registro of registros" [ngValue]="registro.id">
+            #{{ registro.id }} · {{ nombreEstacion(registro.idEstacion) | titlecase }} · {{ registro.fecha }} · {{ registro.numeroPersonas }} {{ registro.numeroPersonas === 1 ? 'persona' : 'personas' }}
+          </option>
+        </select>
+      </div>
+
+      <p class="seccion-texto" *ngIf="eventoEscogido()">
+        Identificados en este colado: {{ cantidadIdentificados(eventoEscogido().id) }} de {{ eventoEscogido().numeroPersonas }}
+      </p>
+
+      <div class="campo-fila">
+        <div class="campo">
+          <label class="campo-etiqueta">Tipo de documento</label>
+          <select class="campo-linea" [(ngModel)]="nuevoInfractor.tipoDocumento">
+            <option value="">Escoge el tipo</option>
+            <option *ngFor="let tipo of tiposDocumento" [value]="tipo">{{ tipo }}</option>
+          </select>
+        </div>
+        <div class="campo">
+          <label class="campo-etiqueta">Número de documento</label>
+          <input class="campo-linea" type="text" maxlength="15" [(ngModel)]="nuevoInfractor.numeroDocumento">
+        </div>
+      </div>
+
+      <div class="campo-fila">
+        <div class="campo">
+          <label class="campo-etiqueta">Nombre</label>
+          <input class="campo-linea" type="text" maxlength="40" [(ngModel)]="nuevoInfractor.nombre">
+        </div>
+        <div class="campo">
+          <label class="campo-etiqueta">Apellido</label>
+          <input class="campo-linea" type="text" maxlength="40" [(ngModel)]="nuevoInfractor.apellido">
+        </div>
+      </div>
+
+      <button class="boton-guarda" (click)="registrarInfractor()">Guardar infractor</button>
+
+      <div class="fila-registro" *ngFor="let infractor of infractoresDelEvento(nuevoInfractor.idEvento)">
+        <span class="fila-numero">{{ infractor.tipoDocumento }}</span>
+        <div class="fila-datos">
+          <p class="fila-principal">{{ infractor.nombre | titlecase }} {{ infractor.apellido | titlecase }}</p>
+          <p class="fila-secundario">Documento {{ infractor.numeroDocumento }}</p>
+        </div>
+      </div>
+    </section>
+
     <section *ngIf="seccionActiva === 'agresion'">
       <h2 class="seccion-titulo">Registrar una agresión</h2>
       <p class="seccion-texto">Escoge el evento en el que ocurrió y cuenta qué pasó.</p>

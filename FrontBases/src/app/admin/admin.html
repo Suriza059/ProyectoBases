@@ -15,6 +15,7 @@
       <button type="button" class="admin-enlace" [class.admin-enlace-activo]="seccionActual === 'tarifas'" (click)="cambiarSeccion('tarifas')">Tarifas</button>
       <button type="button" class="admin-enlace" [class.admin-enlace-activo]="seccionActual === 'guardas'" (click)="cambiarSeccion('guardas')">Guardas</button>
       <button type="button" class="admin-enlace" [class.admin-enlace-activo]="seccionActual === 'usuarios'" (click)="cambiarSeccion('usuarios')">Usuarios</button>
+      <button type="button" class="admin-enlace" [class.admin-enlace-activo]="seccionActual === 'comparendos'" (click)="cambiarSeccion('comparendos')">Comparendos y pagos</button>
       <button type="button" class="admin-enlace" [class.admin-enlace-activo]="seccionActual === 'cambios'" (click)="cambiarSeccion('cambios')">Registro de cambios</button>
     </nav>
 
@@ -26,7 +27,6 @@
     <p class="mensaje-exito" *ngIf="mensajeExito">{{ mensajeExito }}</p>
     <p class="mensaje-error" *ngIf="mensajeError">{{ mensajeError }}</p>
 
-    <!-- ========== TRONCALES ========== -->
     <section *ngIf="seccionActual === 'troncales'">
       <h2 class="seccion-titulo animate__animated animate__fadeInUp">Troncales</h2>
       <p class="seccion-texto animate__animated animate__fadeInUp">Crea las troncales del sistema. Después las estaciones se asignan a una troncal.</p>
@@ -54,7 +54,6 @@
         <div class="fila-registro" *ngFor="let troncal of troncales">
           <span class="fila-numero">{{ troncal.id }}</span>
 
-          <!-- Fila normal -->
           <ng-container *ngIf="troncalEditandoId !== troncal.id">
             <div class="fila-datos">
               <p class="fila-principal">{{ troncal.nombre }}</p>
@@ -68,7 +67,6 @@
             </div>
           </ng-container>
 
-          <!-- Fila en modo edición -->
           <ng-container *ngIf="troncalEditandoId === troncal.id">
             <div class="fila-datos">
               <input
@@ -86,7 +84,6 @@
       </div>
     </section>
 
-    <!-- ========== ESTACIONES ========== -->
     <section *ngIf="seccionActual === 'estaciones'">
       <h2 class="seccion-titulo animate__animated animate__fadeInUp">Estaciones</h2>
       <p class="seccion-texto animate__animated animate__fadeInUp">Crea las estaciones y asígnalas a una troncal. Las estaciones inactivas no le aparecen al guarda.</p>
@@ -135,7 +132,6 @@
         <div class="fila-registro" *ngFor="let estacion of estaciones">
           <span class="fila-numero">{{ estacion.id }}</span>
 
-          <!-- Fila normal -->
           <ng-container *ngIf="estacionEditandoId !== estacion.id">
             <div class="fila-datos">
               <p class="fila-principal">{{ estacion.nombre }}</p>
@@ -154,7 +150,6 @@
             </div>
           </ng-container>
 
-          <!-- Fila en modo edición -->
           <ng-container *ngIf="estacionEditandoId === estacion.id">
             <div class="fila-datos">
               <div class="campo-fila">
@@ -191,7 +186,6 @@
       </div>
     </section>
 
-    <!-- ========== MODALIDADES ========== -->
     <section *ngIf="seccionActual === 'modalidades'">
       <h2 class="seccion-titulo animate__animated animate__fadeInUp">Modalidades</h2>
       <p class="seccion-texto animate__animated animate__fadeInUp">Crea las formas en que la gente se cuela. El guarda las escoge al registrar un colado.</p>
@@ -219,7 +213,6 @@
         <div class="fila-registro" *ngFor="let modalidad of modalidades">
           <span class="fila-numero">{{ modalidad.id }}</span>
 
-          <!-- Fila normal -->
           <ng-container *ngIf="modalidadEditandoId !== modalidad.id">
             <div class="fila-datos">
               <p class="fila-principal">{{ modalidad.nombre }}</p>
@@ -233,7 +226,6 @@
             </div>
           </ng-container>
 
-          <!-- Fila en modo edición -->
           <ng-container *ngIf="modalidadEditandoId === modalidad.id">
             <div class="fila-datos">
               <input
@@ -251,7 +243,6 @@
       </div>
     </section>
 
-    <!-- ========== GUARDAS ========== -->
     <section *ngIf="seccionActual === 'guardas'">
       <h2 class="seccion-titulo animate__animated animate__fadeInUp">Guardas</h2>
       <p class="seccion-texto animate__animated animate__fadeInUp">Registra a los guardas, su turno y la estación donde trabajan. El supervisor es opcional.</p>
@@ -319,7 +310,7 @@
             <label class="campo-etiqueta">Supervisor (opcional)</label>
             <select class="campo-linea" [(ngModel)]="nuevaGuarda.idSupervisor">
               <option [ngValue]="null">Sin supervisor</option>
-              <option *ngFor="let guarda of guardas" [ngValue]="guarda.id">{{ guarda.nombre }} {{ guarda.apellido }}</option>
+              <option *ngFor="let guarda of supervisores(null)" [ngValue]="guarda.id">{{ guarda.nombre }} {{ guarda.apellido }}</option>
             </select>
           </div>
         </div>
@@ -335,7 +326,6 @@
         <div class="fila-registro" *ngFor="let guarda of guardas">
           <span class="fila-numero">{{ guarda.id }}</span>
 
-          <!-- Fila normal -->
           <ng-container *ngIf="guardaEditandoId !== guarda.id">
             <div class="fila-datos">
               <p class="fila-principal">{{ guarda.nombre }} {{ guarda.apellido }}</p>
@@ -357,7 +347,6 @@
             </div>
           </ng-container>
 
-          <!-- Fila en modo edición -->
           <ng-container *ngIf="guardaEditandoId === guarda.id">
             <div class="fila-datos">
               <div class="campo-fila">
@@ -407,9 +396,7 @@
                   <label class="campo-etiqueta">Supervisor</label>
                   <select class="campo-linea" [(ngModel)]="guardaEditada.idSupervisor">
                     <option [ngValue]="null">Sin supervisor</option>
-                    <ng-container *ngFor="let otro of guardas">
-                      <option *ngIf="otro.id !== guardaEditandoId" [ngValue]="otro.id">{{ otro.nombre }} {{ otro.apellido }}</option>
-                    </ng-container>
+                    <option *ngFor="let otro of supervisores(guardaEditandoId)" [ngValue]="otro.id">{{ otro.nombre }} {{ otro.apellido }}</option>
                   </select>
                 </div>
               </div>
@@ -424,7 +411,6 @@
       </div>
     </section>
 
-    <!-- ========== TARIFAS ========== -->
     <section *ngIf="seccionActual === 'tarifas'">
       <h2 class="seccion-titulo animate__animated animate__fadeInUp">Tarifas</h2>
       <p class="seccion-texto animate__animated animate__fadeInUp">Define el valor del pasaje y entre qué fechas está vigente. El guarda usa las fechas para saber qué tarifa le toca a cada colado.</p>
@@ -440,7 +426,7 @@
           </div>
 
           <div class="campo">
-            <label class="campo-etiqueta">Fecha final</label>
+            <label class="campo-etiqueta">Fecha final (opcional)</label>
             <input
               class="campo-linea"
               type="date"
@@ -469,11 +455,11 @@
         <div class="fila-registro" *ngFor="let tarifa of tarifas">
           <span class="fila-numero">{{ tarifa.id }}</span>
 
-          <!-- Fila normal -->
           <ng-container *ngIf="tarifaEditandoId !== tarifa.id">
             <div class="fila-datos">
               <p class="fila-principal">$ {{ tarifa.valor }}</p>
-              <p class="fila-secundario">Del {{ formatearFecha(tarifa.fechaInicio) }} al {{ formatearFecha(tarifa.fechaFin) }}</p>
+              <p class="fila-secundario" *ngIf="tarifa.fechaFin">Del {{ formatearFecha(tarifa.fechaInicio) }} al {{ formatearFecha(tarifa.fechaFin) }}</p>
+              <p class="fila-secundario" *ngIf="!tarifa.fechaFin">Vigente desde el {{ formatearFecha(tarifa.fechaInicio) }}</p>
             </div>
 
             <div class="fila-acciones">
@@ -482,7 +468,6 @@
             </div>
           </ng-container>
 
-          <!-- Fila en modo edición -->
           <ng-container *ngIf="tarifaEditandoId === tarifa.id">
             <div class="fila-datos">
               <div class="campo-fila">
@@ -495,7 +480,7 @@
                 </div>
 
                 <div class="campo">
-                  <label class="campo-etiqueta">Fecha final</label>
+                  <label class="campo-etiqueta">Fecha final (opcional)</label>
                   <input
                     class="campo-linea campo-editar"
                     type="date"
@@ -522,7 +507,6 @@
       </div>
     </section>
 
-    <!-- ========== USUARIOS ========== -->
     <section *ngIf="seccionActual === 'usuarios'">
       <h2 class="seccion-titulo animate__animated animate__fadeInUp">Usuarios</h2>
       <p class="seccion-texto animate__animated animate__fadeInUp">Crea las cuentas para entrar al sistema y escoge si cada una es de administrador o de guarda.</p>
@@ -554,7 +538,17 @@
               <option *ngFor="let rol of roles" [value]="rol">{{ rol }}</option>
             </select>
           </div>
+
+          <div class="campo" *ngIf="nuevoUsuario.rol === 'Guarda'">
+            <label class="campo-etiqueta">¿Qué guarda es?</label>
+            <select class="campo-linea" [(ngModel)]="nuevoUsuario.idGuarda">
+              <option [ngValue]="null">Escoge el guarda</option>
+              <option *ngFor="let guarda of guardasSinUsuario()" [ngValue]="guarda.id">{{ guarda.nombre }} {{ guarda.apellido }}</option>
+            </select>
+          </div>
         </div>
+
+        <p class="seccion-texto" *ngIf="nuevoUsuario.rol === 'Guarda' && guardasSinUsuario().length === 0">Todos los guardas activos ya tienen cuenta. Primero crea el guarda en la sección Guardas.</p>
 
         <button type="button" class="boton-admin" (click)="crearUsuario()">
           Crear usuario <i class="bi bi-plus-lg"></i>
@@ -569,10 +563,11 @@
         <div class="fila-registro" *ngFor="let usuario of usuarios">
           <span class="fila-numero">{{ usuario.id }}</span>
 
-          <!-- Fila normal -->
           <ng-container *ngIf="usuarioEditandoId !== usuario.id">
             <div class="fila-datos">
               <p class="fila-principal">{{ usuario.nombreUsuario }}</p>
+              <p class="fila-secundario" *ngIf="guardaDeUsuario(usuario.id)">Guarda: {{ guardaDeUsuario(usuario.id).nombre }} {{ guardaDeUsuario(usuario.id).apellido }}</p>
+              <p class="fila-secundario" *ngIf="usuario.rol === 'Guarda' && !guardaDeUsuario(usuario.id)">Sin guarda asociado</p>
             </div>
 
             <span class="insignia" [class.insignia-admin]="usuario.rol === 'Administrador'">
@@ -587,7 +582,6 @@
             </div>
           </ng-container>
 
-          <!-- Fila en modo edición -->
           <ng-container *ngIf="usuarioEditandoId === usuario.id">
             <div class="fila-datos">
               <div class="campo-fila">
@@ -626,7 +620,103 @@
       </div>
     </section>
 
-    <!-- ========== REGISTRO DE CAMBIOS ========== -->
+    <section *ngIf="seccionActual === 'comparendos'">
+      <h2 class="seccion-titulo animate__animated animate__fadeInUp">Comparendos y pagos</h2>
+      <p class="seccion-texto animate__animated animate__fadeInUp">Los guardas registran a los infractores que identifican en cada colado. Aquí les pones el comparendo, registras el pago o lo anulas. Un comparendo pagado o anulado ya no cambia.</p>
+
+      <div class="panel animate__animated animate__fadeInUp">
+        <div class="campo">
+          <label class="campo-etiqueta">Infractor y colado</label>
+          <select class="campo-linea" [(ngModel)]="nuevoComparendo.idPareja">
+            <option [ngValue]="null">Escoge a quién se le pone el comparendo</option>
+            <option *ngFor="let pareja of parejasSinComparendo()" [ngValue]="pareja.id">{{ textoPareja(pareja.id) }}</option>
+          </select>
+        </div>
+
+        <p class="seccion-texto" *ngIf="parejasSinComparendo().length === 0">No hay infractores pendientes de comparendo. Los registra el guarda desde su panel.</p>
+
+        <div class="campo-fila">
+          <div class="campo">
+            <label class="campo-etiqueta">Fecha del comparendo</label>
+            <input
+              class="campo-linea"
+              type="date"
+              [max]="fechaHoy"
+              [(ngModel)]="nuevoComparendo.fecha">
+          </div>
+
+          <div class="campo">
+            <label class="campo-etiqueta">Valor</label>
+            <input
+              class="campo-linea"
+              type="number"
+              min="1"
+              placeholder="Ejemplo: 604100"
+              [(ngModel)]="nuevoComparendo.valor">
+          </div>
+        </div>
+
+        <button type="button" class="boton-admin" (click)="crearComparendo()">Crear comparendo</button>
+      </div>
+
+      <h3 class="admin-subtitulo">Comparendos registrados</h3>
+
+      <p class="seccion-texto" *ngIf="comparendos.length === 0">Todavía no hay comparendos.</p>
+
+      <div class="lista animate__animated animate__fadeInUp" *ngIf="comparendos.length > 0">
+        <div class="fila-registro" *ngFor="let comparendo of comparendos">
+          <span class="fila-numero">{{ comparendo.id }}</span>
+
+          <ng-container *ngIf="comparendoPagandoId !== comparendo.id">
+            <div class="fila-datos">
+              <p class="fila-principal">$ {{ comparendo.valor }} · {{ formatearFecha(comparendo.fecha) }}</p>
+              <p class="fila-secundario">{{ textoPareja(comparendo.idEventoInfractor) }}</p>
+              <p class="fila-secundario" *ngIf="pagoDeComparendo(comparendo.id)">
+                Recibo {{ pagoDeComparendo(comparendo.id).numeroRecibo }} · pagado el {{ formatearFecha(pagoDeComparendo(comparendo.id).fecha) }}
+              </p>
+            </div>
+
+            <span class="insignia" [class.insignia-inactiva]="comparendo.estado === 'Anulado'" [class.insignia-admin]="comparendo.estado === 'Pendiente'">{{ comparendo.estado }}</span>
+
+            <div class="fila-acciones" *ngIf="comparendo.estado === 'Pendiente'">
+              <button type="button" class="accion-texto" (click)="empezarPago(comparendo)">Registrar pago</button>
+              <button type="button" class="accion-texto accion-peligro" (click)="anularComparendo(comparendo)">Anular</button>
+            </div>
+          </ng-container>
+
+          <ng-container *ngIf="comparendoPagandoId === comparendo.id">
+            <div class="fila-datos">
+              <p class="fila-principal">Pago de $ {{ comparendo.valor }}</p>
+              <div class="campo-fila">
+                <div class="campo">
+                  <label class="campo-etiqueta">Número de recibo</label>
+                  <input
+                    class="campo-linea campo-editar"
+                    type="text"
+                    maxlength="20"
+                    [(ngModel)]="nuevoPago.numeroRecibo">
+                </div>
+
+                <div class="campo">
+                  <label class="campo-etiqueta">Fecha del pago</label>
+                  <input
+                    class="campo-linea campo-editar"
+                    type="date"
+                    [max]="fechaHoy"
+                    [(ngModel)]="nuevoPago.fecha">
+                </div>
+              </div>
+            </div>
+
+            <div class="fila-acciones">
+              <button type="button" class="accion-texto" (click)="registrarPago(comparendo)">Guardar pago</button>
+              <button type="button" class="accion-texto" (click)="cancelarPago()">Cancelar</button>
+            </div>
+          </ng-container>
+        </div>
+      </div>
+    </section>
+
     <section *ngIf="seccionActual === 'cambios'">
       <h2 class="seccion-titulo animate__animated animate__fadeInUp">Registro de cambios</h2>
       <p class="seccion-texto animate__animated animate__fadeInUp">Aquí ves quién cambió qué y cuándo. Esta sección es solo para consultar.</p>
@@ -655,4 +745,15 @@
     </section>
 
   </main>
+
+  <div class="toast-confirmacion animate__animated animate__fadeInUp animate__faster" *ngIf="confirmacion.visible">
+    <p class="toast-texto">
+      <i class="bi bi-exclamation-triangle"></i>
+      {{ confirmacion.texto }}
+    </p>
+    <div class="toast-botones">
+      <button type="button" class="toast-boton toast-si" (click)="aceptarConfirmacion()">Sí</button>
+      <button type="button" class="toast-boton" (click)="cancelarConfirmacion()">Cancelar</button>
+    </div>
+  </div>
 </div>

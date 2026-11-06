@@ -46,6 +46,7 @@ export class Login {
         this.authService.guardarToken(token);
         this.authService.guardarRol(contenido.rol);
         this.authService.guardarIdUsuario(contenido.idUsuario);
+        this.authService.guardarIdGuarda(contenido.idGuarda);
 
         const rol = String(contenido.rol).toLowerCase();
 

@@ -10,50 +10,54 @@ import { Router } from '@angular/router';
 })
 export class Guarda implements OnInit {
 
-  // Dirección del back
   urlBase: string = 'http://localhost:8080';
 
-  // TEMPORAL: es el id del guarda de prueba. Cuando el token del login
-  // traiga el idGuarda, hay que cambiar esta línea para leerlo de ahí.
-  idGuarda: number = 1;
+  idGuarda: number | null = null;
 
-  // Sección que se está viendo: 'registrar', 'registros' o 'agresion'
+  sinGuarda: boolean = false;
+
   seccionActiva: string = 'registrar';
 
-  // Animación de entrada (setTimeout + booleano)
   entradaLista: boolean = false;
 
-  // Fecha de hoy en formato aaaa-mm-dd
   fechaHoy: string = '';
 
-  // Mensajes para el guarda
   mensajeExito: string = '';
   mensajeError: string = '';
 
-  // Valores de la gravedad (cambiar si Esteban dice otros)
-  gravedades: string[] = ['Leve', 'Media', 'Grave'];
+  gravedades: string[] = ['Leve', 'Moderada', 'Grave'];
 
-  // Listas que vienen del back
+  tiposDocumento: string[] = ['CC', 'CE', 'TI', 'PAS'];
+
   estaciones: any[] = [];
   modalidades: any[] = [];
   tarifas: any[] = [];
   registros: any[] = [];
   agresiones: any[] = [];
+  infractores: any[] = [];
+  parejas: any[] = [];
 
-  // Formulario de registrar colado
   nuevoColado = {
     idEstacion: null as number | null,
     idModalidad: null as number | null,
     numeroPersonas: 1,
-    fecha: ''
+    fecha: '',
+    hora: ''
   };
 
-  // Formulario de registrar agresión
   nuevaAgresion = {
     idEvento: null as number | null,
     gravedad: '',
     fecha: '',
     descripcion: ''
+  };
+
+  nuevoInfractor = {
+    idEvento: null as number | null,
+    tipoDocumento: '',
+    numeroDocumento: '',
+    nombre: '',
+    apellido: ''
   };
 
   constructor(
@@ -63,7 +67,6 @@ export class Guarda implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    // Si no hay token guardado, no se puede estar aquí
     if (!localStorage.getItem('token')) {
       this.router.navigate(['/login']);
       return;
@@ -71,11 +74,20 @@ export class Guarda implements OnInit {
 
     this.fechaHoy = this.obtenerFechaHoy();
 
+    const guardado = localStorage.getItem('idGuarda');
+    if (guardado) {
+      this.idGuarda = Number(guardado);
+    } else {
+      this.sinGuarda = true;
+    }
+
     this.cargarEstaciones();
     this.cargarModalidades();
     this.cargarTarifas();
     this.cargarEventos();
     this.cargarAgresiones();
+    this.cargarInfractores();
+    this.cargarParejas();
 
     setTimeout(() => {
       this.entradaLista = true;
@@ -83,9 +95,6 @@ export class Guarda implements OnInit {
     }, 100);
   }
 
-  // ---------- Ayudas ----------
-
-  // Devuelve la fecha de hoy como texto aaaa-mm-dd
   obtenerFechaHoy(): string {
     const hoy = new Date();
     const anio = hoy.getFullYear();
@@ -94,13 +103,11 @@ export class Guarda implements OnInit {
     return anio + '-' + mes + '-' + dia;
   }
 
-  // Encabezado con el token (la "manilla") para cada llamada al back
   private encabezados(): HttpHeaders {
     const token = localStorage.getItem('token');
     return new HttpHeaders({ Authorization: 'Bearer ' + token });
   }
 
-  // Solo las estaciones activas (el back escribe "Si" o "si")
   estacionesActivas(): any[] {
     return this.estaciones.filter(e => String(e.activa).toLowerCase() === 'si');
   }
@@ -115,6 +122,38 @@ export class Guarda implements OnInit {
     return modalidad ? modalidad.nombre : 'Modalidad ' + id;
   }
 
+  cantidadIdentificados(idEvento: number): number {
+    return this.parejas.filter(p => p.idEvento === idEvento).length;
+  }
+
+  infractoresDelEvento(idEvento: number | null): any[] {
+    const lista: any[] = [];
+    for (const pareja of this.parejas) {
+      if (pareja.idEvento === idEvento) {
+        const infractor = this.infractores.find(i => i.id === pareja.idInfractor);
+        if (infractor) {
+          lista.push(infractor);
+        }
+      }
+    }
+    return lista;
+  }
+
+  eventoEscogido(): any {
+    return this.registros.find(r => r.id === this.nuevoInfractor.idEvento);
+  }
+
+  nombreValido(texto: string): boolean {
+    return /^[A-Za-zÁÉÍÓÚáéíóúÑñÜü]+( [A-Za-zÁÉÍÓÚáéíóúÑñÜü]+)*$/.test(texto) && texto.length >= 2 && texto.length <= 40;
+  }
+
+  documentoValido(tipo: string, numero: string): boolean {
+    if (tipo === 'CC' || tipo === 'TI') {
+      return /^[0-9]{6,10}$/.test(numero);
+    }
+    return /^[A-Za-z0-9]{5,15}$/.test(numero);
+  }
+
   mostrarExito(texto: string): void {
     this.mensajeExito = texto;
     this.cambios.markForCheck();
@@ -125,7 +164,6 @@ export class Guarda implements OnInit {
   }
 
   manejarError(err: any): void {
-    // 401: el token venció o no sirve, hay que iniciar sesión otra vez
     if (err.status === 401) {
       localStorage.clear();
       this.router.navigate(['/login']);
@@ -147,8 +185,6 @@ export class Guarda implements OnInit {
     this.mensajeExito = '';
     this.mensajeError = '';
   }
-
-  // ---------- Cargar datos del back ----------
 
   cargarEstaciones(): void {
     this.http.get<any[]>(this.urlBase + '/estacion/todos', { headers: this.encabezados() }).subscribe({
@@ -180,7 +216,6 @@ export class Guarda implements OnInit {
     });
   }
 
-  // Trae todos los eventos y deja solo los de este guarda, el más nuevo primero
   cargarEventos(): void {
     this.http.get<any[]>(this.urlBase + '/evento/todos', { headers: this.encabezados() }).subscribe({
       next: (lista) => {
@@ -205,28 +240,51 @@ export class Guarda implements OnInit {
     });
   }
 
-  // ---------- Guardar en el back ----------
+  cargarInfractores(): void {
+    this.http.get<any[]>(this.urlBase + '/infractor/todos', { headers: this.encabezados() }).subscribe({
+      next: (lista) => {
+        this.infractores = lista;
+        this.cambios.markForCheck();
+      },
+      error: (err) => this.manejarError(err)
+    });
+  }
+
+  cargarParejas(): void {
+    this.http.get<any[]>(this.urlBase + '/eventoInfractor/todos', { headers: this.encabezados() }).subscribe({
+      next: (lista) => {
+        this.parejas = lista;
+        this.cambios.markForCheck();
+      },
+      error: (err) => this.manejarError(err)
+    });
+  }
 
   registrarColado(): void {
     this.mensajeExito = '';
     this.mensajeError = '';
 
-    if (this.nuevoColado.idEstacion === null || this.nuevoColado.idModalidad === null || !this.nuevoColado.fecha) {
-      this.mensajeError = 'Falta llenar la estación, la modalidad o la fecha.';
+    if (this.sinGuarda) {
+      this.mensajeError = 'Tu usuario no tiene un guarda asociado. Pídele al administrador que lo asocie.';
+      return;
+    }
+
+    if (this.nuevoColado.idEstacion === null || this.nuevoColado.idModalidad === null ||
+      !this.nuevoColado.fecha || !this.nuevoColado.hora) {
+      this.mensajeError = 'Falta llenar la estación, la modalidad, la fecha o la hora.';
       return;
     }
     if (this.nuevoColado.fecha > this.fechaHoy) {
       this.mensajeError = 'La fecha no puede ser posterior a hoy.';
       return;
     }
-    if (!this.nuevoColado.numeroPersonas || this.nuevoColado.numeroPersonas < 1) {
-      this.mensajeError = 'El número de personas debe ser mínimo 1.';
+    if (!Number.isInteger(this.nuevoColado.numeroPersonas) || this.nuevoColado.numeroPersonas < 1) {
+      this.mensajeError = 'El número de personas debe ser un número entero, mínimo 1.';
       return;
     }
 
-    // Se busca la tarifa que cubre la fecha del colado
     const tarifa = this.tarifas.find(t =>
-      this.nuevoColado.fecha >= t.fechaInicio && this.nuevoColado.fecha <= t.fechaFin
+      this.nuevoColado.fecha >= t.fechaInicio && (!t.fechaFin || this.nuevoColado.fecha <= t.fechaFin)
     );
     if (!tarifa) {
       this.mensajeError = 'No hay una tarifa vigente para esa fecha.';
@@ -235,6 +293,7 @@ export class Guarda implements OnInit {
 
     const parametros = new HttpParams()
       .set('fecha', this.nuevoColado.fecha)
+      .set('hora', this.nuevoColado.hora)
       .set('numeroPersonas', String(this.nuevoColado.numeroPersonas))
       .set('idEstacion', String(this.nuevoColado.idEstacion))
       .set('idTarifa', String(tarifa.id))
@@ -247,7 +306,7 @@ export class Guarda implements OnInit {
       responseType: 'text'
     }).subscribe({
       next: () => {
-        this.nuevoColado = { idEstacion: null, idModalidad: null, numeroPersonas: 1, fecha: '' };
+        this.nuevoColado = { idEstacion: null, idModalidad: null, numeroPersonas: 1, fecha: '', hora: '' };
         this.mostrarExito('Colado registrado.');
         this.cargarEventos();
       },
@@ -259,6 +318,11 @@ export class Guarda implements OnInit {
     this.mensajeExito = '';
     this.mensajeError = '';
 
+    if (this.sinGuarda) {
+      this.mensajeError = 'Tu usuario no tiene un guarda asociado. Pídele al administrador que lo asocie.';
+      return;
+    }
+
     if (this.nuevaAgresion.idEvento === null || !this.nuevaAgresion.gravedad ||
       !this.nuevaAgresion.fecha || !this.nuevaAgresion.descripcion.trim()) {
       this.mensajeError = 'Falta escoger el evento, la gravedad, la fecha o contar qué pasó.';
@@ -269,7 +333,6 @@ export class Guarda implements OnInit {
       return;
     }
 
-    // La agresión no puede ser antes del colado en el que ocurrió
     const evento = this.registros.find(r => r.id === this.nuevaAgresion.idEvento);
     if (evento && this.nuevaAgresion.fecha < evento.fecha) {
       this.mensajeError = 'La agresión no puede ser anterior al colado.';
@@ -292,6 +355,102 @@ export class Guarda implements OnInit {
         this.nuevaAgresion = { idEvento: null, gravedad: '', fecha: '', descripcion: '' };
         this.mostrarExito('Agresión registrada.');
         this.cargarAgresiones();
+      },
+      error: (err) => this.manejarError(err)
+    });
+  }
+
+  registrarInfractor(): void {
+    this.mensajeExito = '';
+    this.mensajeError = '';
+
+    if (this.sinGuarda) {
+      this.mensajeError = 'Tu usuario no tiene un guarda asociado. Pídele al administrador que lo asocie.';
+      return;
+    }
+
+    const tipo = this.nuevoInfractor.tipoDocumento;
+    const numero = this.nuevoInfractor.numeroDocumento.trim();
+    const nombre = this.nuevoInfractor.nombre.trim();
+    const apellido = this.nuevoInfractor.apellido.trim();
+
+    if (this.nuevoInfractor.idEvento === null || !tipo || !numero || !nombre || !apellido) {
+      this.mensajeError = 'Falta escoger el colado o llenar el documento, el nombre o el apellido.';
+      return;
+    }
+    if (!this.documentoValido(tipo, numero)) {
+      this.mensajeError = 'El número de documento no es válido. CC y TI: solo números (6 a 10). CE y PAS: letras y números (5 a 15), sin espacios.';
+      return;
+    }
+    if (!this.nombreValido(nombre) || !this.nombreValido(apellido)) {
+      this.mensajeError = 'El nombre y el apellido solo pueden tener letras (de 2 a 40), sin números ni símbolos.';
+      return;
+    }
+
+    const evento = this.eventoEscogido();
+    if (evento && this.cantidadIdentificados(evento.id) >= evento.numeroPersonas) {
+      this.mensajeError = 'Ya identificaste a todas las personas de ese colado (' + evento.numeroPersonas + ').';
+      return;
+    }
+
+    const existente = this.infractores.find(i => i.tipoDocumento === tipo && i.numeroDocumento === numero);
+    if (existente) {
+      const repetido = this.parejas.find(p => p.idEvento === this.nuevoInfractor.idEvento && p.idInfractor === existente.id);
+      if (repetido) {
+        this.mensajeError = 'Esa persona ya está registrada en este colado.';
+        return;
+      }
+      this.asociarInfractor(existente.id, 'La persona ya estaba registrada. Se agregó a este colado.');
+      return;
+    }
+
+    const parametros = new HttpParams()
+      .set('tipoDocumento', tipo)
+      .set('numeroDocumento', numero)
+      .set('nombre', nombre)
+      .set('apellido', apellido);
+
+    this.http.post(this.urlBase + '/infractor/crear', null, {
+      headers: this.encabezados(),
+      params: parametros,
+      responseType: 'text'
+    }).subscribe({
+      next: () => {
+        this.http.get<any[]>(this.urlBase + '/infractor/todos', { headers: this.encabezados() }).subscribe({
+          next: (lista) => {
+            this.infractores = lista;
+            const nuevo = lista.find(i => i.tipoDocumento === tipo && i.numeroDocumento === numero);
+            if (nuevo) {
+              this.asociarInfractor(nuevo.id, 'Infractor registrado en el colado.');
+            }
+          },
+          error: (err) => this.manejarError(err)
+        });
+      },
+      error: (err) => this.manejarError(err)
+    });
+  }
+
+  asociarInfractor(idInfractor: number, texto: string): void {
+    const parametros = new HttpParams()
+      .set('idEvento', String(this.nuevoInfractor.idEvento))
+      .set('idInfractor', String(idInfractor));
+
+    this.http.post(this.urlBase + '/eventoInfractor/crear', null, {
+      headers: this.encabezados(),
+      params: parametros,
+      responseType: 'text'
+    }).subscribe({
+      next: () => {
+        this.nuevoInfractor = {
+          idEvento: this.nuevoInfractor.idEvento,
+          tipoDocumento: '',
+          numeroDocumento: '',
+          nombre: '',
+          apellido: ''
+        };
+        this.mostrarExito(texto);
+        this.cargarParejas();
       },
       error: (err) => this.manejarError(err)
     });
