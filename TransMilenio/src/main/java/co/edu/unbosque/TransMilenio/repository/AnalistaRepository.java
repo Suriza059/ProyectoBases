@@ -1,96 +1,60 @@
 package co.edu.unbosque.TransMilenio.repository;
 
-import java.util.ArrayList;
 import java.util.List;
+
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 
 import co.edu.unbosque.TransMilenio.entity.Analista;
 
-/**
- * Repositorio del analista. Guarda los registros en una lista en memoria (los datos se pierden al reiniciar
- * la aplicacion). Aqui es donde se conecta la base de datos: solo hay que cambiar el cuerpo de sus metodos,
- * el resto del back no cambia.
- *
- * <p>Esta entidad no genera su propio id: la llave es el id del usuario, que lo envia quien crea el
- * registro.
- */
 public class AnalistaRepository {
 
-	/**
-	 * Lista en memoria donde se guardan los registros.
-	 */
-	private ArrayList<Analista> lista = new ArrayList<>();
+	private JdbcTemplate jdbc;
 
-	/**
-	 * Guarda el registro. Si ya existe uno con el mismo id de usuario lo reemplaza; si no, lo agrega.
-	 *
-	 * @param analista el analista a guardar
-	 * @return el registro guardado
-	 */
+	private RowMapper<Analista> convertir = (fila, numero) -> {
+		Analista analista = new Analista();
+		analista.setIdUsuario(fila.getLong("ID_USUARIO"));
+		analista.setAreaAnalisis(fila.getString("AREA_ANALISIS"));
+		return analista;
+	};
+
+	public AnalistaRepository(JdbcTemplate jdbc) {
+		this.jdbc = jdbc;
+	}
+
 	public Analista guardar(Analista analista) {
-		for (int i = 0; i < lista.size(); i++) {
-			if (lista.get(i).getIdUsuario().equals(analista.getIdUsuario())) {
-				lista.set(i, analista);
-				return analista;
-			}
+		if (existe(analista.getIdUsuario())) {
+			jdbc.update("UPDATE ANALISTA SET AREA_ANALISIS = ? WHERE ID_USUARIO = ?",
+					analista.getAreaAnalisis(), analista.getIdUsuario());
+		} else {
+			jdbc.update("INSERT INTO ANALISTA (ID_USUARIO, AREA_ANALISIS) VALUES (?, ?)",
+					analista.getIdUsuario(), analista.getAreaAnalisis());
 		}
-		lista.add(analista);
 		return analista;
 	}
 
-	/**
-	 * Busca un analista por su identificador (el id del usuario).
-	 *
-	 * @param id el identificador a buscar
-	 * @return el registro encontrado, o null si no existe
-	 */
 	public Analista buscarPorId(Long id) {
-		for (Analista analista : lista) {
-			if (analista.getIdUsuario().equals(id)) {
-				return analista;
-			}
+		List<Analista> lista = jdbc.query("SELECT * FROM ANALISTA WHERE ID_USUARIO = ?", convertir, id);
+		if (lista.isEmpty()) {
+			return null;
 		}
-		return null;
+		return lista.get(0);
 	}
 
-	/**
-	 * Obtiene todos los registros.
-	 *
-	 * @return una copia de la lista de registros
-	 */
 	public List<Analista> listar() {
-		return new ArrayList<>(lista);
+		return jdbc.query("SELECT * FROM ANALISTA ORDER BY ID_USUARIO", convertir);
 	}
 
-	/**
-	 * Elimina un analista por su identificador.
-	 *
-	 * @param id el identificador del registro a eliminar
-	 * @return true si se elimino, false si no existia
-	 */
 	public boolean eliminar(Long id) {
-		Analista analista = buscarPorId(id);
-		if (analista == null)
-			return false;
-		lista.remove(analista);
-		return true;
+		return jdbc.update("DELETE FROM ANALISTA WHERE ID_USUARIO = ?", id) > 0;
 	}
 
-	/**
-	 * Indica si existe un registro con ese identificador.
-	 *
-	 * @param id el identificador a comprobar
-	 * @return true si existe, false si no
-	 */
 	public boolean existe(Long id) {
 		return buscarPorId(id) != null;
 	}
 
-	/**
-	 * Cuenta los registros guardados.
-	 *
-	 * @return la cantidad de registros
-	 */
 	public long contar() {
-		return lista.size();
+		Long total = jdbc.queryForObject("SELECT COUNT(*) FROM ANALISTA", Long.class);
+		return total;
 	}
 }

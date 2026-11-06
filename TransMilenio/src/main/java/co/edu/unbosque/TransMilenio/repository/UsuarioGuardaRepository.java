@@ -1,96 +1,61 @@
 package co.edu.unbosque.TransMilenio.repository;
 
-import java.util.ArrayList;
 import java.util.List;
+
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 
 import co.edu.unbosque.TransMilenio.entity.UsuarioGuarda;
 
-/**
- * Repositorio de la activacion de guarda. Guarda los registros en una lista en memoria (los datos se
- * pierden al reiniciar la aplicacion). Aqui es donde se conecta la base de datos: solo hay que cambiar el
- * cuerpo de sus metodos, el resto del back no cambia.
- *
- * <p>Esta entidad no genera su propio id: la llave es el id del usuario, que lo envia quien crea el
- * registro.
- */
 public class UsuarioGuardaRepository {
 
-	/**
-	 * Lista en memoria donde se guardan los registros.
-	 */
-	private ArrayList<UsuarioGuarda> lista = new ArrayList<>();
+	private JdbcTemplate jdbc;
 
-	/**
-	 * Guarda el registro. Si ya existe uno con el mismo id de usuario lo reemplaza; si no, lo agrega.
-	 *
-	 * @param usuarioGuarda la activacion de guarda a guardar
-	 * @return el registro guardado
-	 */
+	private RowMapper<UsuarioGuarda> convertir = (fila, numero) -> {
+		UsuarioGuarda usuarioGuarda = new UsuarioGuarda();
+		usuarioGuarda.setIdUsuario(fila.getLong("ID_USUARIO"));
+		usuarioGuarda.setFechaActivacion(fila.getDate("FECHA_ACTIVACION").toLocalDate());
+		usuarioGuarda.setIdGuarda(fila.getLong("ID_GUARDA"));
+		return usuarioGuarda;
+	};
+
+	public UsuarioGuardaRepository(JdbcTemplate jdbc) {
+		this.jdbc = jdbc;
+	}
+
 	public UsuarioGuarda guardar(UsuarioGuarda usuarioGuarda) {
-		for (int i = 0; i < lista.size(); i++) {
-			if (lista.get(i).getIdUsuario().equals(usuarioGuarda.getIdUsuario())) {
-				lista.set(i, usuarioGuarda);
-				return usuarioGuarda;
-			}
+		if (existe(usuarioGuarda.getIdUsuario())) {
+			jdbc.update("UPDATE USUARIO_GUARDA SET FECHA_ACTIVACION = ?, ID_GUARDA = ? WHERE ID_USUARIO = ?",
+					usuarioGuarda.getFechaActivacion(), usuarioGuarda.getIdGuarda(), usuarioGuarda.getIdUsuario());
+		} else {
+			jdbc.update("INSERT INTO USUARIO_GUARDA (ID_USUARIO, FECHA_ACTIVACION, ID_GUARDA) VALUES (?, ?, ?)",
+					usuarioGuarda.getIdUsuario(), usuarioGuarda.getFechaActivacion(), usuarioGuarda.getIdGuarda());
 		}
-		lista.add(usuarioGuarda);
 		return usuarioGuarda;
 	}
 
-	/**
-	 * Busca una activacion de guarda por su identificador (el id del usuario).
-	 *
-	 * @param id el identificador a buscar
-	 * @return el registro encontrado, o null si no existe
-	 */
 	public UsuarioGuarda buscarPorId(Long id) {
-		for (UsuarioGuarda usuarioGuarda : lista) {
-			if (usuarioGuarda.getIdUsuario().equals(id)) {
-				return usuarioGuarda;
-			}
+		List<UsuarioGuarda> lista = jdbc.query("SELECT * FROM USUARIO_GUARDA WHERE ID_USUARIO = ?", convertir, id);
+		if (lista.isEmpty()) {
+			return null;
 		}
-		return null;
+		return lista.get(0);
 	}
 
-	/**
-	 * Obtiene todos los registros.
-	 *
-	 * @return una copia de la lista de registros
-	 */
 	public List<UsuarioGuarda> listar() {
-		return new ArrayList<>(lista);
+		return jdbc.query("SELECT * FROM USUARIO_GUARDA ORDER BY ID_USUARIO", convertir);
 	}
 
-	/**
-	 * Elimina una activacion de guarda por su identificador.
-	 *
-	 * @param id el identificador del registro a eliminar
-	 * @return true si se elimino, false si no existia
-	 */
 	public boolean eliminar(Long id) {
-		UsuarioGuarda usuarioGuarda = buscarPorId(id);
-		if (usuarioGuarda == null)
-			return false;
-		lista.remove(usuarioGuarda);
-		return true;
+		return jdbc.update("DELETE FROM USUARIO_GUARDA WHERE ID_USUARIO = ?", id) > 0;
 	}
 
-	/**
-	 * Indica si existe un registro con ese identificador.
-	 *
-	 * @param id el identificador a comprobar
-	 * @return true si existe, false si no
-	 */
 	public boolean existe(Long id) {
 		return buscarPorId(id) != null;
 	}
 
-	/**
-	 * Cuenta los registros guardados.
-	 *
-	 * @return la cantidad de registros
-	 */
 	public long contar() {
-		return lista.size();
+		Long total = jdbc.queryForObject("SELECT COUNT(*) FROM USUARIO_GUARDA", Long.class);
+		return total;
 	}
 }

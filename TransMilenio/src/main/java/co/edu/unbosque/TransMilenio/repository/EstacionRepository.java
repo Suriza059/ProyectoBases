@@ -1,106 +1,62 @@
 package co.edu.unbosque.TransMilenio.repository;
 
-import java.util.ArrayList;
 import java.util.List;
+
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 
 import co.edu.unbosque.TransMilenio.entity.Estacion;
 
-/**
- * Repositorio de la estacion. Guarda los registros en una lista en memoria (los datos se pierden al
- * reiniciar la aplicacion). Aqui es donde se conecta la base de datos: solo hay que cambiar el cuerpo de
- * sus metodos, el resto del back no cambia.
- *
- * <p>Los ids se asignan con un contador (siguienteId), empezando en 1.
- */
 public class EstacionRepository {
 
-	/**
-	 * Lista en memoria donde se guardan los registros.
-	 */
-	private ArrayList<Estacion> lista = new ArrayList<>();
-	/**
-	 * Siguiente id que se asignara a un registro nuevo.
-	 */
-	private long siguienteId = 1;
+	private JdbcTemplate jdbc;
 
-	/**
-	 * Guarda el registro. Si no tiene id, le asigna uno nuevo y lo agrega; si ya tiene id, reemplaza el
-	 * registro existente.
-	 *
-	 * @param estacion la estacion a guardar
-	 * @return el registro guardado
-	 */
+	private RowMapper<Estacion> convertir = (fila, numero) -> {
+		Estacion estacion = new Estacion();
+		estacion.setId(fila.getLong("ID_ESTACION"));
+		estacion.setNombre(fila.getString("NOMBRE"));
+		estacion.setActiva(fila.getString("ACTIVA"));
+		estacion.setIdTroncal(fila.getLong("ID_TRONCAL"));
+		return estacion;
+	};
+
+	public EstacionRepository(JdbcTemplate jdbc) {
+		this.jdbc = jdbc;
+	}
+
 	public Estacion guardar(Estacion estacion) {
 		if (estacion.getId() == null) {
-			estacion.setId(siguienteId);
-			siguienteId++;
-			lista.add(estacion);
-			return estacion;
+			jdbc.update("INSERT INTO ESTACION (ID_ESTACION, NOMBRE, ACTIVA, ID_TRONCAL) VALUES (SEQ_ESTACION.NEXTVAL, ?, ?, ?)",
+					estacion.getNombre(), estacion.getActiva(), estacion.getIdTroncal());
+		} else {
+			jdbc.update("UPDATE ESTACION SET NOMBRE = ?, ACTIVA = ?, ID_TRONCAL = ? WHERE ID_ESTACION = ?",
+					estacion.getNombre(), estacion.getActiva(), estacion.getIdTroncal(), estacion.getId());
 		}
-		for (int i = 0; i < lista.size(); i++) {
-			if (lista.get(i).getId().equals(estacion.getId())) {
-				lista.set(i, estacion);
-				return estacion;
-			}
-		}
-		lista.add(estacion);
 		return estacion;
 	}
 
-	/**
-	 * Busca una estacion por su identificador.
-	 *
-	 * @param id el identificador a buscar
-	 * @return el registro encontrado, o null si no existe
-	 */
 	public Estacion buscarPorId(Long id) {
-		for (Estacion estacion : lista) {
-			if (estacion.getId().equals(id)) {
-				return estacion;
-			}
+		List<Estacion> lista = jdbc.query("SELECT * FROM ESTACION WHERE ID_ESTACION = ?", convertir, id);
+		if (lista.isEmpty()) {
+			return null;
 		}
-		return null;
+		return lista.get(0);
 	}
 
-	/**
-	 * Obtiene todos los registros.
-	 *
-	 * @return una copia de la lista de registros
-	 */
 	public List<Estacion> listar() {
-		return new ArrayList<>(lista);
+		return jdbc.query("SELECT * FROM ESTACION ORDER BY ID_ESTACION", convertir);
 	}
 
-	/**
-	 * Elimina una estacion por su identificador.
-	 *
-	 * @param id el identificador del registro a eliminar
-	 * @return true si se elimino, false si no existia
-	 */
 	public boolean eliminar(Long id) {
-		Estacion estacion = buscarPorId(id);
-		if (estacion == null)
-			return false;
-		lista.remove(estacion);
-		return true;
+		return jdbc.update("DELETE FROM ESTACION WHERE ID_ESTACION = ?", id) > 0;
 	}
 
-	/**
-	 * Indica si existe un registro con ese identificador.
-	 *
-	 * @param id el identificador a comprobar
-	 * @return true si existe, false si no
-	 */
 	public boolean existe(Long id) {
 		return buscarPorId(id) != null;
 	}
 
-	/**
-	 * Cuenta los registros guardados.
-	 *
-	 * @return la cantidad de registros
-	 */
 	public long contar() {
-		return lista.size();
+		Long total = jdbc.queryForObject("SELECT COUNT(*) FROM ESTACION", Long.class);
+		return total;
 	}
 }
