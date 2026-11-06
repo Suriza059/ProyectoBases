@@ -1,6 +1,6 @@
 package co.edu.unbosque.TransMilenio.controller;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.format.annotation.DateTimeFormat;
@@ -51,7 +51,7 @@ public class AgresionController {
 	 */
 	@PostMapping("/crear")
 	public ResponseEntity<String> crear(
-			@RequestParam(name = "fecha", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fecha,
+			@RequestParam(name = "fecha", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDateTime fecha,
 			@RequestParam(name = "gravedad", required = false) String gravedad,
 			@RequestParam(name = "descripcion", required = false) String descripcion,
 			@RequestParam(name = "idEvento", required = false) Long idEvento,
@@ -94,7 +94,7 @@ public class AgresionController {
 	@PutMapping("/actualizar/{id}")
 	public ResponseEntity<String> actualizar(
 			@PathVariable Long id,
-			@RequestParam(name = "fecha", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fecha,
+			@RequestParam(name = "fecha", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDateTime fecha,
 			@RequestParam(name = "gravedad", required = false) String gravedad,
 			@RequestParam(name = "descripcion", required = false) String descripcion,
 			@RequestParam(name = "idEvento", required = false) Long idEvento,

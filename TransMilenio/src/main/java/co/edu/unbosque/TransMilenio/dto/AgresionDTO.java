@@ -1,6 +1,6 @@
 package co.edu.unbosque.TransMilenio.dto;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 /**
@@ -16,7 +16,7 @@ public class AgresionDTO {
 	/**
 	 * La fecha de la agresion.
 	 */
-	private LocalDate fecha;
+	private LocalDateTime fecha;
 	/**
 	 * La gravedad de la agresion.
 	 */
@@ -49,7 +49,7 @@ public class AgresionDTO {
 	 * @param idEvento el identificador del evento en el que ocurrio la agresion (llave foranea)
 	 * @param idGuarda el identificador del guarda involucrado en la agresion (llave foranea)
 	 */
-	public AgresionDTO(LocalDate fecha, String gravedad, String descripcion, Long idEvento, Long idGuarda) {
+	public AgresionDTO(LocalDateTime fecha, String gravedad, String descripcion, Long idEvento, Long idGuarda) {
 		super();
 		this.fecha = fecha;
 		this.gravedad = gravedad;
@@ -81,7 +81,7 @@ public class AgresionDTO {
 	 *
 	 * @return la fecha de la agresion
 	 */
-	public LocalDate getFecha() {
+	public LocalDateTime getFecha() {
 		return fecha;
 	}
 
@@ -90,7 +90,7 @@ public class AgresionDTO {
 	 *
 	 * @param fecha la fecha de la agresion
 	 */
-	public void setFecha(LocalDate fecha) {
+	public void setFecha(LocalDateTime fecha) {
 		this.fecha = fecha;
 	}
 
