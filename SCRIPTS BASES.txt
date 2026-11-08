@@ -1,0 +1,1157 @@
+--------------------------------------------------------
+-- Archivo creado  - sábado-noviembre-07-2026   
+--------------------------------------------------------
+--------------------------------------------------------
+--  DDL for Sequence SEQ_AGRESION
+--------------------------------------------------------
+
+   CREATE SEQUENCE  "SEQ_AGRESION"  MINVALUE 1 MAXVALUE 9999999999999999999999999999 INCREMENT BY 1 START WITH 4 NOCACHE  NOORDER  NOCYCLE  NOKEEP  NOSCALE  GLOBAL ;
+--------------------------------------------------------
+--  DDL for Sequence SEQ_COMPARENDO
+--------------------------------------------------------
+
+   CREATE SEQUENCE  "SEQ_COMPARENDO"  MINVALUE 1 MAXVALUE 9999999999999999999999999999 INCREMENT BY 1 START WITH 3 NOCACHE  NOORDER  NOCYCLE  NOKEEP  NOSCALE  GLOBAL ;
+--------------------------------------------------------
+--  DDL for Sequence SEQ_ESTACION
+--------------------------------------------------------
+
+   CREATE SEQUENCE  "SEQ_ESTACION"  MINVALUE 1 MAXVALUE 9999999999999999999999999999 INCREMENT BY 1 START WITH 153 NOCACHE  NOORDER  NOCYCLE  NOKEEP  NOSCALE  GLOBAL ;
+--------------------------------------------------------
+--  DDL for Sequence SEQ_EVENTO
+--------------------------------------------------------
+
+   CREATE SEQUENCE  "SEQ_EVENTO"  MINVALUE 1 MAXVALUE 9999999999999999999999999999 INCREMENT BY 1 START WITH 7 NOCACHE  NOORDER  NOCYCLE  NOKEEP  NOSCALE  GLOBAL ;
+--------------------------------------------------------
+--  DDL for Sequence SEQ_EVENTO_INFRACTOR
+--------------------------------------------------------
+
+   CREATE SEQUENCE  "SEQ_EVENTO_INFRACTOR"  MINVALUE 1 MAXVALUE 9999999999999999999999999999 INCREMENT BY 1 START WITH 5 NOCACHE  NOORDER  NOCYCLE  NOKEEP  NOSCALE  GLOBAL ;
+--------------------------------------------------------
+--  DDL for Sequence SEQ_GUARDA
+--------------------------------------------------------
+
+   CREATE SEQUENCE  "SEQ_GUARDA"  MINVALUE 1 MAXVALUE 9999999999999999999999999999 INCREMENT BY 1 START WITH 7 NOCACHE  NOORDER  NOCYCLE  NOKEEP  NOSCALE  GLOBAL ;
+--------------------------------------------------------
+--  DDL for Sequence SEQ_INFRACTOR
+--------------------------------------------------------
+
+   CREATE SEQUENCE  "SEQ_INFRACTOR"  MINVALUE 1 MAXVALUE 9999999999999999999999999999 INCREMENT BY 1 START WITH 5 NOCACHE  NOORDER  NOCYCLE  NOKEEP  NOSCALE  GLOBAL ;
+--------------------------------------------------------
+--  DDL for Sequence SEQ_MODALIDAD
+--------------------------------------------------------
+
+   CREATE SEQUENCE  "SEQ_MODALIDAD"  MINVALUE 1 MAXVALUE 9999999999999999999999999999 INCREMENT BY 1 START WITH 3 NOCACHE  NOORDER  NOCYCLE  NOKEEP  NOSCALE  GLOBAL ;
+--------------------------------------------------------
+--  DDL for Sequence SEQ_PAGO
+--------------------------------------------------------
+
+   CREATE SEQUENCE  "SEQ_PAGO"  MINVALUE 1 MAXVALUE 9999999999999999999999999999 INCREMENT BY 1 START WITH 1 NOCACHE  NOORDER  NOCYCLE  NOKEEP  NOSCALE  GLOBAL ;
+--------------------------------------------------------
+--  DDL for Sequence SEQ_REGISTRO_CAMBIOS
+--------------------------------------------------------
+
+   CREATE SEQUENCE  "SEQ_REGISTRO_CAMBIOS"  MINVALUE 1 MAXVALUE 9999999999999999999999999999 INCREMENT BY 1 START WITH 3 NOCACHE  NOORDER  NOCYCLE  NOKEEP  NOSCALE  GLOBAL ;
+--------------------------------------------------------
+--  DDL for Sequence SEQ_TARIFA
+--------------------------------------------------------
+
+   CREATE SEQUENCE  "SEQ_TARIFA"  MINVALUE 1 MAXVALUE 9999999999999999999999999999 INCREMENT BY 1 START WITH 4 NOCACHE  NOORDER  NOCYCLE  NOKEEP  NOSCALE  GLOBAL ;
+--------------------------------------------------------
+--  DDL for Sequence SEQ_TRONCAL
+--------------------------------------------------------
+
+   CREATE SEQUENCE  "SEQ_TRONCAL"  MINVALUE 1 MAXVALUE 9999999999999999999999999999 INCREMENT BY 1 START WITH 18 NOCACHE  NOORDER  NOCYCLE  NOKEEP  NOSCALE  GLOBAL ;
+--------------------------------------------------------
+--  DDL for Sequence SEQ_USUARIO
+--------------------------------------------------------
+
+   CREATE SEQUENCE  "SEQ_USUARIO"  MINVALUE 1 MAXVALUE 9999999999999999999999999999 INCREMENT BY 1 START WITH 10 NOCACHE  NOORDER  NOCYCLE  NOKEEP  NOSCALE  GLOBAL ;
+--------------------------------------------------------
+--  DDL for Table ADMINISTRADOR
+--------------------------------------------------------
+
+  CREATE TABLE "ADMINISTRADOR" 
+   (	"ID_USUARIO" NUMBER(5,0), 
+	"AREA_GESTION" VARCHAR2(60 BYTE), 
+	"FECHA_GESTION" DATE
+   ) SEGMENT CREATION IMMEDIATE 
+  PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 
+ NOCOMPRESS LOGGING
+  TABLESPACE "USERS" ;
+--------------------------------------------------------
+--  DDL for Table AGRESION
+--------------------------------------------------------
+
+  CREATE TABLE "AGRESION" 
+   (	"ID_AGRESION" NUMBER(5,0), 
+	"FECHA" TIMESTAMP (6), 
+	"GRAVEDAD" VARCHAR2(20 BYTE), 
+	"DESCRIPCION" VARCHAR2(300 BYTE), 
+	"ID_EVENTO" NUMBER(5,0), 
+	"ID_GUARDA" NUMBER(5,0)
+   ) SEGMENT CREATION IMMEDIATE 
+  PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 
+ NOCOMPRESS LOGGING
+  TABLESPACE "USERS" ;
+--------------------------------------------------------
+--  DDL for Table ANALISTA
+--------------------------------------------------------
+
+  CREATE TABLE "ANALISTA" 
+   (	"ID_USUARIO" NUMBER(5,0), 
+	"AREA_ANALISIS" VARCHAR2(60 BYTE)
+   ) SEGMENT CREATION IMMEDIATE 
+  PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 
+ NOCOMPRESS LOGGING
+  TABLESPACE "USERS" ;
+--------------------------------------------------------
+--  DDL for Table COMPARENDO
+--------------------------------------------------------
+
+  CREATE TABLE "COMPARENDO" 
+   (	"ID_COMPARENDO" NUMBER(5,0), 
+	"FECHA" DATE, 
+	"VALOR" NUMBER(12,2), 
+	"ESTADO" VARCHAR2(15 BYTE) DEFAULT 'Pendiente', 
+	"ID_EVENTO_INFRACTOR" NUMBER(5,0)
+   ) SEGMENT CREATION IMMEDIATE 
+  PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 
+ NOCOMPRESS LOGGING
+  TABLESPACE "USERS" ;
+--------------------------------------------------------
+--  DDL for Table ESTACION
+--------------------------------------------------------
+
+  CREATE TABLE "ESTACION" 
+   (	"ID_ESTACION" NUMBER(5,0), 
+	"NOMBRE" VARCHAR2(80 BYTE), 
+	"ACTIVA" CHAR(2 BYTE) DEFAULT 'Si', 
+	"ID_TRONCAL" NUMBER(5,0)
+   ) SEGMENT CREATION IMMEDIATE 
+  PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 
+ NOCOMPRESS LOGGING
+  TABLESPACE "USERS" ;
+--------------------------------------------------------
+--  DDL for Table EVENTO
+--------------------------------------------------------
+
+  CREATE TABLE "EVENTO" 
+   (	"ID_EVENTO" NUMBER(5,0), 
+	"FECHA" TIMESTAMP (6), 
+	"NUMERO_PERSONAS" NUMBER(4,0), 
+	"ID_ESTACION" NUMBER(5,0), 
+	"ID_TARIFA" NUMBER(5,0), 
+	"ID_MODALIDAD" NUMBER(5,0), 
+	"ID_GUARDA" NUMBER(5,0), 
+	"HORA" VARCHAR2(8 BYTE)
+   ) SEGMENT CREATION IMMEDIATE 
+  PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 
+ NOCOMPRESS LOGGING
+  TABLESPACE "USERS" ;
+--------------------------------------------------------
+--  DDL for Table EVENTO_INFRACTOR
+--------------------------------------------------------
+
+  CREATE TABLE "EVENTO_INFRACTOR" 
+   (	"ID_EVENTO_INFRACTOR" NUMBER(5,0), 
+	"ID_EVENTO" NUMBER(5,0), 
+	"ID_INFRACTOR" NUMBER(5,0)
+   ) SEGMENT CREATION IMMEDIATE 
+  PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 
+ NOCOMPRESS LOGGING
+  TABLESPACE "USERS" ;
+--------------------------------------------------------
+--  DDL for Table GUARDA
+--------------------------------------------------------
+
+  CREATE TABLE "GUARDA" 
+   (	"ID_GUARDA" NUMBER(5,0), 
+	"TURNO" VARCHAR2(20 BYTE), 
+	"NOMBRE" VARCHAR2(60 BYTE), 
+	"APELLIDO" VARCHAR2(60 BYTE), 
+	"ACTIVO" CHAR(2 BYTE) DEFAULT 'Si', 
+	"CARGO" VARCHAR2(20 BYTE), 
+	"ID_ESTACION" NUMBER(5,0), 
+	"ID_SUPERVISOR" NUMBER(5,0)
+   ) SEGMENT CREATION IMMEDIATE 
+  PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 
+ NOCOMPRESS LOGGING
+  TABLESPACE "USERS" ;
+--------------------------------------------------------
+--  DDL for Table INFRACTOR
+--------------------------------------------------------
+
+  CREATE TABLE "INFRACTOR" 
+   (	"ID_INFRACTOR" NUMBER(5,0), 
+	"TIPO_DOCUMENTO" VARCHAR2(5 BYTE), 
+	"NUMERO_DOCUMENTO" VARCHAR2(20 BYTE), 
+	"NOMBRE" VARCHAR2(60 BYTE), 
+	"APELLIDO" VARCHAR2(60 BYTE)
+   ) SEGMENT CREATION IMMEDIATE 
+  PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 
+ NOCOMPRESS LOGGING
+  TABLESPACE "USERS" ;
+--------------------------------------------------------
+--  DDL for Table MODALIDAD
+--------------------------------------------------------
+
+  CREATE TABLE "MODALIDAD" 
+   (	"ID_MODALIDAD" NUMBER(5,0), 
+	"NOMBRE" VARCHAR2(60 BYTE)
+   ) SEGMENT CREATION IMMEDIATE 
+  PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 
+ NOCOMPRESS LOGGING
+  TABLESPACE "USERS" ;
+--------------------------------------------------------
+--  DDL for Table PAGO
+--------------------------------------------------------
+
+  CREATE TABLE "PAGO" 
+   (	"ID_PAGO" NUMBER(5,0), 
+	"VALOR" NUMBER(12,2), 
+	"NUMERO_RECIBO" VARCHAR2(30 BYTE), 
+	"FECHA" DATE, 
+	"ID_COMPARENDO" NUMBER(5,0)
+   ) SEGMENT CREATION IMMEDIATE 
+  PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 
+ NOCOMPRESS LOGGING
+  TABLESPACE "USERS" ;
+--------------------------------------------------------
+--  DDL for Table REGISTRO_CAMBIOS
+--------------------------------------------------------
+
+  CREATE TABLE "REGISTRO_CAMBIOS" 
+   (	"ID_REGISTROCAMBIOS" NUMBER(5,0), 
+	"FECHA" TIMESTAMP (6) DEFAULT SYSTIMESTAMP, 
+	"CAMPO_MODIFICADO" VARCHAR2(50 BYTE), 
+	"VALOR_ANTERIOR" VARCHAR2(200 BYTE), 
+	"VALOR_NUEVO" VARCHAR2(200 BYTE), 
+	"ID_USUARIO" NUMBER(5,0), 
+	"ID_COMPARENDO" NUMBER(5,0)
+   ) SEGMENT CREATION IMMEDIATE 
+  PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 
+ NOCOMPRESS LOGGING
+  TABLESPACE "USERS" ;
+--------------------------------------------------------
+--  DDL for Table TARIFA
+--------------------------------------------------------
+
+  CREATE TABLE "TARIFA" 
+   (	"ID_TARIFA" NUMBER(5,0), 
+	"FECHA_INICIO" DATE, 
+	"FECHA_FIN" DATE, 
+	"VALOR" NUMBER(10,2)
+   ) SEGMENT CREATION IMMEDIATE 
+  PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 
+ NOCOMPRESS LOGGING
+  TABLESPACE "USERS" ;
+--------------------------------------------------------
+--  DDL for Table TRONCAL
+--------------------------------------------------------
+
+  CREATE TABLE "TRONCAL" 
+   (	"ID_TRONCAL" NUMBER(5,0), 
+	"NOMBRE" VARCHAR2(60 BYTE)
+   ) SEGMENT CREATION IMMEDIATE 
+  PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 
+ NOCOMPRESS LOGGING
+  TABLESPACE "USERS" ;
+--------------------------------------------------------
+--  DDL for Table USUARIO
+--------------------------------------------------------
+
+  CREATE TABLE "USUARIO" 
+   (	"ID_USUARIO" NUMBER(5,0), 
+	"ROL" VARCHAR2(20 BYTE), 
+	"NOMBRE_USUARIO" VARCHAR2(60 BYTE), 
+	"CONTRASENA" VARCHAR2(200 BYTE)
+   ) SEGMENT CREATION IMMEDIATE 
+  PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 
+ NOCOMPRESS LOGGING
+  TABLESPACE "USERS" ;
+--------------------------------------------------------
+--  DDL for Table USUARIO_GUARDA
+--------------------------------------------------------
+
+  CREATE TABLE "USUARIO_GUARDA" 
+   (	"ID_USUARIO" NUMBER(5,0), 
+	"FECHA_ACTIVACION" DATE, 
+	"ID_GUARDA" NUMBER(5,0)
+   ) SEGMENT CREATION IMMEDIATE 
+  PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 
+ NOCOMPRESS LOGGING
+  TABLESPACE "USERS" ;
+REM INSERTING into ADMINISTRADOR
+SET DEFINE OFF;
+REM INSERTING into AGRESION
+SET DEFINE OFF;
+Insert into AGRESION (ID_AGRESION,FECHA,GRAVEDAD,DESCRIPCION,ID_EVENTO,ID_GUARDA) values ('2',to_timestamp('04/11/26 08:07:00,000000000 PM','DD/MM/RR HH12:MI:SSXFF AM'),'Moderada','agresion verbal','2','3');
+Insert into AGRESION (ID_AGRESION,FECHA,GRAVEDAD,DESCRIPCION,ID_EVENTO,ID_GUARDA) values ('3',to_timestamp('05/11/26 10:33:00,000000000 PM','DD/MM/RR HH12:MI:SSXFF AM'),'Leve','Agresion verbal a guarda','6','5');
+REM INSERTING into ANALISTA
+SET DEFINE OFF;
+REM INSERTING into COMPARENDO
+SET DEFINE OFF;
+Insert into COMPARENDO (ID_COMPARENDO,FECHA,VALOR,ESTADO,ID_EVENTO_INFRACTOR) values ('2',to_date('05/11/26','DD/MM/RR'),'665800','Anulado','2');
+Insert into COMPARENDO (ID_COMPARENDO,FECHA,VALOR,ESTADO,ID_EVENTO_INFRACTOR) values ('1',to_date('03/11/26','DD/MM/RR'),'660000','Anulado','3');
+REM INSERTING into ESTACION
+SET DEFINE OFF;
+Insert into ESTACION (ID_ESTACION,NOMBRE,ACTIVA,ID_TRONCAL) values ('152','El Bosque','No','2');
+Insert into ESTACION (ID_ESTACION,NOMBRE,ACTIVA,ID_TRONCAL) values ('1','Calle 76 - San Felipe','Si','1');
+Insert into ESTACION (ID_ESTACION,NOMBRE,ACTIVA,ID_TRONCAL) values ('2','Calle 72','Si','1');
+Insert into ESTACION (ID_ESTACION,NOMBRE,ACTIVA,ID_TRONCAL) values ('3','Flores','Si','1');
+Insert into ESTACION (ID_ESTACION,NOMBRE,ACTIVA,ID_TRONCAL) values ('4','Calle 63','Si','1');
+Insert into ESTACION (ID_ESTACION,NOMBRE,ACTIVA,ID_TRONCAL) values ('5','Lourdes','Si','1');
+Insert into ESTACION (ID_ESTACION,NOMBRE,ACTIVA,ID_TRONCAL) values ('6','Calle 57','Si','1');
+Insert into ESTACION (ID_ESTACION,NOMBRE,ACTIVA,ID_TRONCAL) values ('7','Marly','Si','1');
+Insert into ESTACION (ID_ESTACION,NOMBRE,ACTIVA,ID_TRONCAL) values ('8','Calle 45','Si','1');
+Insert into ESTACION (ID_ESTACION,NOMBRE,ACTIVA,ID_TRONCAL) values ('9','Avenida 39','Si','1');
+Insert into ESTACION (ID_ESTACION,NOMBRE,ACTIVA,ID_TRONCAL) values ('10','Calle 34','Si','1');
+Insert into ESTACION (ID_ESTACION,NOMBRE,ACTIVA,ID_TRONCAL) values ('11','Calle 26','Si','1');
+Insert into ESTACION (ID_ESTACION,NOMBRE,ACTIVA,ID_TRONCAL) values ('12','Calle 22','Si','1');
+Insert into ESTACION (ID_ESTACION,NOMBRE,ACTIVA,ID_TRONCAL) values ('13','Calle 19','Si','1');
+Insert into ESTACION (ID_ESTACION,NOMBRE,ACTIVA,ID_TRONCAL) values ('14','Avenida Jiménez','Si','1');
+Insert into ESTACION (ID_ESTACION,NOMBRE,ACTIVA,ID_TRONCAL) values ('15','Portal del Norte','Si','2');
+Insert into ESTACION (ID_ESTACION,NOMBRE,ACTIVA,ID_TRONCAL) values ('16','Terminal','Si','2');
+Insert into ESTACION (ID_ESTACION,NOMBRE,ACTIVA,ID_TRONCAL) values ('17','Calle 187','Si','2');
+Insert into ESTACION (ID_ESTACION,NOMBRE,ACTIVA,ID_TRONCAL) values ('18','Toberín','Si','2');
+Insert into ESTACION (ID_ESTACION,NOMBRE,ACTIVA,ID_TRONCAL) values ('19','Calle 146','Si','2');
+Insert into ESTACION (ID_ESTACION,NOMBRE,ACTIVA,ID_TRONCAL) values ('20','Calle 142','Si','2');
+Insert into ESTACION (ID_ESTACION,NOMBRE,ACTIVA,ID_TRONCAL) values ('21','Alcalá','Si','2');
+Insert into ESTACION (ID_ESTACION,NOMBRE,ACTIVA,ID_TRONCAL) values ('22','Prado','Si','2');
+Insert into ESTACION (ID_ESTACION,NOMBRE,ACTIVA,ID_TRONCAL) values ('23','Calle 127','Si','2');
+Insert into ESTACION (ID_ESTACION,NOMBRE,ACTIVA,ID_TRONCAL) values ('24','Pepe Sierra','Si','2');
+Insert into ESTACION (ID_ESTACION,NOMBRE,ACTIVA,ID_TRONCAL) values ('25','Calle 106','Si','2');
+Insert into ESTACION (ID_ESTACION,NOMBRE,ACTIVA,ID_TRONCAL) values ('26','Calle 100','Si','2');
+Insert into ESTACION (ID_ESTACION,NOMBRE,ACTIVA,ID_TRONCAL) values ('27','Virrey','Si','2');
+Insert into ESTACION (ID_ESTACION,NOMBRE,ACTIVA,ID_TRONCAL) values ('28','Calle 85','Si','2');
+Insert into ESTACION (ID_ESTACION,NOMBRE,ACTIVA,ID_TRONCAL) values ('29','Héroes','Si','2');
+Insert into ESTACION (ID_ESTACION,NOMBRE,ACTIVA,ID_TRONCAL) values ('30','Portal Suba','Si','3');
+Insert into ESTACION (ID_ESTACION,NOMBRE,ACTIVA,ID_TRONCAL) values ('31','La Campiña','Si','3');
+Insert into ESTACION (ID_ESTACION,NOMBRE,ACTIVA,ID_TRONCAL) values ('32','Suba - Transversal 91','Si','3');
+Insert into ESTACION (ID_ESTACION,NOMBRE,ACTIVA,ID_TRONCAL) values ('33','21 Ángeles','Si','3');
+Insert into ESTACION (ID_ESTACION,NOMBRE,ACTIVA,ID_TRONCAL) values ('34','Gratamira','Si','3');
+Insert into ESTACION (ID_ESTACION,NOMBRE,ACTIVA,ID_TRONCAL) values ('35','Suba - Avenida Boyacá','Si','3');
+Insert into ESTACION (ID_ESTACION,NOMBRE,ACTIVA,ID_TRONCAL) values ('36','Niza - Calle 127','Si','3');
+Insert into ESTACION (ID_ESTACION,NOMBRE,ACTIVA,ID_TRONCAL) values ('37','Humedal Córdoba','Si','3');
+Insert into ESTACION (ID_ESTACION,NOMBRE,ACTIVA,ID_TRONCAL) values ('38','Shaio','Si','3');
+Insert into ESTACION (ID_ESTACION,NOMBRE,ACTIVA,ID_TRONCAL) values ('39','Puentelargo','Si','3');
+Insert into ESTACION (ID_ESTACION,NOMBRE,ACTIVA,ID_TRONCAL) values ('40','Suba - Calle 100','Si','3');
+Insert into ESTACION (ID_ESTACION,NOMBRE,ACTIVA,ID_TRONCAL) values ('41','Suba - Calle 95','Si','3');
+Insert into ESTACION (ID_ESTACION,NOMBRE,ACTIVA,ID_TRONCAL) values ('42','San Martín','Si','3');
+Insert into ESTACION (ID_ESTACION,NOMBRE,ACTIVA,ID_TRONCAL) values ('43','Portal de la 80','Si','4');
+Insert into ESTACION (ID_ESTACION,NOMBRE,ACTIVA,ID_TRONCAL) values ('44','Quirigua','Si','4');
+Insert into ESTACION (ID_ESTACION,NOMBRE,ACTIVA,ID_TRONCAL) values ('45','Carrera 90','Si','4');
+Insert into ESTACION (ID_ESTACION,NOMBRE,ACTIVA,ID_TRONCAL) values ('46','Avenida Cali','Si','4');
+Insert into ESTACION (ID_ESTACION,NOMBRE,ACTIVA,ID_TRONCAL) values ('47','Granja - Carrera 77','Si','4');
+Insert into ESTACION (ID_ESTACION,NOMBRE,ACTIVA,ID_TRONCAL) values ('48','Minuto de Dios','Si','4');
+Insert into ESTACION (ID_ESTACION,NOMBRE,ACTIVA,ID_TRONCAL) values ('49','Boyacá','Si','4');
+Insert into ESTACION (ID_ESTACION,NOMBRE,ACTIVA,ID_TRONCAL) values ('50','Avenida 68','Si','4');
+Insert into ESTACION (ID_ESTACION,NOMBRE,ACTIVA,ID_TRONCAL) values ('51','Carrera 53','Si','4');
+Insert into ESTACION (ID_ESTACION,NOMBRE,ACTIVA,ID_TRONCAL) values ('52','Carrera 47','Si','4');
+Insert into ESTACION (ID_ESTACION,NOMBRE,ACTIVA,ID_TRONCAL) values ('53','Escuela Militar','Si','4');
+Insert into ESTACION (ID_ESTACION,NOMBRE,ACTIVA,ID_TRONCAL) values ('54','Polo','Si','4');
+Insert into ESTACION (ID_ESTACION,NOMBRE,ACTIVA,ID_TRONCAL) values ('55','La Castellana','Si','5');
+Insert into ESTACION (ID_ESTACION,NOMBRE,ACTIVA,ID_TRONCAL) values ('56','NQS Calle 75 - Zona M','Si','5');
+Insert into ESTACION (ID_ESTACION,NOMBRE,ACTIVA,ID_TRONCAL) values ('57','Avenida Chile','Si','5');
+Insert into ESTACION (ID_ESTACION,NOMBRE,ACTIVA,ID_TRONCAL) values ('58','7 de Agosto','Si','5');
+Insert into ESTACION (ID_ESTACION,NOMBRE,ACTIVA,ID_TRONCAL) values ('59','Movistar Arena','Si','5');
+Insert into ESTACION (ID_ESTACION,NOMBRE,ACTIVA,ID_TRONCAL) values ('60','Campín - Universidad Antonio Nariño','Si','5');
+Insert into ESTACION (ID_ESTACION,NOMBRE,ACTIVA,ID_TRONCAL) values ('61','Universidad Nacional','Si','5');
+Insert into ESTACION (ID_ESTACION,NOMBRE,ACTIVA,ID_TRONCAL) values ('62','Avenida Eldorado','Si','5');
+Insert into ESTACION (ID_ESTACION,NOMBRE,ACTIVA,ID_TRONCAL) values ('63','CAD','Si','5');
+Insert into ESTACION (ID_ESTACION,NOMBRE,ACTIVA,ID_TRONCAL) values ('64','Paloquemao','Si','5');
+Insert into ESTACION (ID_ESTACION,NOMBRE,ACTIVA,ID_TRONCAL) values ('65','Portal de las Américas','Si','6');
+Insert into ESTACION (ID_ESTACION,NOMBRE,ACTIVA,ID_TRONCAL) values ('66','Patio Bonito','Si','6');
+Insert into ESTACION (ID_ESTACION,NOMBRE,ACTIVA,ID_TRONCAL) values ('67','Biblioteca Tintal','Si','6');
+Insert into ESTACION (ID_ESTACION,NOMBRE,ACTIVA,ID_TRONCAL) values ('68','Transversal 86','Si','6');
+Insert into ESTACION (ID_ESTACION,NOMBRE,ACTIVA,ID_TRONCAL) values ('69','Banderas','Si','6');
+Insert into ESTACION (ID_ESTACION,NOMBRE,ACTIVA,ID_TRONCAL) values ('70','Mandalay','Si','6');
+Insert into ESTACION (ID_ESTACION,NOMBRE,ACTIVA,ID_TRONCAL) values ('71','Américas - Avenida Boyacá','Si','6');
+Insert into ESTACION (ID_ESTACION,NOMBRE,ACTIVA,ID_TRONCAL) values ('72','Marsella','Si','6');
+Insert into ESTACION (ID_ESTACION,NOMBRE,ACTIVA,ID_TRONCAL) values ('73','Pradera','Si','6');
+Insert into ESTACION (ID_ESTACION,NOMBRE,ACTIVA,ID_TRONCAL) values ('74','Distrito Graffiti','Si','6');
+Insert into ESTACION (ID_ESTACION,NOMBRE,ACTIVA,ID_TRONCAL) values ('75','Puente Aranda','Si','6');
+Insert into ESTACION (ID_ESTACION,NOMBRE,ACTIVA,ID_TRONCAL) values ('76','Carrera 43','Si','6');
+Insert into ESTACION (ID_ESTACION,NOMBRE,ACTIVA,ID_TRONCAL) values ('77','Zona Industrial','Si','6');
+Insert into ESTACION (ID_ESTACION,NOMBRE,ACTIVA,ID_TRONCAL) values ('78','CDS - Carrera 32','Si','6');
+Insert into ESTACION (ID_ESTACION,NOMBRE,ACTIVA,ID_TRONCAL) values ('79','Ricaurte','Si','6');
+Insert into ESTACION (ID_ESTACION,NOMBRE,ACTIVA,ID_TRONCAL) values ('80','San Façon - Carrera 22','Si','6');
+Insert into ESTACION (ID_ESTACION,NOMBRE,ACTIVA,ID_TRONCAL) values ('81','De la Sabana','Si','6');
+Insert into ESTACION (ID_ESTACION,NOMBRE,ACTIVA,ID_TRONCAL) values ('82','Portal Sur','Si','7');
+Insert into ESTACION (ID_ESTACION,NOMBRE,ACTIVA,ID_TRONCAL) values ('83','Bosa','Si','7');
+Insert into ESTACION (ID_ESTACION,NOMBRE,ACTIVA,ID_TRONCAL) values ('84','La Despensa','Si','7');
+Insert into ESTACION (ID_ESTACION,NOMBRE,ACTIVA,ID_TRONCAL) values ('85','León XIII','Si','7');
+Insert into ESTACION (ID_ESTACION,NOMBRE,ACTIVA,ID_TRONCAL) values ('86','Terreros - Hospital Cardiovascular','Si','7');
+Insert into ESTACION (ID_ESTACION,NOMBRE,ACTIVA,ID_TRONCAL) values ('87','San Mateo (Soacha)','Si','7');
+Insert into ESTACION (ID_ESTACION,NOMBRE,ACTIVA,ID_TRONCAL) values ('88','Perdomo','Si','7');
+Insert into ESTACION (ID_ESTACION,NOMBRE,ACTIVA,ID_TRONCAL) values ('89','Madelena','Si','7');
+Insert into ESTACION (ID_ESTACION,NOMBRE,ACTIVA,ID_TRONCAL) values ('90','Sevillana','Si','7');
+Insert into ESTACION (ID_ESTACION,NOMBRE,ACTIVA,ID_TRONCAL) values ('91','Venecia','Si','7');
+Insert into ESTACION (ID_ESTACION,NOMBRE,ACTIVA,ID_TRONCAL) values ('92','General Santander','Si','7');
+Insert into ESTACION (ID_ESTACION,NOMBRE,ACTIVA,ID_TRONCAL) values ('93','Alquería','Si','7');
+Insert into ESTACION (ID_ESTACION,NOMBRE,ACTIVA,ID_TRONCAL) values ('94','NQS - Calle 38 Sur','Si','7');
+Insert into ESTACION (ID_ESTACION,NOMBRE,ACTIVA,ID_TRONCAL) values ('95','NQS - Calle 30 Sur','Si','7');
+Insert into ESTACION (ID_ESTACION,NOMBRE,ACTIVA,ID_TRONCAL) values ('96','Sena','Si','7');
+Insert into ESTACION (ID_ESTACION,NOMBRE,ACTIVA,ID_TRONCAL) values ('97','Guatoque - Veraguas','Si','7');
+Insert into ESTACION (ID_ESTACION,NOMBRE,ACTIVA,ID_TRONCAL) values ('98','Comuneros','Si','7');
+Insert into ESTACION (ID_ESTACION,NOMBRE,ACTIVA,ID_TRONCAL) values ('99','Portal de Usme','Si','8');
+Insert into ESTACION (ID_ESTACION,NOMBRE,ACTIVA,ID_TRONCAL) values ('100','Molinos','Si','8');
+Insert into ESTACION (ID_ESTACION,NOMBRE,ACTIVA,ID_TRONCAL) values ('101','Consuelo','Si','8');
+Insert into ESTACION (ID_ESTACION,NOMBRE,ACTIVA,ID_TRONCAL) values ('102','Socorro','Si','8');
+Insert into ESTACION (ID_ESTACION,NOMBRE,ACTIVA,ID_TRONCAL) values ('103','Santa Lucía','Si','8');
+Insert into ESTACION (ID_ESTACION,NOMBRE,ACTIVA,ID_TRONCAL) values ('104','Portal del Tunal','Si','8');
+Insert into ESTACION (ID_ESTACION,NOMBRE,ACTIVA,ID_TRONCAL) values ('105','Parque','Si','8');
+Insert into ESTACION (ID_ESTACION,NOMBRE,ACTIVA,ID_TRONCAL) values ('106','Biblioteca','Si','8');
+Insert into ESTACION (ID_ESTACION,NOMBRE,ACTIVA,ID_TRONCAL) values ('107','Calle 40 Sur','Si','8');
+Insert into ESTACION (ID_ESTACION,NOMBRE,ACTIVA,ID_TRONCAL) values ('108','Quiroga','Si','8');
+Insert into ESTACION (ID_ESTACION,NOMBRE,ACTIVA,ID_TRONCAL) values ('109','Olaya','Si','8');
+Insert into ESTACION (ID_ESTACION,NOMBRE,ACTIVA,ID_TRONCAL) values ('110','Restrepo','Si','8');
+Insert into ESTACION (ID_ESTACION,NOMBRE,ACTIVA,ID_TRONCAL) values ('111','Fucha','Si','8');
+Insert into ESTACION (ID_ESTACION,NOMBRE,ACTIVA,ID_TRONCAL) values ('112','Nariño','Si','8');
+Insert into ESTACION (ID_ESTACION,NOMBRE,ACTIVA,ID_TRONCAL) values ('113','Hortúa','Si','8');
+Insert into ESTACION (ID_ESTACION,NOMBRE,ACTIVA,ID_TRONCAL) values ('114','Hospital','Si','8');
+Insert into ESTACION (ID_ESTACION,NOMBRE,ACTIVA,ID_TRONCAL) values ('115','Museo del Oro','Si','9');
+Insert into ESTACION (ID_ESTACION,NOMBRE,ACTIVA,ID_TRONCAL) values ('116','Las Aguas - Centro Colombo Americano','Si','9');
+Insert into ESTACION (ID_ESTACION,NOMBRE,ACTIVA,ID_TRONCAL) values ('117','Universidades','Si','9');
+Insert into ESTACION (ID_ESTACION,NOMBRE,ACTIVA,ID_TRONCAL) values ('118','Portal Eldorado','Si','10');
+Insert into ESTACION (ID_ESTACION,NOMBRE,ACTIVA,ID_TRONCAL) values ('119','Modelia','Si','10');
+Insert into ESTACION (ID_ESTACION,NOMBRE,ACTIVA,ID_TRONCAL) values ('120','Normandía','Si','10');
+Insert into ESTACION (ID_ESTACION,NOMBRE,ACTIVA,ID_TRONCAL) values ('121','Avenida Rojas - UNISALUD','Si','10');
+Insert into ESTACION (ID_ESTACION,NOMBRE,ACTIVA,ID_TRONCAL) values ('122','El Tiempo - Cámara de Comercio de Bogotá','Si','10');
+Insert into ESTACION (ID_ESTACION,NOMBRE,ACTIVA,ID_TRONCAL) values ('123','Salitre - El Greco','Si','10');
+Insert into ESTACION (ID_ESTACION,NOMBRE,ACTIVA,ID_TRONCAL) values ('124','CAN','Si','10');
+Insert into ESTACION (ID_ESTACION,NOMBRE,ACTIVA,ID_TRONCAL) values ('125','Gobernación','Si','10');
+Insert into ESTACION (ID_ESTACION,NOMBRE,ACTIVA,ID_TRONCAL) values ('126','Quinta Paredes','Si','10');
+Insert into ESTACION (ID_ESTACION,NOMBRE,ACTIVA,ID_TRONCAL) values ('127','Corferias','Si','10');
+Insert into ESTACION (ID_ESTACION,NOMBRE,ACTIVA,ID_TRONCAL) values ('128','Ciudad Universitaria - Lotería de Bogotá','Si','10');
+Insert into ESTACION (ID_ESTACION,NOMBRE,ACTIVA,ID_TRONCAL) values ('129','Concejo de Bogotá','Si','10');
+Insert into ESTACION (ID_ESTACION,NOMBRE,ACTIVA,ID_TRONCAL) values ('130','Centro Memoria','Si','10');
+Insert into ESTACION (ID_ESTACION,NOMBRE,ACTIVA,ID_TRONCAL) values ('131','Portal 20 de Julio','Si','11');
+Insert into ESTACION (ID_ESTACION,NOMBRE,ACTIVA,ID_TRONCAL) values ('132','Country Sur','Si','11');
+Insert into ESTACION (ID_ESTACION,NOMBRE,ACTIVA,ID_TRONCAL) values ('133','Avenida Primero de Mayo','Si','11');
+Insert into ESTACION (ID_ESTACION,NOMBRE,ACTIVA,ID_TRONCAL) values ('134','Ciudad Jardín - Universidad Antonio Nariño','Si','11');
+Insert into ESTACION (ID_ESTACION,NOMBRE,ACTIVA,ID_TRONCAL) values ('135','Policlínico','Si','11');
+Insert into ESTACION (ID_ESTACION,NOMBRE,ACTIVA,ID_TRONCAL) values ('136','San Victorino','Si','11');
+Insert into ESTACION (ID_ESTACION,NOMBRE,ACTIVA,ID_TRONCAL) values ('137','Las Nieves','Si','11');
+Insert into ESTACION (ID_ESTACION,NOMBRE,ACTIVA,ID_TRONCAL) values ('138','San Diego','Si','11');
+Insert into ESTACION (ID_ESTACION,NOMBRE,ACTIVA,ID_TRONCAL) values ('139','Museo Nacional','Si','11');
+Insert into ESTACION (ID_ESTACION,NOMBRE,ACTIVA,ID_TRONCAL) values ('140','Tibanica - Primavera','Si','13');
+Insert into ESTACION (ID_ESTACION,NOMBRE,ACTIVA,ID_TRONCAL) values ('141','Los Laureles','Si','13');
+Insert into ESTACION (ID_ESTACION,NOMBRE,ACTIVA,ID_TRONCAL) values ('142','Islandia','Si','13');
+REM INSERTING into EVENTO
+SET DEFINE OFF;
+Insert into EVENTO (ID_EVENTO,FECHA,NUMERO_PERSONAS,ID_ESTACION,ID_TARIFA,ID_MODALIDAD,ID_GUARDA,HORA) values ('6',to_timestamp('05/11/26 12:00:00,000000000 AM','DD/MM/RR HH12:MI:SSXFF AM'),'5','6','3','2','5','15:32');
+Insert into EVENTO (ID_EVENTO,FECHA,NUMERO_PERSONAS,ID_ESTACION,ID_TARIFA,ID_MODALIDAD,ID_GUARDA,HORA) values ('5',to_timestamp('06/11/26 12:00:00,000000000 AM','DD/MM/RR HH12:MI:SSXFF AM'),'7','10','3','1','4','14:54');
+Insert into EVENTO (ID_EVENTO,FECHA,NUMERO_PERSONAS,ID_ESTACION,ID_TARIFA,ID_MODALIDAD,ID_GUARDA,HORA) values ('1',to_timestamp('03/11/26 12:00:00,000000000 AM','DD/MM/RR HH12:MI:SSXFF AM'),'13','6','2','1','1',null);
+Insert into EVENTO (ID_EVENTO,FECHA,NUMERO_PERSONAS,ID_ESTACION,ID_TARIFA,ID_MODALIDAD,ID_GUARDA,HORA) values ('2',to_timestamp('04/11/26 12:00:00,000000000 AM','DD/MM/RR HH12:MI:SSXFF AM'),'8','1','2','1','3','20:03');
+Insert into EVENTO (ID_EVENTO,FECHA,NUMERO_PERSONAS,ID_ESTACION,ID_TARIFA,ID_MODALIDAD,ID_GUARDA,HORA) values ('3',to_timestamp('03/11/26 12:00:00,000000000 AM','DD/MM/RR HH12:MI:SSXFF AM'),'6','10','2','1','3','22:03');
+Insert into EVENTO (ID_EVENTO,FECHA,NUMERO_PERSONAS,ID_ESTACION,ID_TARIFA,ID_MODALIDAD,ID_GUARDA,HORA) values ('4',to_timestamp('04/11/26 12:00:00,000000000 AM','DD/MM/RR HH12:MI:SSXFF AM'),'1','5','2','1','3','23:17');
+REM INSERTING into EVENTO_INFRACTOR
+SET DEFINE OFF;
+Insert into EVENTO_INFRACTOR (ID_EVENTO_INFRACTOR,ID_EVENTO,ID_INFRACTOR) values ('1','3','1');
+Insert into EVENTO_INFRACTOR (ID_EVENTO_INFRACTOR,ID_EVENTO,ID_INFRACTOR) values ('3','3','3');
+Insert into EVENTO_INFRACTOR (ID_EVENTO_INFRACTOR,ID_EVENTO,ID_INFRACTOR) values ('2','4','2');
+Insert into EVENTO_INFRACTOR (ID_EVENTO_INFRACTOR,ID_EVENTO,ID_INFRACTOR) values ('4','6','4');
+REM INSERTING into GUARDA
+SET DEFINE OFF;
+Insert into GUARDA (ID_GUARDA,TURNO,NOMBRE,APELLIDO,ACTIVO,CARGO,ID_ESTACION,ID_SUPERVISOR) values ('4','Mañana','Maria','Gomez','Si','Guarda','13',null);
+Insert into GUARDA (ID_GUARDA,TURNO,NOMBRE,APELLIDO,ACTIVO,CARGO,ID_ESTACION,ID_SUPERVISOR) values ('6','Mañana','Dilan','Cardenas','No','Supervisor','15',null);
+Insert into GUARDA (ID_GUARDA,TURNO,NOMBRE,APELLIDO,ACTIVO,CARGO,ID_ESTACION,ID_SUPERVISOR) values ('1','Mañana','Ricardo','Machado','No','Guarda','3','3');
+Insert into GUARDA (ID_GUARDA,TURNO,NOMBRE,APELLIDO,ACTIVO,CARGO,ID_ESTACION,ID_SUPERVISOR) values ('3','Mañana','Armando','Suarez','Si','Supervisor','3',null);
+Insert into GUARDA (ID_GUARDA,TURNO,NOMBRE,APELLIDO,ACTIVO,CARGO,ID_ESTACION,ID_SUPERVISOR) values ('5','Tarde','Laura','Gomez','Si','Guarda','6',null);
+REM INSERTING into INFRACTOR
+SET DEFINE OFF;
+Insert into INFRACTOR (ID_INFRACTOR,TIPO_DOCUMENTO,NUMERO_DOCUMENTO,NOMBRE,APELLIDO) values ('1','CC','1072324556','Alba','Mendez');
+Insert into INFRACTOR (ID_INFRACTOR,TIPO_DOCUMENTO,NUMERO_DOCUMENTO,NOMBRE,APELLIDO) values ('3','CC','2312432544','Maria','Perez');
+Insert into INFRACTOR (ID_INFRACTOR,TIPO_DOCUMENTO,NUMERO_DOCUMENTO,NOMBRE,APELLIDO) values ('4','CC','123456789','Juan','Garcia');
+Insert into INFRACTOR (ID_INFRACTOR,TIPO_DOCUMENTO,NUMERO_DOCUMENTO,NOMBRE,APELLIDO) values ('2','CC','1752862344','Marcos','Espitia');
+REM INSERTING into MODALIDAD
+SET DEFINE OFF;
+Insert into MODALIDAD (ID_MODALIDAD,NOMBRE) values ('2','Salto de Estacion');
+Insert into MODALIDAD (ID_MODALIDAD,NOMBRE) values ('1','saltar torniquete');
+REM INSERTING into PAGO
+SET DEFINE OFF;
+REM INSERTING into REGISTRO_CAMBIOS
+SET DEFINE OFF;
+Insert into REGISTRO_CAMBIOS (ID_REGISTROCAMBIOS,FECHA,CAMPO_MODIFICADO,VALOR_ANTERIOR,VALOR_NUEVO,ID_USUARIO,ID_COMPARENDO) values ('2',to_timestamp('06/11/26 10:31:14,000000000 PM','DD/MM/RR HH12:MI:SSXFF AM'),'estado','Pendiente','Anulado','1','2');
+Insert into REGISTRO_CAMBIOS (ID_REGISTROCAMBIOS,FECHA,CAMPO_MODIFICADO,VALOR_ANTERIOR,VALOR_NUEVO,ID_USUARIO,ID_COMPARENDO) values ('1',to_timestamp('06/11/26 09:37:13,000000000 PM','DD/MM/RR HH12:MI:SSXFF AM'),'estado','Pendiente','Anulado','1','1');
+REM INSERTING into TARIFA
+SET DEFINE OFF;
+Insert into TARIFA (ID_TARIFA,FECHA_INICIO,FECHA_FIN,VALOR) values ('3',to_date('01/11/26','DD/MM/RR'),to_date('30/11/26','DD/MM/RR'),'3552');
+Insert into TARIFA (ID_TARIFA,FECHA_INICIO,FECHA_FIN,VALOR) values ('2',to_date('01/10/26','DD/MM/RR'),to_date('16/10/26','DD/MM/RR'),'3350');
+REM INSERTING into TRONCAL
+SET DEFINE OFF;
+Insert into TRONCAL (ID_TRONCAL,NOMBRE) values ('2','Autopista Norte');
+Insert into TRONCAL (ID_TRONCAL,NOMBRE) values ('1','Avenida Caracas');
+Insert into TRONCAL (ID_TRONCAL,NOMBRE) values ('17','Avenida El bosque');
+Insert into TRONCAL (ID_TRONCAL,NOMBRE) values ('10','Avenida Eldorado');
+Insert into TRONCAL (ID_TRONCAL,NOMBRE) values ('3','Avenida Suba');
+Insert into TRONCAL (ID_TRONCAL,NOMBRE) values ('6','Avenida de las Américas');
+Insert into TRONCAL (ID_TRONCAL,NOMBRE) values ('4','Calle 80');
+Insert into TRONCAL (ID_TRONCAL,NOMBRE) values ('8','Caracas Sur');
+Insert into TRONCAL (ID_TRONCAL,NOMBRE) values ('11','Carrera Décima');
+Insert into TRONCAL (ID_TRONCAL,NOMBRE) values ('12','Carrera Séptima');
+Insert into TRONCAL (ID_TRONCAL,NOMBRE) values ('9','Eje Ambiental');
+Insert into TRONCAL (ID_TRONCAL,NOMBRE) values ('13','Extensión Avenida Ciudad de Cali');
+Insert into TRONCAL (ID_TRONCAL,NOMBRE) values ('5','NQS Central');
+Insert into TRONCAL (ID_TRONCAL,NOMBRE) values ('7','NQS Sur');
+Insert into TRONCAL (ID_TRONCAL,NOMBRE) values ('15','Nueva NQS');
+REM INSERTING into USUARIO
+SET DEFINE OFF;
+Insert into USUARIO (ID_USUARIO,ROL,NOMBRE_USUARIO,CONTRASENA) values ('9','Analista','Yoel','iwnmSlS7pB6IfX2YkybdeQ==:S924KlfinM/pCaNK4bxfVaz+X3zIFIiE2Mqksdaqjq4=');
+Insert into USUARIO (ID_USUARIO,ROL,NOMBRE_USUARIO,CONTRASENA) values ('8','Guarda','LauraGomez','duYk3LSc+qWPGxDIqHl23w==:TSTjW8Ck2SFEKZOknudVaOmMyPsUYT+Ieb0rNaG0MrQ=');
+Insert into USUARIO (ID_USUARIO,ROL,NOMBRE_USUARIO,CONTRASENA) values ('7','Guarda','mariagomez','ZM0ITVEIsiep4zxrjrx6RQ==:VmbULyyk2szLZrrOTjeNRc+Z3SmTc7n5UOR2eM7XlCI=');
+Insert into USUARIO (ID_USUARIO,ROL,NOMBRE_USUARIO,CONTRASENA) values ('1','Administrador','admin','n8NaizWl7C8Dqvnpzfr7jA==:83oFhhOiam12HrCSHSgRxnIAa1Mrv7+wHkqb29bFIhM=');
+REM INSERTING into USUARIO_GUARDA
+SET DEFINE OFF;
+Insert into USUARIO_GUARDA (ID_USUARIO,FECHA_ACTIVACION,ID_GUARDA) values ('7',to_date('06/11/26','DD/MM/RR'),'4');
+Insert into USUARIO_GUARDA (ID_USUARIO,FECHA_ACTIVACION,ID_GUARDA) values ('8',to_date('06/11/26','DD/MM/RR'),'5');
+--------------------------------------------------------
+--  DDL for Index PK_ADMINISTRADOR
+--------------------------------------------------------
+
+  CREATE UNIQUE INDEX "PK_ADMINISTRADOR" ON "ADMINISTRADOR" ("ID_USUARIO") 
+  PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
+  TABLESPACE "USERS" ;
+--------------------------------------------------------
+--  DDL for Index PK_AGRESION
+--------------------------------------------------------
+
+  CREATE UNIQUE INDEX "PK_AGRESION" ON "AGRESION" ("ID_AGRESION") 
+  PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
+  TABLESPACE "USERS" ;
+--------------------------------------------------------
+--  DDL for Index PK_ANALISTA
+--------------------------------------------------------
+
+  CREATE UNIQUE INDEX "PK_ANALISTA" ON "ANALISTA" ("ID_USUARIO") 
+  PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
+  TABLESPACE "USERS" ;
+--------------------------------------------------------
+--  DDL for Index PK_COMPARENDO
+--------------------------------------------------------
+
+  CREATE UNIQUE INDEX "PK_COMPARENDO" ON "COMPARENDO" ("ID_COMPARENDO") 
+  PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
+  TABLESPACE "USERS" ;
+--------------------------------------------------------
+--  DDL for Index PK_ESTACION
+--------------------------------------------------------
+
+  CREATE UNIQUE INDEX "PK_ESTACION" ON "ESTACION" ("ID_ESTACION") 
+  PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
+  TABLESPACE "USERS" ;
+--------------------------------------------------------
+--  DDL for Index PK_EVENTO
+--------------------------------------------------------
+
+  CREATE UNIQUE INDEX "PK_EVENTO" ON "EVENTO" ("ID_EVENTO") 
+  PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
+  TABLESPACE "USERS" ;
+--------------------------------------------------------
+--  DDL for Index PK_EVENTO_INFRACTOR
+--------------------------------------------------------
+
+  CREATE UNIQUE INDEX "PK_EVENTO_INFRACTOR" ON "EVENTO_INFRACTOR" ("ID_EVENTO_INFRACTOR") 
+  PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
+  TABLESPACE "USERS" ;
+--------------------------------------------------------
+--  DDL for Index PK_GUARDA
+--------------------------------------------------------
+
+  CREATE UNIQUE INDEX "PK_GUARDA" ON "GUARDA" ("ID_GUARDA") 
+  PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
+  TABLESPACE "USERS" ;
+--------------------------------------------------------
+--  DDL for Index PK_INFRACTOR
+--------------------------------------------------------
+
+  CREATE UNIQUE INDEX "PK_INFRACTOR" ON "INFRACTOR" ("ID_INFRACTOR") 
+  PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
+  TABLESPACE "USERS" ;
+--------------------------------------------------------
+--  DDL for Index PK_MODALIDAD
+--------------------------------------------------------
+
+  CREATE UNIQUE INDEX "PK_MODALIDAD" ON "MODALIDAD" ("ID_MODALIDAD") 
+  PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
+  TABLESPACE "USERS" ;
+--------------------------------------------------------
+--  DDL for Index PK_PAGO
+--------------------------------------------------------
+
+  CREATE UNIQUE INDEX "PK_PAGO" ON "PAGO" ("ID_PAGO") 
+  PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
+  TABLESPACE "USERS" ;
+--------------------------------------------------------
+--  DDL for Index PK_REGISTRO_CAMBIOS
+--------------------------------------------------------
+
+  CREATE UNIQUE INDEX "PK_REGISTRO_CAMBIOS" ON "REGISTRO_CAMBIOS" ("ID_REGISTROCAMBIOS") 
+  PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
+  TABLESPACE "USERS" ;
+--------------------------------------------------------
+--  DDL for Index PK_TARIFA
+--------------------------------------------------------
+
+  CREATE UNIQUE INDEX "PK_TARIFA" ON "TARIFA" ("ID_TARIFA") 
+  PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
+  TABLESPACE "USERS" ;
+--------------------------------------------------------
+--  DDL for Index PK_TRONCAL
+--------------------------------------------------------
+
+  CREATE UNIQUE INDEX "PK_TRONCAL" ON "TRONCAL" ("ID_TRONCAL") 
+  PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
+  TABLESPACE "USERS" ;
+--------------------------------------------------------
+--  DDL for Index PK_USUARIO
+--------------------------------------------------------
+
+  CREATE UNIQUE INDEX "PK_USUARIO" ON "USUARIO" ("ID_USUARIO") 
+  PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
+  TABLESPACE "USERS" ;
+--------------------------------------------------------
+--  DDL for Index PK_USUARIO_GUARDA
+--------------------------------------------------------
+
+  CREATE UNIQUE INDEX "PK_USUARIO_GUARDA" ON "USUARIO_GUARDA" ("ID_USUARIO") 
+  PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
+  TABLESPACE "USERS" ;
+--------------------------------------------------------
+--  DDL for Index UQ_COMPARENDO_EI
+--------------------------------------------------------
+
+  CREATE UNIQUE INDEX "UQ_COMPARENDO_EI" ON "COMPARENDO" ("ID_EVENTO_INFRACTOR") 
+  PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
+  TABLESPACE "USERS" ;
+--------------------------------------------------------
+--  DDL for Index UQ_ESTACION_NOMBRE
+--------------------------------------------------------
+
+  CREATE UNIQUE INDEX "UQ_ESTACION_NOMBRE" ON "ESTACION" ("NOMBRE") 
+  PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
+  TABLESPACE "USERS" ;
+--------------------------------------------------------
+--  DDL for Index UQ_ESTACION_NOMBRE_TRONCAL
+--------------------------------------------------------
+
+  CREATE UNIQUE INDEX "UQ_ESTACION_NOMBRE_TRONCAL" ON "ESTACION" ("NOMBRE", "ID_TRONCAL") 
+  PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
+  TABLESPACE "USERS" ;
+--------------------------------------------------------
+--  DDL for Index UQ_EVENTO_INFRACTOR
+--------------------------------------------------------
+
+  CREATE UNIQUE INDEX "UQ_EVENTO_INFRACTOR" ON "EVENTO_INFRACTOR" ("ID_EVENTO", "ID_INFRACTOR") 
+  PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
+  TABLESPACE "USERS" ;
+--------------------------------------------------------
+--  DDL for Index UQ_INFRACTOR_DOCUMENTO
+--------------------------------------------------------
+
+  CREATE UNIQUE INDEX "UQ_INFRACTOR_DOCUMENTO" ON "INFRACTOR" ("TIPO_DOCUMENTO", "NUMERO_DOCUMENTO") 
+  PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
+  TABLESPACE "USERS" ;
+--------------------------------------------------------
+--  DDL for Index UQ_PAGO_COMPARENDO
+--------------------------------------------------------
+
+  CREATE UNIQUE INDEX "UQ_PAGO_COMPARENDO" ON "PAGO" ("ID_COMPARENDO") 
+  PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
+  TABLESPACE "USERS" ;
+--------------------------------------------------------
+--  DDL for Index UQ_PAGO_RECIBO
+--------------------------------------------------------
+
+  CREATE UNIQUE INDEX "UQ_PAGO_RECIBO" ON "PAGO" ("NUMERO_RECIBO") 
+  PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
+  TABLESPACE "USERS" ;
+--------------------------------------------------------
+--  DDL for Index UQ_TRONCAL_NOMBRE
+--------------------------------------------------------
+
+  CREATE UNIQUE INDEX "UQ_TRONCAL_NOMBRE" ON "TRONCAL" ("NOMBRE") 
+  PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
+  TABLESPACE "USERS" ;
+--------------------------------------------------------
+--  DDL for Index UQ_UG_GUARDA
+--------------------------------------------------------
+
+  CREATE UNIQUE INDEX "UQ_UG_GUARDA" ON "USUARIO_GUARDA" ("ID_GUARDA") 
+  PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
+  TABLESPACE "USERS" ;
+--------------------------------------------------------
+--  DDL for Index UQ_USUARIO_NOMBRE
+--------------------------------------------------------
+
+  CREATE UNIQUE INDEX "UQ_USUARIO_NOMBRE" ON "USUARIO" ("NOMBRE_USUARIO") 
+  PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
+  TABLESPACE "USERS" ;
+--------------------------------------------------------
+--  DDL for Index PK_ADMINISTRADOR
+--------------------------------------------------------
+
+  CREATE UNIQUE INDEX "PK_ADMINISTRADOR" ON "ADMINISTRADOR" ("ID_USUARIO") 
+  PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
+  TABLESPACE "USERS" ;
+--------------------------------------------------------
+--  DDL for Index PK_AGRESION
+--------------------------------------------------------
+
+  CREATE UNIQUE INDEX "PK_AGRESION" ON "AGRESION" ("ID_AGRESION") 
+  PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
+  TABLESPACE "USERS" ;
+--------------------------------------------------------
+--  DDL for Index PK_ANALISTA
+--------------------------------------------------------
+
+  CREATE UNIQUE INDEX "PK_ANALISTA" ON "ANALISTA" ("ID_USUARIO") 
+  PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
+  TABLESPACE "USERS" ;
+--------------------------------------------------------
+--  DDL for Index UQ_COMPARENDO_EI
+--------------------------------------------------------
+
+  CREATE UNIQUE INDEX "UQ_COMPARENDO_EI" ON "COMPARENDO" ("ID_EVENTO_INFRACTOR") 
+  PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
+  TABLESPACE "USERS" ;
+--------------------------------------------------------
+--  DDL for Index PK_COMPARENDO
+--------------------------------------------------------
+
+  CREATE UNIQUE INDEX "PK_COMPARENDO" ON "COMPARENDO" ("ID_COMPARENDO") 
+  PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
+  TABLESPACE "USERS" ;
+--------------------------------------------------------
+--  DDL for Index UQ_ESTACION_NOMBRE
+--------------------------------------------------------
+
+  CREATE UNIQUE INDEX "UQ_ESTACION_NOMBRE" ON "ESTACION" ("NOMBRE") 
+  PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
+  TABLESPACE "USERS" ;
+--------------------------------------------------------
+--  DDL for Index UQ_ESTACION_NOMBRE_TRONCAL
+--------------------------------------------------------
+
+  CREATE UNIQUE INDEX "UQ_ESTACION_NOMBRE_TRONCAL" ON "ESTACION" ("NOMBRE", "ID_TRONCAL") 
+  PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
+  TABLESPACE "USERS" ;
+--------------------------------------------------------
+--  DDL for Index PK_ESTACION
+--------------------------------------------------------
+
+  CREATE UNIQUE INDEX "PK_ESTACION" ON "ESTACION" ("ID_ESTACION") 
+  PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
+  TABLESPACE "USERS" ;
+--------------------------------------------------------
+--  DDL for Index PK_EVENTO
+--------------------------------------------------------
+
+  CREATE UNIQUE INDEX "PK_EVENTO" ON "EVENTO" ("ID_EVENTO") 
+  PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
+  TABLESPACE "USERS" ;
+--------------------------------------------------------
+--  DDL for Index UQ_EVENTO_INFRACTOR
+--------------------------------------------------------
+
+  CREATE UNIQUE INDEX "UQ_EVENTO_INFRACTOR" ON "EVENTO_INFRACTOR" ("ID_EVENTO", "ID_INFRACTOR") 
+  PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
+  TABLESPACE "USERS" ;
+--------------------------------------------------------
+--  DDL for Index PK_EVENTO_INFRACTOR
+--------------------------------------------------------
+
+  CREATE UNIQUE INDEX "PK_EVENTO_INFRACTOR" ON "EVENTO_INFRACTOR" ("ID_EVENTO_INFRACTOR") 
+  PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
+  TABLESPACE "USERS" ;
+--------------------------------------------------------
+--  DDL for Index PK_GUARDA
+--------------------------------------------------------
+
+  CREATE UNIQUE INDEX "PK_GUARDA" ON "GUARDA" ("ID_GUARDA") 
+  PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
+  TABLESPACE "USERS" ;
+--------------------------------------------------------
+--  DDL for Index PK_INFRACTOR
+--------------------------------------------------------
+
+  CREATE UNIQUE INDEX "PK_INFRACTOR" ON "INFRACTOR" ("ID_INFRACTOR") 
+  PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
+  TABLESPACE "USERS" ;
+--------------------------------------------------------
+--  DDL for Index UQ_INFRACTOR_DOCUMENTO
+--------------------------------------------------------
+
+  CREATE UNIQUE INDEX "UQ_INFRACTOR_DOCUMENTO" ON "INFRACTOR" ("TIPO_DOCUMENTO", "NUMERO_DOCUMENTO") 
+  PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
+  TABLESPACE "USERS" ;
+--------------------------------------------------------
+--  DDL for Index PK_MODALIDAD
+--------------------------------------------------------
+
+  CREATE UNIQUE INDEX "PK_MODALIDAD" ON "MODALIDAD" ("ID_MODALIDAD") 
+  PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
+  TABLESPACE "USERS" ;
+--------------------------------------------------------
+--  DDL for Index UQ_PAGO_COMPARENDO
+--------------------------------------------------------
+
+  CREATE UNIQUE INDEX "UQ_PAGO_COMPARENDO" ON "PAGO" ("ID_COMPARENDO") 
+  PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
+  TABLESPACE "USERS" ;
+--------------------------------------------------------
+--  DDL for Index UQ_PAGO_RECIBO
+--------------------------------------------------------
+
+  CREATE UNIQUE INDEX "UQ_PAGO_RECIBO" ON "PAGO" ("NUMERO_RECIBO") 
+  PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
+  TABLESPACE "USERS" ;
+--------------------------------------------------------
+--  DDL for Index PK_PAGO
+--------------------------------------------------------
+
+  CREATE UNIQUE INDEX "PK_PAGO" ON "PAGO" ("ID_PAGO") 
+  PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
+  TABLESPACE "USERS" ;
+--------------------------------------------------------
+--  DDL for Index PK_REGISTRO_CAMBIOS
+--------------------------------------------------------
+
+  CREATE UNIQUE INDEX "PK_REGISTRO_CAMBIOS" ON "REGISTRO_CAMBIOS" ("ID_REGISTROCAMBIOS") 
+  PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
+  TABLESPACE "USERS" ;
+--------------------------------------------------------
+--  DDL for Index PK_TARIFA
+--------------------------------------------------------
+
+  CREATE UNIQUE INDEX "PK_TARIFA" ON "TARIFA" ("ID_TARIFA") 
+  PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
+  TABLESPACE "USERS" ;
+--------------------------------------------------------
+--  DDL for Index PK_TRONCAL
+--------------------------------------------------------
+
+  CREATE UNIQUE INDEX "PK_TRONCAL" ON "TRONCAL" ("ID_TRONCAL") 
+  PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
+  TABLESPACE "USERS" ;
+--------------------------------------------------------
+--  DDL for Index UQ_TRONCAL_NOMBRE
+--------------------------------------------------------
+
+  CREATE UNIQUE INDEX "UQ_TRONCAL_NOMBRE" ON "TRONCAL" ("NOMBRE") 
+  PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
+  TABLESPACE "USERS" ;
+--------------------------------------------------------
+--  DDL for Index PK_USUARIO
+--------------------------------------------------------
+
+  CREATE UNIQUE INDEX "PK_USUARIO" ON "USUARIO" ("ID_USUARIO") 
+  PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
+  TABLESPACE "USERS" ;
+--------------------------------------------------------
+--  DDL for Index UQ_USUARIO_NOMBRE
+--------------------------------------------------------
+
+  CREATE UNIQUE INDEX "UQ_USUARIO_NOMBRE" ON "USUARIO" ("NOMBRE_USUARIO") 
+  PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
+  TABLESPACE "USERS" ;
+--------------------------------------------------------
+--  DDL for Index PK_USUARIO_GUARDA
+--------------------------------------------------------
+
+  CREATE UNIQUE INDEX "PK_USUARIO_GUARDA" ON "USUARIO_GUARDA" ("ID_USUARIO") 
+  PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
+  TABLESPACE "USERS" ;
+--------------------------------------------------------
+--  DDL for Index UQ_UG_GUARDA
+--------------------------------------------------------
+
+  CREATE UNIQUE INDEX "UQ_UG_GUARDA" ON "USUARIO_GUARDA" ("ID_GUARDA") 
+  PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
+  TABLESPACE "USERS" ;
+--------------------------------------------------------
+--  Constraints for Table ADMINISTRADOR
+--------------------------------------------------------
+
+  ALTER TABLE "ADMINISTRADOR" MODIFY ("AREA_GESTION" NOT NULL ENABLE);
+  ALTER TABLE "ADMINISTRADOR" MODIFY ("FECHA_GESTION" NOT NULL ENABLE);
+  ALTER TABLE "ADMINISTRADOR" ADD CONSTRAINT "PK_ADMINISTRADOR" PRIMARY KEY ("ID_USUARIO")
+  USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
+  TABLESPACE "USERS"  ENABLE;
+--------------------------------------------------------
+--  Constraints for Table AGRESION
+--------------------------------------------------------
+
+  ALTER TABLE "AGRESION" MODIFY ("FECHA" NOT NULL ENABLE);
+  ALTER TABLE "AGRESION" MODIFY ("GRAVEDAD" NOT NULL ENABLE);
+  ALTER TABLE "AGRESION" MODIFY ("ID_EVENTO" NOT NULL ENABLE);
+  ALTER TABLE "AGRESION" MODIFY ("ID_GUARDA" NOT NULL ENABLE);
+  ALTER TABLE "AGRESION" ADD CONSTRAINT "CK_AGRESION_GRAVEDAD" CHECK (gravedad IN ('Leve','Moderada','Grave')) ENABLE;
+  ALTER TABLE "AGRESION" ADD CONSTRAINT "PK_AGRESION" PRIMARY KEY ("ID_AGRESION")
+  USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
+  TABLESPACE "USERS"  ENABLE;
+--------------------------------------------------------
+--  Constraints for Table ANALISTA
+--------------------------------------------------------
+
+  ALTER TABLE "ANALISTA" MODIFY ("AREA_ANALISIS" NOT NULL ENABLE);
+  ALTER TABLE "ANALISTA" ADD CONSTRAINT "PK_ANALISTA" PRIMARY KEY ("ID_USUARIO")
+  USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
+  TABLESPACE "USERS"  ENABLE;
+--------------------------------------------------------
+--  Constraints for Table COMPARENDO
+--------------------------------------------------------
+
+  ALTER TABLE "COMPARENDO" ADD CONSTRAINT "UQ_COMPARENDO_EI" UNIQUE ("ID_EVENTO_INFRACTOR")
+  USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
+  TABLESPACE "USERS"  ENABLE;
+  ALTER TABLE "COMPARENDO" MODIFY ("FECHA" NOT NULL ENABLE);
+  ALTER TABLE "COMPARENDO" MODIFY ("VALOR" NOT NULL ENABLE);
+  ALTER TABLE "COMPARENDO" MODIFY ("ESTADO" NOT NULL ENABLE);
+  ALTER TABLE "COMPARENDO" MODIFY ("ID_EVENTO_INFRACTOR" NOT NULL ENABLE);
+  ALTER TABLE "COMPARENDO" ADD CONSTRAINT "CK_COMPARENDO_VALOR" CHECK (valor > 0) ENABLE;
+  ALTER TABLE "COMPARENDO" ADD CONSTRAINT "CK_COMPARENDO_ESTADO" CHECK (estado IN ('Pendiente','Pagado','Anulado')) ENABLE;
+  ALTER TABLE "COMPARENDO" ADD CONSTRAINT "PK_COMPARENDO" PRIMARY KEY ("ID_COMPARENDO")
+  USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
+  TABLESPACE "USERS"  ENABLE;
+--------------------------------------------------------
+--  Constraints for Table ESTACION
+--------------------------------------------------------
+
+  ALTER TABLE "ESTACION" ADD CONSTRAINT "UQ_ESTACION_NOMBRE" UNIQUE ("NOMBRE")
+  USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
+  TABLESPACE "USERS"  ENABLE;
+  ALTER TABLE "ESTACION" ADD CONSTRAINT "UQ_ESTACION_NOMBRE_TRONCAL" UNIQUE ("NOMBRE", "ID_TRONCAL")
+  USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
+  TABLESPACE "USERS"  ENABLE;
+  ALTER TABLE "ESTACION" ADD CONSTRAINT "CK_ESTACION_ACTIVA" CHECK (ACTIVA IN ('Si', 'No')) ENABLE;
+  ALTER TABLE "ESTACION" MODIFY ("NOMBRE" NOT NULL ENABLE);
+  ALTER TABLE "ESTACION" MODIFY ("ACTIVA" NOT NULL ENABLE);
+  ALTER TABLE "ESTACION" MODIFY ("ID_TRONCAL" NOT NULL ENABLE);
+  ALTER TABLE "ESTACION" ADD CONSTRAINT "PK_ESTACION" PRIMARY KEY ("ID_ESTACION")
+  USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
+  TABLESPACE "USERS"  ENABLE;
+--------------------------------------------------------
+--  Constraints for Table EVENTO
+--------------------------------------------------------
+
+  ALTER TABLE "EVENTO" MODIFY ("FECHA" NOT NULL ENABLE);
+  ALTER TABLE "EVENTO" MODIFY ("NUMERO_PERSONAS" NOT NULL ENABLE);
+  ALTER TABLE "EVENTO" MODIFY ("ID_ESTACION" NOT NULL ENABLE);
+  ALTER TABLE "EVENTO" MODIFY ("ID_TARIFA" NOT NULL ENABLE);
+  ALTER TABLE "EVENTO" MODIFY ("ID_MODALIDAD" NOT NULL ENABLE);
+  ALTER TABLE "EVENTO" MODIFY ("ID_GUARDA" NOT NULL ENABLE);
+  ALTER TABLE "EVENTO" ADD CONSTRAINT "CK_EVENTO_PERSONAS" CHECK (numero_personas > 0) ENABLE;
+  ALTER TABLE "EVENTO" ADD CONSTRAINT "PK_EVENTO" PRIMARY KEY ("ID_EVENTO")
+  USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
+  TABLESPACE "USERS"  ENABLE;
+--------------------------------------------------------
+--  Constraints for Table EVENTO_INFRACTOR
+--------------------------------------------------------
+
+  ALTER TABLE "EVENTO_INFRACTOR" MODIFY ("ID_EVENTO" NOT NULL ENABLE);
+  ALTER TABLE "EVENTO_INFRACTOR" MODIFY ("ID_INFRACTOR" NOT NULL ENABLE);
+  ALTER TABLE "EVENTO_INFRACTOR" ADD CONSTRAINT "PK_EVENTO_INFRACTOR" PRIMARY KEY ("ID_EVENTO_INFRACTOR")
+  USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
+  TABLESPACE "USERS"  ENABLE;
+  ALTER TABLE "EVENTO_INFRACTOR" ADD CONSTRAINT "UQ_EVENTO_INFRACTOR" UNIQUE ("ID_EVENTO", "ID_INFRACTOR")
+  USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
+  TABLESPACE "USERS"  ENABLE;
+--------------------------------------------------------
+--  Constraints for Table GUARDA
+--------------------------------------------------------
+
+  ALTER TABLE "GUARDA" ADD CONSTRAINT "CK_GUARDA_TURNO" CHECK (turno IN ('Mañana','Tarde','Noche')) ENABLE;
+  ALTER TABLE "GUARDA" ADD CONSTRAINT "CK_GUARDA_NO_SELF" CHECK (id_supervisor IS NULL OR id_supervisor <> id_guarda) ENABLE;
+  ALTER TABLE "GUARDA" ADD CONSTRAINT "CK_GUARDA_ACTIVO" CHECK (ACTIVO IN ('Si', 'No')) ENABLE;
+  ALTER TABLE "GUARDA" MODIFY ("TURNO" NOT NULL ENABLE);
+  ALTER TABLE "GUARDA" MODIFY ("NOMBRE" NOT NULL ENABLE);
+  ALTER TABLE "GUARDA" MODIFY ("APELLIDO" NOT NULL ENABLE);
+  ALTER TABLE "GUARDA" MODIFY ("ACTIVO" NOT NULL ENABLE);
+  ALTER TABLE "GUARDA" MODIFY ("CARGO" NOT NULL ENABLE);
+  ALTER TABLE "GUARDA" MODIFY ("ID_ESTACION" NOT NULL ENABLE);
+  ALTER TABLE "GUARDA" ADD CONSTRAINT "CK_GUARDA_CARGO" CHECK (cargo IN ('Guarda','Supervisor')) ENABLE;
+  ALTER TABLE "GUARDA" ADD CONSTRAINT "PK_GUARDA" PRIMARY KEY ("ID_GUARDA")
+  USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
+  TABLESPACE "USERS"  ENABLE;
+--------------------------------------------------------
+--  Constraints for Table INFRACTOR
+--------------------------------------------------------
+
+  ALTER TABLE "INFRACTOR" MODIFY ("TIPO_DOCUMENTO" NOT NULL ENABLE);
+  ALTER TABLE "INFRACTOR" MODIFY ("NUMERO_DOCUMENTO" NOT NULL ENABLE);
+  ALTER TABLE "INFRACTOR" MODIFY ("NOMBRE" NOT NULL ENABLE);
+  ALTER TABLE "INFRACTOR" MODIFY ("APELLIDO" NOT NULL ENABLE);
+  ALTER TABLE "INFRACTOR" ADD CONSTRAINT "CK_INFRACTOR_TIPODOC" CHECK (tipo_documento IN ('CC','CE','TI','PAS')) ENABLE;
+  ALTER TABLE "INFRACTOR" ADD CONSTRAINT "PK_INFRACTOR" PRIMARY KEY ("ID_INFRACTOR")
+  USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
+  TABLESPACE "USERS"  ENABLE;
+  ALTER TABLE "INFRACTOR" ADD CONSTRAINT "UQ_INFRACTOR_DOCUMENTO" UNIQUE ("TIPO_DOCUMENTO", "NUMERO_DOCUMENTO")
+  USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
+  TABLESPACE "USERS"  ENABLE;
+--------------------------------------------------------
+--  Constraints for Table MODALIDAD
+--------------------------------------------------------
+
+  ALTER TABLE "MODALIDAD" MODIFY ("NOMBRE" NOT NULL ENABLE);
+  ALTER TABLE "MODALIDAD" ADD CONSTRAINT "PK_MODALIDAD" PRIMARY KEY ("ID_MODALIDAD")
+  USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
+  TABLESPACE "USERS"  ENABLE;
+--------------------------------------------------------
+--  Constraints for Table PAGO
+--------------------------------------------------------
+
+  ALTER TABLE "PAGO" MODIFY ("VALOR" NOT NULL ENABLE);
+  ALTER TABLE "PAGO" MODIFY ("NUMERO_RECIBO" NOT NULL ENABLE);
+  ALTER TABLE "PAGO" MODIFY ("FECHA" NOT NULL ENABLE);
+  ALTER TABLE "PAGO" MODIFY ("ID_COMPARENDO" NOT NULL ENABLE);
+  ALTER TABLE "PAGO" ADD CONSTRAINT "CK_PAGO_VALOR" CHECK (valor > 0) ENABLE;
+  ALTER TABLE "PAGO" ADD CONSTRAINT "PK_PAGO" PRIMARY KEY ("ID_PAGO")
+  USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
+  TABLESPACE "USERS"  ENABLE;
+  ALTER TABLE "PAGO" ADD CONSTRAINT "UQ_PAGO_RECIBO" UNIQUE ("NUMERO_RECIBO")
+  USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
+  TABLESPACE "USERS"  ENABLE;
+  ALTER TABLE "PAGO" ADD CONSTRAINT "UQ_PAGO_COMPARENDO" UNIQUE ("ID_COMPARENDO")
+  USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
+  TABLESPACE "USERS"  ENABLE;
+--------------------------------------------------------
+--  Constraints for Table REGISTRO_CAMBIOS
+--------------------------------------------------------
+
+  ALTER TABLE "REGISTRO_CAMBIOS" MODIFY ("FECHA" NOT NULL ENABLE);
+  ALTER TABLE "REGISTRO_CAMBIOS" MODIFY ("CAMPO_MODIFICADO" NOT NULL ENABLE);
+  ALTER TABLE "REGISTRO_CAMBIOS" MODIFY ("ID_USUARIO" NOT NULL ENABLE);
+  ALTER TABLE "REGISTRO_CAMBIOS" MODIFY ("ID_COMPARENDO" NOT NULL ENABLE);
+  ALTER TABLE "REGISTRO_CAMBIOS" ADD CONSTRAINT "PK_REGISTRO_CAMBIOS" PRIMARY KEY ("ID_REGISTROCAMBIOS")
+  USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
+  TABLESPACE "USERS"  ENABLE;
+--------------------------------------------------------
+--  Constraints for Table TARIFA
+--------------------------------------------------------
+
+  ALTER TABLE "TARIFA" MODIFY ("FECHA_INICIO" NOT NULL ENABLE);
+  ALTER TABLE "TARIFA" MODIFY ("VALOR" NOT NULL ENABLE);
+  ALTER TABLE "TARIFA" ADD CONSTRAINT "CK_TARIFA_VALOR" CHECK (valor > 0) ENABLE;
+  ALTER TABLE "TARIFA" ADD CONSTRAINT "CK_TARIFA_FECHAS" CHECK (fecha_fin >= fecha_inicio) ENABLE;
+  ALTER TABLE "TARIFA" ADD CONSTRAINT "PK_TARIFA" PRIMARY KEY ("ID_TARIFA")
+  USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
+  TABLESPACE "USERS"  ENABLE;
+--------------------------------------------------------
+--  Constraints for Table TRONCAL
+--------------------------------------------------------
+
+  ALTER TABLE "TRONCAL" MODIFY ("NOMBRE" NOT NULL ENABLE);
+  ALTER TABLE "TRONCAL" ADD CONSTRAINT "PK_TRONCAL" PRIMARY KEY ("ID_TRONCAL")
+  USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
+  TABLESPACE "USERS"  ENABLE;
+  ALTER TABLE "TRONCAL" ADD CONSTRAINT "UQ_TRONCAL_NOMBRE" UNIQUE ("NOMBRE")
+  USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
+  TABLESPACE "USERS"  ENABLE;
+--------------------------------------------------------
+--  Constraints for Table USUARIO
+--------------------------------------------------------
+
+  ALTER TABLE "USUARIO" MODIFY ("ROL" NOT NULL ENABLE);
+  ALTER TABLE "USUARIO" ADD CONSTRAINT "CK_USUARIO_ROL" CHECK (rol IN ('Guarda','Administrador','Analista')) ENABLE;
+  ALTER TABLE "USUARIO" ADD CONSTRAINT "PK_USUARIO" PRIMARY KEY ("ID_USUARIO")
+  USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
+  TABLESPACE "USERS"  ENABLE;
+  ALTER TABLE "USUARIO" ADD CONSTRAINT "UQ_USUARIO_NOMBRE" UNIQUE ("NOMBRE_USUARIO")
+  USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
+  TABLESPACE "USERS"  ENABLE;
+--------------------------------------------------------
+--  Constraints for Table USUARIO_GUARDA
+--------------------------------------------------------
+
+  ALTER TABLE "USUARIO_GUARDA" MODIFY ("FECHA_ACTIVACION" NOT NULL ENABLE);
+  ALTER TABLE "USUARIO_GUARDA" MODIFY ("ID_GUARDA" NOT NULL ENABLE);
+  ALTER TABLE "USUARIO_GUARDA" ADD CONSTRAINT "PK_USUARIO_GUARDA" PRIMARY KEY ("ID_USUARIO")
+  USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
+  TABLESPACE "USERS"  ENABLE;
+  ALTER TABLE "USUARIO_GUARDA" ADD CONSTRAINT "UQ_UG_GUARDA" UNIQUE ("ID_GUARDA")
+  USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
+  TABLESPACE "USERS"  ENABLE;
+--------------------------------------------------------
+--  Ref Constraints for Table ADMINISTRADOR
+--------------------------------------------------------
+
+  ALTER TABLE "ADMINISTRADOR" ADD CONSTRAINT "FK_ADM_USUARIO" FOREIGN KEY ("ID_USUARIO")
+	  REFERENCES "USUARIO" ("ID_USUARIO") ENABLE;
+--------------------------------------------------------
+--  Ref Constraints for Table AGRESION
+--------------------------------------------------------
+
+  ALTER TABLE "AGRESION" ADD CONSTRAINT "FK_AGRESION_EVENTO" FOREIGN KEY ("ID_EVENTO")
+	  REFERENCES "EVENTO" ("ID_EVENTO") ENABLE;
+  ALTER TABLE "AGRESION" ADD CONSTRAINT "FK_AGRESION_GUARDA" FOREIGN KEY ("ID_GUARDA")
+	  REFERENCES "GUARDA" ("ID_GUARDA") ENABLE;
+--------------------------------------------------------
+--  Ref Constraints for Table ANALISTA
+--------------------------------------------------------
+
+  ALTER TABLE "ANALISTA" ADD CONSTRAINT "FK_ANA_USUARIO" FOREIGN KEY ("ID_USUARIO")
+	  REFERENCES "USUARIO" ("ID_USUARIO") ENABLE;
+--------------------------------------------------------
+--  Ref Constraints for Table COMPARENDO
+--------------------------------------------------------
+
+  ALTER TABLE "COMPARENDO" ADD CONSTRAINT "FK_COMPARENDO_EI" FOREIGN KEY ("ID_EVENTO_INFRACTOR")
+	  REFERENCES "EVENTO_INFRACTOR" ("ID_EVENTO_INFRACTOR") ENABLE;
+--------------------------------------------------------
+--  Ref Constraints for Table ESTACION
+--------------------------------------------------------
+
+  ALTER TABLE "ESTACION" ADD CONSTRAINT "FK_ESTACION_TRONCAL" FOREIGN KEY ("ID_TRONCAL")
+	  REFERENCES "TRONCAL" ("ID_TRONCAL") ENABLE;
+--------------------------------------------------------
+--  Ref Constraints for Table EVENTO
+--------------------------------------------------------
+
+  ALTER TABLE "EVENTO" ADD CONSTRAINT "FK_EVENTO_ESTACION" FOREIGN KEY ("ID_ESTACION")
+	  REFERENCES "ESTACION" ("ID_ESTACION") ENABLE;
+  ALTER TABLE "EVENTO" ADD CONSTRAINT "FK_EVENTO_TARIFA" FOREIGN KEY ("ID_TARIFA")
+	  REFERENCES "TARIFA" ("ID_TARIFA") ENABLE;
+  ALTER TABLE "EVENTO" ADD CONSTRAINT "FK_EVENTO_MODALIDAD" FOREIGN KEY ("ID_MODALIDAD")
+	  REFERENCES "MODALIDAD" ("ID_MODALIDAD") ENABLE;
+  ALTER TABLE "EVENTO" ADD CONSTRAINT "FK_EVENTO_GUARDA" FOREIGN KEY ("ID_GUARDA")
+	  REFERENCES "GUARDA" ("ID_GUARDA") ENABLE;
+--------------------------------------------------------
+--  Ref Constraints for Table EVENTO_INFRACTOR
+--------------------------------------------------------
+
+  ALTER TABLE "EVENTO_INFRACTOR" ADD CONSTRAINT "FK_EI_EVENTO" FOREIGN KEY ("ID_EVENTO")
+	  REFERENCES "EVENTO" ("ID_EVENTO") ENABLE;
+  ALTER TABLE "EVENTO_INFRACTOR" ADD CONSTRAINT "FK_EI_INFRACTOR" FOREIGN KEY ("ID_INFRACTOR")
+	  REFERENCES "INFRACTOR" ("ID_INFRACTOR") ENABLE;
+--------------------------------------------------------
+--  Ref Constraints for Table GUARDA
+--------------------------------------------------------
+
+  ALTER TABLE "GUARDA" ADD CONSTRAINT "FK_GUARDA_ESTACION" FOREIGN KEY ("ID_ESTACION")
+	  REFERENCES "ESTACION" ("ID_ESTACION") ENABLE;
+  ALTER TABLE "GUARDA" ADD CONSTRAINT "FK_GUARDA_SUPERVISOR" FOREIGN KEY ("ID_SUPERVISOR")
+	  REFERENCES "GUARDA" ("ID_GUARDA") ENABLE;
+--------------------------------------------------------
+--  Ref Constraints for Table PAGO
+--------------------------------------------------------
+
+  ALTER TABLE "PAGO" ADD CONSTRAINT "FK_PAGO_COMPARENDO" FOREIGN KEY ("ID_COMPARENDO")
+	  REFERENCES "COMPARENDO" ("ID_COMPARENDO") ENABLE;
+--------------------------------------------------------
+--  Ref Constraints for Table REGISTRO_CAMBIOS
+--------------------------------------------------------
+
+  ALTER TABLE "REGISTRO_CAMBIOS" ADD CONSTRAINT "FK_RC_USUARIO" FOREIGN KEY ("ID_USUARIO")
+	  REFERENCES "USUARIO" ("ID_USUARIO") ENABLE;
+  ALTER TABLE "REGISTRO_CAMBIOS" ADD CONSTRAINT "FK_RC_COMPARENDO" FOREIGN KEY ("ID_COMPARENDO")
+	  REFERENCES "COMPARENDO" ("ID_COMPARENDO") ENABLE;
+--------------------------------------------------------
+--  Ref Constraints for Table USUARIO_GUARDA
+--------------------------------------------------------
+
+  ALTER TABLE "USUARIO_GUARDA" ADD CONSTRAINT "FK_UG_USUARIO" FOREIGN KEY ("ID_USUARIO")
+	  REFERENCES "USUARIO" ("ID_USUARIO") ENABLE;
+  ALTER TABLE "USUARIO_GUARDA" ADD CONSTRAINT "FK_UG_GUARDA" FOREIGN KEY ("ID_GUARDA")
+	  REFERENCES "GUARDA" ("ID_GUARDA") ENABLE;
